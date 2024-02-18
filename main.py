@@ -4,7 +4,8 @@ from openpyxl import load_workbook
 from pptx import Presentation
 
 # Путь к папке work
-work_folder = "C:/Users/guzal/Downloads/work/"
+work_folder = os.path.join(os.getenv('USERPROFILE'), 'Downloads', 'work')
+
 
 # Список для хранения путей к файлам Excel
 excel_files = []
@@ -35,8 +36,10 @@ else:
     print("Файл Excel не найден в папке work.")
 
 
+
 # Загружаем презентацию
-prs = Presentation("C:/Users/guzal/Downloads/parser/PPData/FDTemp.pptx")
+prs = Presentation(os.path.join(os.getenv('USERPROFILE'), 'Downloads', 'parser', 'PPData', 'FDTemp.pptx'))
+
 
 # slide_layout = root.slide_layouts[1]
 # slide = root.slides.add_slide(slide_layout)
@@ -57,5 +60,7 @@ prs = Presentation("C:/Users/guzal/Downloads/parser/PPData/FDTemp.pptx")
 # title_placeholder.text = str("A" + str(len(title_placeholder.text)))
 # content_placeholder.text = str(content)
 
+print({folder_name})
 if folder_name:
-    prs.save(f"C:/Users/guzal/Downloads/work/{folder_name}.pptx")
+    prs.save(os.path.join(work_folder, f"{folder_name}.pptx"))
+
