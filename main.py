@@ -60,7 +60,6 @@ prs = Presentation(os.path.join(os.getenv('USERPROFILE'), 'Downloads', 'parser',
 # title_placeholder.text = str("A" + str(len(title_placeholder.text)))
 # content_placeholder.text = str(content)
 
-print({folder_name})
 if folder_name:
     prs.save(os.path.join(work_folder, f"{folder_name}.pptx"))
 
