@@ -28,7 +28,7 @@ if excel_files:
     with warnings.catch_warnings():
         warnings.simplefilter("ignore")
         book = load_workbook(filename=excel_file_path)
-        print(f"Файл Excel {os.path.basename(excel_file_path)} найден в папке {os.path.dirname(excel_file_path)}.")
+        print(f"Excel файл {os.path.basename(excel_file_path)} найден в папке {os.path.dirname(excel_file_path)}.")
 
         # Извлекаем имя папки из пути
         folder_name = os.path.basename(os.path.dirname(excel_file_path))
