@@ -1,13 +1,13 @@
 import os
 import warnings
 import pandas as pd
+from openpyxl.styles import Alignment
 from pptx.dml.color import RGBColor
 from openpyxl import load_workbook
 from pptx import Presentation
 from datetime import datetime
 from pptx.util import Inches, Pt, Cm
 from pptx.enum.text import PP_PARAGRAPH_ALIGNMENT
-
 
 # Путь к папке work
 user_profile = os.getenv('USERPROFILE')
@@ -173,7 +173,8 @@ df = pd.DataFrame(slideThree_data).iloc[0:9, 14:18]
 sub_up_df = pd.DataFrame(slideThree_data).iloc[1:2, 1:13]
 sub_lower_df = pd.DataFrame(slideThree_data).iloc[2:3, 1:13]
 
-
+value = sub_up_df.iloc[0, 2]
+print(value)
 # Получаем количество строк и столбцов в таблице
 num_rows, num_cols = df.shape
 sub_up_num_rows, sub_up_num_cols = sub_up_df.shape
@@ -185,9 +186,9 @@ top = Inches(6.2)
 width = Inches(7.1)
 height = Inches(3.5)
 
-sub_up_left = Inches(1.05)
-sub_up_top = Inches(2.65)
-sub_up_width = Inches(6.25)
+sub_up_left = Inches(1)
+sub_up_top = Inches(2.5)
+sub_up_width = Inches(5.9)
 sub_up_height = Inches(0.4)
 
 sub_lower_left = Inches(1.05)
@@ -198,7 +199,9 @@ sub_lower_height = Inches(0.4)
 # Добавляем таблицу на слайд
 table = prs.slides[3].shapes.add_table(9, 3, left, top, width, height).table
 sub_up_table = prs.slides[3].shapes.add_table(1, 12, sub_up_left, sub_up_top, sub_up_width, sub_up_height).table
-sub_lower_table = prs.slides[3].shapes.add_table(1, 12, sub_lower_left, sub_lower_top, sub_lower_width, sub_lower_height).table
+sub_lower_table = prs.slides[3].shapes.add_table(1, 12, sub_lower_left, sub_lower_top, sub_lower_width,
+                                                 sub_lower_height).table
+
 
 # Функция для форматирования значения
 def format_value(value):
@@ -213,6 +216,22 @@ def format_value(value):
         return str(value) if value is not None else ""
 
 
+def fill_table_from_df(data_frame, taret_table):
+    # Определение количества строк и столбцов в DataFrame
+    temp_num_rows, temp_num_cols = data_frame.shape
+    # Проход по каждой строке DataFrame
+    for rows in range(temp_num_rows):
+        # Проход по каждому столбцу DataFrame
+        for col in range(temp_num_cols):
+            # Получение значения из DataFrame
+            temp_value = data_frame.iloc[rows, col]
+            # Получение ячейки таблицы PowerPoint
+            temp_cell = taret_table.cell(rows, col)
+            # Преобразование значения в строку и запись в ячейку таблицы
+            temp_cell.text = str(int(temp_value)) if isinstance(temp_value, float) else str(temp_value)
+            temp_cell.text_frame.paragraphs[0].font.size = Pt(18)
+
+
 # Заполнение таблицы данными из DataFrame и центрирование текста
 for r in range(num_rows):
     for c in range(num_cols):
@@ -222,32 +241,31 @@ for r in range(num_rows):
         if c == 1 or c == 2:
             cell.text_frame.paragraphs[0].alignment = PP_PARAGRAPH_ALIGNMENT.CENTER
 
-for r in range(sub_up_num_rows):
-    for c in range(sub_up_num_cols):
-        value = sub_up_df.iloc[r, c]
-        cell = sub_up_table.cell(r, c)
-        cell.text = str(value)
+# Применение функции для заполнения верхней и нижней таблиц из DataFrame
+fill_table_from_df(sub_up_df, sub_up_table)
+fill_table_from_df(sub_lower_df, sub_lower_table)
 
-for r in range(sub_lower_num_rows):
-    for c in range(sub_lower_num_cols):
-        value = sub_lower_df.iloc[r, c]
-        cell = sub_lower_table.cell(r, c)
-        cell.text = str(value)
-        cell.text_frame.paragraphs[0].font.size = Pt(10)
+sub_up_table.cell(0, 0).text_frame.paragraphs[0].alignment = PP_PARAGRAPH_ALIGNMENT.CENTER
+sub_up_table.columns[0].width = Inches(0.6)
+sub_up_table.columns[1].width = Inches(0.6)
+sub_up_table.columns[5].width = Inches(0.6)
+sub_up_table.columns[6].width = Inches(0.5)
+sub_up_table.columns[10].width = Inches(0.6)
 
-sub_lower_table.columns[0].width = Inches(0.8)
+sub_lower_table.cell(0, 0).text_frame.paragraphs[0].alignment = PP_PARAGRAPH_ALIGNMENT.CENTER
+sub_lower_table.columns[0].width = Inches(0.9)
+sub_lower_table.columns[1].width = Inches(0.5)
+sub_lower_table.columns[3].width = Inches(0.4)
 sub_lower_table.columns[4].width = Inches(0.4)
 sub_lower_table.columns[5].width = Inches(0.4)
 sub_lower_table.columns[6].width = Inches(0.4)
 sub_lower_table.columns[7].width = Inches(0.4)
-sub_lower_table.columns[11].width = Inches(0.8)
+sub_lower_table.columns[10].width = Inches(0.6)
 
 # Устанавливаем текст "Индекс Тона" в ячейку
 table.cell(4, 0).text = "Индекс Тона"
 # Объединяем ячейки 4 и 5 в первом столбце
 table.cell(4, 0).merge(table.cell(5, 0))
-
-
 
 # Устанавливаем прозрачный цвет заливки для каждой ячейки таблицы
 for row in sub_up_table.rows:
@@ -261,7 +279,6 @@ for row in sub_lower_table.rows:
         cell.fill.solid()
         cell.text_frame.paragraphs[0].font.color.rgb = RGBColor(0, 0, 0)
         cell.fill.fore_color.rgb = RGBColor(255, 255, 255)
-
 
 if folder_name:
     prs.save(os.path.join(work_folder, f"{folder_name}.pptx"))
