@@ -1,7 +1,6 @@
 import os
 import warnings
 import pandas as pd
-from openpyxl.styles import Alignment
 from pptx.dml.color import RGBColor
 from openpyxl import load_workbook
 from pptx import Presentation
@@ -21,9 +20,6 @@ folder_name = None
 
 # Глобальная переменная для хранения Excel файла
 wb = None
-
-# Расширения для изображений
-extensions = ['.jpg', '.jpeg', '.png']
 
 # Путь к файлу Excel с таблицей
 # Рекурсивно обходим все подпапки внутри папки work
@@ -49,12 +45,61 @@ else:
 
 # Загружаем презентацию
 prs = Presentation(os.path.join(os.getenv('USERPROFILE'), 'Downloads', 'parser', 'PPData', 'FDTemp.pptx'))
+image_folder = os.path.join(work_folder, folder_name)
 
-# Слайд № 1
+# -----------------------------------------------------------------------------------------
+# Определение параметров текстового блока
+left = Inches(6.9)
+top = Inches(7.9)
+width = Inches(3)
+height = Inches(2)
+
+# Список индексов слайдов, для которых нужно создать текстовые блоки
+slide_indexes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]
+
+# Цикл для создания текстовых блоков на каждом слайде
+for index in slide_indexes:
+    name_textbox = prs.slides[index].shapes.add_textbox(left, top, width, height)
+    name_textbox.rotation = 270
+    tf = name_textbox.text_frame
+    tf.word_wrap = True
+    p = tf.add_paragraph()
+    p.text = f"{folder_name}"
+    p.font.bold = False
+    p.font.size = Pt(15)
+
+
+# Функция для вставки изображений на слайд
+
+def insert_images(names, positions, idx):
+    """
+      Функция для добавления изображений на конкретный слайд презентации.
+      Args:
+          names (list): Список имен изображений.
+          positions (list): Словарь с позициями изображений для каждого слайда.
+          idx (int): Индекс слайда, на который добавляются изображения.
+      """
+    extensions = [".jpg", ".png", ".jpeg", ".gif"]  # Расширения изображений для проверки
+    slide = prs.slides[idx]  # Получаем слайд по индексу
+
+    for name, position in zip(names, positions):
+        found_image = False
+        for extension in extensions:
+            image_path = os.path.join(image_folder, name + extension)
+            if os.path.exists(image_path):
+                img_left, img_top, img_width, img_height = position
+                slide.shapes.add_picture(image_path, img_left, img_top, img_width, img_height)
+                found_image = True
+                break  # Нашли изображение, прекращаем поиск расширения
+        if not found_image:
+            print(f"Изображение {name} не найдено на слайде {idx}.")
+
+
+# -----------------------------------------------------------------------------------------
 # Задаем имя пациента, врача и дату
 left = Inches(2.9)  # Расстояние от правого края слайда
 top = Inches(7.75)  # Расстояние от верхнего края слайда
-width = Inches(4)
+width = Inches(4)    # Ширина, чтобы занять всю ширину слайда
 height = Inches(0.5)  # Высота, чтобы занять всю высоту слайда
 name_textbox = prs.slides[0].shapes.add_textbox(left, top, width, height)
 tf = name_textbox.text_frame
@@ -63,9 +108,9 @@ p = tf.add_paragraph()
 p.text = f"{folder_name}"
 p.font.size = Pt(14)
 p.font.bold = False
-# -------------------------------------------------
+
 date_left = Inches(5)
-date_top = Inches(8.9)  # Расстояние от верхнего края слайда
+date_top = Inches(8.9)
 date_width = Inches(4)
 name_textbox = prs.slides[0].shapes.add_textbox(date_left, date_top, date_width, height)
 tf_date = name_textbox.text_frame
@@ -73,92 +118,27 @@ tf_date.word_wrap = True
 p_date = tf_date.add_paragraph()
 p_date.text = f"{datetime.today().strftime('%d.%m.%Y')}"
 # -------------------------------------------------------
-print("Первый слайд готов")
-# Слайд № 2
-# Задаем имя пациента вдоль правой границы
-left = Inches(6.9)  # Расстояние от правого края слайда
-top = Inches(7.9)  # Расстояние от верхнего края слайда
-width = Inches(3)
-height = Inches(2)  # Высота, чтобы занять всю высоту слайда
-name_textbox = prs.slides[1].shapes.add_textbox(left, top, width, height)
-name_textbox.rotation = 270
-tf = name_textbox.text_frame
-tf.word_wrap = True
-p = tf.add_paragraph()
-p.text = f"{folder_name}"
-p.font.bold = False
-p.font.size = Pt(14)
-# -------------------------------------------------------
-print("Второй слайд готов")
-# Слайд № 3
-# Вставляем изображения и ФИО пациента
-left = Inches(6.9)  # Расстояние от правого края слайда
-top = Inches(7.9)  # Расстояние от верхнего края слайда
-width = Inches(3)
-height = Inches(2)  # Высота, чтобы занять всю высоту слайда
-name_textbox = prs.slides[2].shapes.add_textbox(left, top, width, height)
-name_textbox.rotation = 270
-tf = name_textbox.text_frame
-tf.word_wrap = True
-p = tf.add_paragraph()
-p.text = f"{folder_name}"
-p.font.bold = False
-p.font.size = Pt(14)
 
+# Слайд № 1
+print("Слайд №1 сформирован")
+# -------------------------------------------------------
+
+# Слайд № 2
 # Массив имен изображений с префиксом папки
 # TODO image_names = [f"{folder_name}_{image}" for image in ["2.1", "2.2", "2.3", "2.4"]]
-image_names = ["2.1", "2.2", "2.3", "2.4", ]
-
-# Путь к моим изображениям
-image_folder = os.path.join(work_folder, folder_name)
-
-# Задаем путь к изображению
-image_paths = [os.path.join(image_folder, name) for name in image_names]
-
-# Размеры и положения областей для изображений
-image_positions = [
+images_name_2 = ["2q", "2w", "2e", "2r"]
+images_position_2 = [
     (Inches(0.4), Inches(1.5), Inches(2.6), Inches(3.6)),
     (Inches(5.4), Inches(1.5), Inches(2.6), Inches(3.6)),
     (Inches(0.7), Inches(7.8), Inches(3), Inches(3.6)),
     (Inches(4.5), Inches(7.8), Inches(3), Inches(3.6))
 ]
-
-# Устанавливаем размеры и позицию изображения на слайде
-# left = Inches(1)     # Левая граница изображения
-# top = Inches(1)      # Верхняя граница изображения
-# width = Inches(5)    # Ширина изображения
-# height = Inches(3)   # Высота изображения
-
-# Вставка изображений на слайд
-for image_name, position in zip(image_names, image_positions):
-    found_image = False
-    for extension in extensions:
-        image_path = os.path.join(image_folder, image_name + extension)
-        if os.path.exists(image_path):
-            left, top, width, height = position
-            prs.slides[2].shapes.add_picture(image_path, left, top, width, height)
-            found_image = True
-            break  # Нашли изображение, прекращаем поиск расширения
-    if not found_image:
-        print(f"Изображение {image_name} не найдено.")
+slide_index_2 = 2
+insert_images(images_name_2, images_position_2, slide_index_2)
+print("Слайд №2 сформирован")
 # -------------------------------------------------------
-print("Третий слайд готов")
 
-# Слайд № 4
-# Вставляем таблицу из Excel файла и ФИО пациента
-left = Inches(6.9)
-top = Inches(7.9)  # Расстояние от верхнего края слайда
-width = Inches(3)
-height = Inches(2)
-name_textbox = prs.slides[3].shapes.add_textbox(left, top, width, height)
-name_textbox.rotation = 270
-tf = name_textbox.text_frame
-tf.word_wrap = True
-p = tf.add_paragraph()
-p.text = f"{folder_name}"
-p.font.bold = False
-p.font.size = Pt(14)
-
+# Слайд № 3
 ws = wb["Лист2"]
 
 # Создаем пустой DataFrame
@@ -174,7 +154,6 @@ sub_up_df = pd.DataFrame(slideThree_data).iloc[1:2, 1:13]
 sub_lower_df = pd.DataFrame(slideThree_data).iloc[2:3, 1:13]
 
 value = sub_up_df.iloc[0, 2]
-print(value)
 # Получаем количество строк и столбцов в таблице
 num_rows, num_cols = df.shape
 sub_up_num_rows, sub_up_num_cols = sub_up_df.shape
@@ -199,21 +178,20 @@ sub_lower_height = Inches(0.4)
 # Добавляем таблицу на слайд
 table = prs.slides[3].shapes.add_table(9, 3, left, top, width, height).table
 sub_up_table = prs.slides[3].shapes.add_table(1, 12, sub_up_left, sub_up_top, sub_up_width, sub_up_height).table
-sub_lower_table = prs.slides[3].shapes.add_table(1, 12, sub_lower_left, sub_lower_top, sub_lower_width,
-                                                 sub_lower_height).table
+sub_lower_table = prs.slides[3].shapes.add_table(1, 12, sub_lower_left, sub_lower_top, sub_lower_width, sub_lower_height).table
 
 
 # Функция для форматирования значения
-def format_value(value):
-    if isinstance(value, (float, int)):
+def format_value(target_value):
+    if isinstance(target_value, (float, int)):
         if (r == 7 and c == 1) or (r == 7 and c == 2) or (r == 8 and c == 1):
             # Форматирование процентного значения
             return "{:.2f}%".format(value * 100)
         else:
             # Округление числовых значений до сотых
-            return str(round(value, 2))
+            return str(round(target_value, 2))
     else:
-        return str(value) if value is not None else ""
+        return str(target_value) if target_value is not None else ""
 
 
 def fill_table_from_df(data_frame, taret_table):
@@ -279,6 +257,48 @@ for row in sub_lower_table.rows:
         cell.fill.solid()
         cell.text_frame.paragraphs[0].font.color.rgb = RGBColor(0, 0, 0)
         cell.fill.fore_color.rgb = RGBColor(255, 255, 255)
+print("Слайд №3 сформирован")
+# -------------------------------------------------------
+
+# Слайд № 4
+# Массив имен изображений с префиксом папки
+# TODO image_names = [f"{folder_name}_{image}" for image in ["2.1", "2.2", "2.3", "2.4"]]
+images_name_4 = ["4q", "4w", "4e", "4r", "4t", "4y"]
+images_position_4 = [
+    (Inches(1.1), Inches(1.1), Inches(2.4), Inches(2.4)),
+    (Inches(4.7), Inches(1.1), Inches(2.4), Inches(2.4)),
+    (Inches(1.1), Inches(3.55), Inches(2.4), Inches(2.4)),
+    (Inches(4.7), Inches(3.55), Inches(2.4), Inches(2.4)),
+    (Inches(1), Inches(8.4), Inches(2.7), Inches(2.8)),
+    (Inches(3.8), Inches(8.7), Inches(3.8), Inches(2.4))
+]
+slide_index_4 = 4
+insert_images(images_name_4, images_position_4, slide_index_4)
+print("Слайд №4 сформирован")
+# -------------------------------------------------------
+
+# Слайд № 5
+# Размеры и положения областей для изображений
+# left = Inches(1)     # Левая граница изображения
+# top = Inches(1)      # Верхняя граница изображения
+# width = Inches(5)    # Ширина изображения
+# height = Inches(3)   # Высота изображения
+
+# Массив имен изображений с префиксом папки
+# TODO image_names = [f"{folder_name}_{image}" for image in ["5q", "5w", "5e", "5r", "5t", "5y"]]
+images_name_5 = ["5q", "5w", "5e", "5r", "5t", "5y"]
+images_position_5 = [
+    (Inches(1), Inches(1.1), Inches(2.4), Inches(2.4)),
+    (Inches(4.7), Inches(1.1), Inches(2.4), Inches(2.4)),
+    (Inches(1.1), Inches(3.55), Inches(2.4), Inches(2.4)),
+    (Inches(4.7), Inches(3.55), Inches(2.4), Inches(2.4)),
+    (Inches(1), Inches(8.4), Inches(2.7), Inches(2.8)),
+    (Inches(3.8), Inches(8.7), Inches(3.8), Inches(2.4))
+]
+slide_index_5 = 5
+insert_images(images_name_5, images_position_5, slide_index_5)
+print("Слайд №5 сформирован")
+# -------------------------------------------------------
 
 if folder_name:
     prs.save(os.path.join(work_folder, f"{folder_name}.pptx"))
