@@ -329,12 +329,6 @@ print("Слайд №6 сформирован")
 # -------------------------------------------------------
 
 # Слайд № 7
-# Размеры и положения областей для изображений
-# left = Inches(1)     # Левая граница изображения
-# top = Inches(1)      # Верхняя граница изображения
-# width = Inches(5)    # Ширина изображения
-# height = Inches(3)   # Высота изображения
-
 # Массив имен изображений с префиксом папки
 # TODO image_names = [f"{folder_name}_{image}" for image in ["9", "6"]]
 images_name_7 = ["9", "6"]
@@ -347,6 +341,40 @@ insert_images(images_name_7, images_position_7, slide_index_7)
 print("Слайд №7 сформирован")
 # -------------------------------------------------------
 
+# Слайд № 8
+# Размеры и положения областей для изображений
+# TODO image_names = [f"{folder_name}_{image}" for image in ["3", "33", "44"]]
+images_name_8 = ["3", "33", "44"]
+images_position_8 = [
+    (Inches(1.5), Inches(1.2), Inches(5.5), Inches(5.5)),
+
+    (Inches(0.5), Inches(7.5), Inches(3.5), Inches(3.5)),
+    (Inches(4.1), Inches(7.5), Inches(3.5), Inches(3.5)),
+]
+slide_index_8 = 8
+insert_images(images_name_8, images_position_8, slide_index_8)
+print("Слайд №8 сформирован")
+# -------------------------------------------------------
+
+# Слайд № 9
+# Размеры и положения областей для изображений
+# left = Inches(1)     # Левая граница изображения
+# top = Inches(1)      # Верхняя граница изображения
+# width = Inches(5)    # Ширина изображения
+# height = Inches(3)   # Высота изображения
+
+# Массив имен изображений с префиксом папки
+# TODO image_names = [f"{folder_name}_{image}" for image in ["11", "вч", "нч"]]
+images_name_9 = ["11", "вч", "нч"]
+images_position_9 = [
+    (Inches(0.5), Inches(1.2), Inches(7.4), Inches(3.4)),
+    (Inches(0.5), Inches(5.1), Inches(7.2), Inches(3.8)),
+    (Inches(0.5), Inches(7.8), Inches(7.2), Inches(3.8)),
+]
+slide_index_9 = 9
+insert_images(images_name_9, images_position_9, slide_index_9)
+print("Слайд №9 сформирован")
+# -------------------------------------------------------
 
 if folder_name:
     prs.save(os.path.join(work_folder, f"{folder_name}.pptx"))
