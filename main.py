@@ -279,11 +279,6 @@ print("Слайд №4 сформирован")
 
 # Слайд № 5
 # Размеры и положения областей для изображений
-# left = Inches(1)     # Левая граница изображения
-# top = Inches(1)      # Верхняя граница изображения
-# width = Inches(5)    # Ширина изображения
-# height = Inches(3)   # Высота изображения
-
 # Массив имен изображений с префиксом папки
 # TODO image_names = [f"{folder_name}_{image}" for image in ["5q", "5w", "5e", "5r", "5t", "5y", 5u]]
 images_name_5 = ["5q", "5w", "5e", "5r", "5t", "5y", "5u"]
@@ -302,6 +297,37 @@ slide_index_5 = 5
 insert_images(images_name_5, images_position_5, slide_index_5)
 print("Слайд №5 сформирован")
 # -------------------------------------------------------
+
+
+# Слайд № 6
+# Размеры и положения областей для изображений
+# left = Inches(1)     # Левая граница изображения
+# top = Inches(1)      # Верхняя граница изображения
+# width = Inches(5)    # Ширина изображения
+# height = Inches(3)   # Высота изображения
+
+# Массив имен изображений с префиксом папки
+# TODO image_names = [f"{folder_name}_{image}" for image in ["6q", "6w", "6e", "6r", "6t", "6y", "6u", "6i", "6o"]]
+images_name_6 = ["6q", "6w", "6e", "6r", "6t", "6y", "6u", "6i", "6o"]
+images_position_6 = [
+    (Inches(0.7), Inches(1.1), Inches(3.2), Inches(1.7)),
+    (Inches(4), Inches(1.1), Inches(3), Inches(1.6)),
+
+    (Inches(0.7), Inches(2.95), Inches(3.2), Inches(1.7)),
+    (Inches(4), Inches(3), Inches(3), Inches(1.6)),
+
+    (Inches(0.7), Inches(4.8), Inches(3.2), Inches(1.7)),
+    (Inches(4), Inches(4.9), Inches(3), Inches(1.6)),
+
+    (Inches(0.5), Inches(9.1), Inches(2.4), Inches(2)),
+    (Inches(2.9), Inches(9.1), Inches(2.4), Inches(2)),
+    (Inches(5.3), Inches(9.1), Inches(2.4), Inches(2))
+]
+slide_index_6 = 6
+insert_images(images_name_6, images_position_6, slide_index_6)
+print("Слайд №6 сформирован")
+# -------------------------------------------------------
+
 
 if folder_name:
     prs.save(os.path.join(work_folder, f"{folder_name}.pptx"))
