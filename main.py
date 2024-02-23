@@ -370,12 +370,6 @@ print("Слайд №9 сформирован")
 # -------------------------------------------------------
 
 # Слайд № 10
-# Размеры и положения областей для изображений
-# left = Inches(1)     # Левая граница изображения
-# top = Inches(1)      # Верхняя граница изображения
-# width = Inches(5)    # Ширина изображения
-# height = Inches(3)   # Высота изображения
-
 # Массив имен изображений с префиксом папки
 # TODO image_names = [f"{folder_name}_{image}" for image in ["11", "вч", "нч"]]
 images_name_10 = ["22", "1", "2"]
@@ -387,6 +381,37 @@ images_position_10 = [
 slide_index_10 = 10
 insert_images(images_name_10, images_position_10, slide_index_10)
 print("Слайд №10 сформирован")
+# -------------------------------------------------------
+
+# Слайд № 11
+# TODO image_names = [f"{folder_name}_{image}" for image in ["222", "333"]]
+images_name_11 = ["222", "333"]
+images_position_11 = [
+    (Inches(0.5), Inches(1.3), Inches(7.1), Inches(4.7)),
+    (Inches(0.5), Inches(6.6), Inches(7.1), Inches(4.7)),
+]
+slide_index_11 = 11
+insert_images(images_name_11, images_position_11, slide_index_11)
+print("Слайд №11 сформирован")
+# -------------------------------------------------------
+
+# Слайд № 12
+# Размеры и положения областей для изображений
+# left = Inches(1)     # Левая граница изображения
+# top = Inches(1)      # Верхняя граница изображения
+# width = Inches(5)    # Ширина изображения
+# height = Inches(3)   # Высота изображения
+
+# Массив имен изображений с префиксом папки
+# TODO image_names = [f"{folder_name}_{image}" for image in ["222", "333"]]
+images_name_12 = ["222", "333"]
+images_position_12 = [
+    (Inches(0.5), Inches(1.3), Inches(7.1), Inches(4.7)),
+    (Inches(0.5), Inches(6.6), Inches(7.1), Inches(4.7)),
+]
+slide_index_12 = 12
+insert_images(images_name_12, images_position_12, slide_index_12)
+print("Слайд №12 сформирован")
 # -------------------------------------------------------
 if folder_name:
     prs.save(os.path.join(work_folder, f"{folder_name}.pptx"))
