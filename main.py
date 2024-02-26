@@ -7,6 +7,7 @@ from pptx import Presentation
 from datetime import datetime
 from pptx.util import Inches, Pt, Cm
 from pptx.enum.text import PP_PARAGRAPH_ALIGNMENT
+from pptx.enum.dml import MSO_THEME_COLOR_INDEX
 
 # Путь к папке work
 user_profile = os.getenv('USERPROFILE')
@@ -96,10 +97,25 @@ def insert_images(names, positions, idx):
 
 
 # -----------------------------------------------------------------------------------------
+# Функция для форматирования значения
+def format_value(target_value):
+    if isinstance(target_value, (float, int)):
+        if (r == 7 and c == 1) or (r == 7 and c == 2) or (r == 8 and c == 1):
+            # Форматирование процентного значения
+            return "{:.2f}%".format(value * 100)
+        else:
+            # Округление числовых значений до сотых
+            return str(round(target_value, 2))
+    else:
+        return str(target_value) if target_value is not None else ""
+
+
+# -----------------------------------------------------------------------------------------
+
 # Задаем имя пациента, врача и дату
 left = Inches(2.9)  # Расстояние от правого края слайда
 top = Inches(7.75)  # Расстояние от верхнего края слайда
-width = Inches(4)    # Ширина, чтобы занять всю ширину слайда
+width = Inches(4)  # Ширина, чтобы занять всю ширину слайда
 height = Inches(0.5)  # Высота, чтобы занять всю высоту слайда
 name_textbox = prs.slides[0].shapes.add_textbox(left, top, width, height)
 tf = name_textbox.text_frame
@@ -143,6 +159,46 @@ ws = wb["Лист2"]
 
 # Создаем пустой DataFrame
 slideThree_data = []
+slideThree_dataF = []
+for row in ws.iter_rows(min_row=2, max_row=3, min_col=2, max_col=12, values_only=True):
+    slideThree_dataF.append(list(row))
+
+slideThree_dataS = []
+for row in ws.iter_rows(min_row=2, max_row=9, min_col=16, max_col=17, values_only=True):
+    slideThree_dataS.append(list(row))
+
+print(slideThree_dataF)
+print(slideThree_dataS)
+
+# Размер и положение данных на слайде
+left = Inches(3.7)  # Левая граница
+top = Inches(5.52)  # Верхняя граница
+cell_width = Inches(1.5)  # Ширина ячейки
+cell_height = Inches(0)  # Высота ячейки
+font_size = Pt(12)  # Размер шрифта
+horizontal_spacing = Inches(1)  # Горизонтальный интервал между ячейками
+vertical_spacing = Inches(0.28)  # Вертикальный интервал между ячейками
+
+# Переменные для отслеживания текущей позиции в таблице
+current_left = left
+current_top = top
+
+# Размещение данных на слайде
+for row_data in slideThree_dataS:
+    for value in row_data:
+        # Добавление текстового блока на слайд с текущими координатами
+        text_frame = prs.slides[3].shapes.add_textbox(current_left, current_top, cell_width, cell_height).text_frame
+        # Запись значения в текстовый блок
+        p = text_frame.add_paragraph()
+        p.text = str(value)
+        # Установка размера шрифта
+        p.font.size = font_size
+        # Переход к следующей ячейке справа
+        current_left += cell_width + horizontal_spacing
+    # Переход к следующей строке сверху
+    current_top += cell_height + vertical_spacing
+    # Сброс горизонтальной позиции
+    current_left = left
 
 # Проходимся по строкам и столбцам в Excel и добавляем их в DataFrame
 for row in ws.iter_rows(values_only=True):
@@ -161,37 +217,25 @@ sub_lower_num_rows, sub_lower_num_cols = sub_lower_df.shape
 
 # Определяем размеры и позицию таблицы на слайде
 left = Inches(0.55)
-top = Inches(6.2)
+top = Inches(9)
 width = Inches(7.1)
 height = Inches(3.5)
 
 sub_up_left = Inches(1)
-sub_up_top = Inches(2.5)
-sub_up_width = Inches(5.9)
-sub_up_height = Inches(0.4)
+sub_up_top = Inches(2.2)
+sub_up_width = Inches(6)
+sub_up_height = Inches(0.3)
 
 sub_lower_left = Inches(1.05)
-sub_lower_top = Inches(3.67)
+sub_lower_top = Inches(3.8)
 sub_lower_width = Inches(6.2)
-sub_lower_height = Inches(0.4)
+sub_lower_height = Inches(0.3)
 
 # Добавляем таблицу на слайд
-table = prs.slides[3].shapes.add_table(9, 3, left, top, width, height).table
+# table = prs.slides[3].shapes.add_table(9, 3, left, top, width, height).table
 sub_up_table = prs.slides[3].shapes.add_table(1, 12, sub_up_left, sub_up_top, sub_up_width, sub_up_height).table
-sub_lower_table = prs.slides[3].shapes.add_table(1, 12, sub_lower_left, sub_lower_top, sub_lower_width, sub_lower_height).table
-
-
-# Функция для форматирования значения
-def format_value(target_value):
-    if isinstance(target_value, (float, int)):
-        if (r == 7 and c == 1) or (r == 7 and c == 2) or (r == 8 and c == 1):
-            # Форматирование процентного значения
-            return "{:.2f}%".format(value * 100)
-        else:
-            # Округление числовых значений до сотых
-            return str(round(target_value, 2))
-    else:
-        return str(target_value) if target_value is not None else ""
+sub_lower_table = prs.slides[3].shapes.add_table(1, 12, sub_lower_left, sub_lower_top, sub_lower_width,
+                                                 sub_lower_height).table
 
 
 def fill_table_from_df(data_frame, taret_table):
@@ -211,13 +255,13 @@ def fill_table_from_df(data_frame, taret_table):
 
 
 # Заполнение таблицы данными из DataFrame и центрирование текста
-for r in range(num_rows):
-    for c in range(num_cols):
-        value = df.iloc[r, c]
-        cell = table.cell(r, c)
-        cell.text = format_value(value)
-        if c == 1 or c == 2:
-            cell.text_frame.paragraphs[0].alignment = PP_PARAGRAPH_ALIGNMENT.CENTER
+# for r in range(num_rows):
+#     for c in range(num_cols):
+#         value = df.iloc[r, c]
+#         cell = table.cell(r, c)
+#         cell.text = format_value(value)
+#         if c == 1 or c == 2:
+#             cell.text_frame.paragraphs[0].alignment = PP_PARAGRAPH_ALIGNMENT.CENTER
 
 # Применение функции для заполнения верхней и нижней таблиц из DataFrame
 fill_table_from_df(sub_up_df, sub_up_table)
@@ -225,7 +269,7 @@ fill_table_from_df(sub_lower_df, sub_lower_table)
 
 sub_up_table.cell(0, 0).text_frame.paragraphs[0].alignment = PP_PARAGRAPH_ALIGNMENT.CENTER
 sub_up_table.columns[0].width = Inches(0.6)
-sub_up_table.columns[1].width = Inches(0.6)
+sub_up_table.columns[1].width = Inches(0.7)
 sub_up_table.columns[5].width = Inches(0.6)
 sub_up_table.columns[6].width = Inches(0.5)
 sub_up_table.columns[10].width = Inches(0.6)
@@ -240,23 +284,27 @@ sub_lower_table.columns[6].width = Inches(0.4)
 sub_lower_table.columns[7].width = Inches(0.4)
 sub_lower_table.columns[10].width = Inches(0.6)
 
+
 # Устанавливаем текст "Индекс Тона" в ячейку
-table.cell(4, 0).text = "Индекс Тона"
+# table.cell(4, 0).text = "Индекс Тона"
 # Объединяем ячейки 4 и 5 в первом столбце
-table.cell(4, 0).merge(table.cell(5, 0))
+# table.cell(4, 0).merge(table.cell(5, 0))
+
 
 # Устанавливаем прозрачный цвет заливки для каждой ячейки таблицы
-for row in sub_up_table.rows:
-    for cell in row.cells:
-        cell.fill.solid()
-        cell.text_frame.paragraphs[0].font.color.rgb = RGBColor(0, 0, 0)
-        cell.fill.fore_color.rgb = RGBColor(255, 255, 255)
+def set_transparent_fill(t_table):
+    for t_row in t_table.rows:
+        for t_cell in t_row.cells:
+            t_cell.fill.solid()
+            t_cell.text_frame.paragraphs[0].font.color.rgb = RGBColor(0, 0, 0)
+            t_cell.fill.fore_color.rgb = RGBColor(255, 255, 255)
+            t_cell.fill.background()
 
-for row in sub_lower_table.rows:
-    for cell in row.cells:
-        cell.fill.solid()
-        cell.text_frame.paragraphs[0].font.color.rgb = RGBColor(0, 0, 0)
-        cell.fill.fore_color.rgb = RGBColor(255, 255, 255)
+
+# Применяем функцию к верхней и нижней таблицам
+set_transparent_fill(sub_up_table)
+set_transparent_fill(sub_lower_table)
+
 print("Слайд №3 сформирован")
 # -------------------------------------------------------
 
@@ -265,11 +313,11 @@ print("Слайд №3 сформирован")
 # TODO image_names = [f"{folder_name}_{image}" for image in ["2.1", "2.2", "2.3", "2.4"]]
 images_name_4 = ["4q", "4w", "4e", "4r", "4t", "4y"]
 images_position_4 = [
-    (Inches(1.1), Inches(1.1), Inches(2.4), Inches(2.4)),
-    (Inches(4.7), Inches(1.1), Inches(2.4), Inches(2.4)),
-    (Inches(1.1), Inches(3.55), Inches(2.4), Inches(2.4)),
-    (Inches(4.7), Inches(3.55), Inches(2.4), Inches(2.4)),
-    (Inches(1), Inches(8.4), Inches(2.7), Inches(2.8)),
+    (Inches(1.1), Inches(1.1), Inches(2.7), Inches(2.4)),
+    (Inches(4.7), Inches(1.1), Inches(2.7), Inches(2.4)),
+    (Inches(1.1), Inches(3.55), Inches(2.7), Inches(2.4)),
+    (Inches(4.7), Inches(3.55), Inches(2.7), Inches(2.4)),
+    (Inches(1), Inches(8.4), Inches(2.8), Inches(2.8)),
     (Inches(3.8), Inches(8.7), Inches(3.8), Inches(2.4))
 ]
 slide_index_4 = 4
@@ -346,7 +394,7 @@ print("Слайд №7 сформирован")
 # TODO image_names = [f"{folder_name}_{image}" for image in ["3", "33", "44"]]
 images_name_8 = ["444", "33", "44"]
 images_position_8 = [
-    (Inches(0.6), Inches(1.5), Inches(7), Inches(4.8)),
+    (Inches(0.6), Inches(1.5), Inches(7), Inches(4.6)),
 
     (Inches(0.5), Inches(7.5), Inches(3.5), Inches(3.5)),
     (Inches(4.1), Inches(7.5), Inches(3.5), Inches(3.5)),
@@ -416,13 +464,61 @@ print("Слайд №12 сформирован")
 # TODO image_names = [f"{folder_name}_{image}" for image in ["77", "88", "3", "000"]]
 images_name_13 = ["77", "88", "3", "000"]
 images_position_13 = [
-    (Inches(1.1), Inches(1.1), Inches(2.4), Inches(2.4)),
-    (Inches(4.7), Inches(1.1), Inches(2.4), Inches(2.4)),
-    (Inches(1.1), Inches(3.55), Inches(2.4), Inches(2.4)),
-    (Inches(4.7), Inches(3.55), Inches(2.4), Inches(2.4)),
+    (Inches(1.4), Inches(3.2), Inches(2.3), Inches(2.1)),
+    (Inches(4.8), Inches(3.2), Inches(2.3), Inches(2.1)),
+    (Inches(1), Inches(8.6), Inches(3), Inches(2.5)),
+    (Inches(4.5), Inches(8.6), Inches(3), Inches(2.5)),
 ]
 slide_index_13 = 13
 insert_images(images_name_13, images_position_13, slide_index_13)
+
+mt = wb["Лист1"]
+
+# Пустой DataFrame
+slideFour_data = []
+
+for row in mt.iter_rows(values_only=True):
+    slideFour_data.append(row)
+
+up_dff = pd.DataFrame(slideFour_data).iloc[8:14, 2:6]
+# lower_dff = pd.DataFrame(slideFour_data).iloc[14:24, 0:4]
+
+up_num_rows, up_num_cols = up_dff.shape
+# lower_num_rows, lower_num_cols = dff_lower.shape
+
+# Определяем размеры и позицию таблицы на слайде
+up_left = Inches(3.7)
+up_top = Inches(0.8)
+up_width = Inches(3)
+up_height = Inches(1)
+
+# lower_left = Inches(0.55)
+# lower_top = Inches(6.2)
+# lower_width = Inches(7.1)
+# lower_height = Inches(3.5)
+
+
+# Добавляем таблицу на слайд
+# up_table = prs.slides[13].shapes.add_table(6, 4, up_left, up_top, up_width, up_height).table
+up_table = prs.slides[0].shapes.add_table(6, 4, up_left, up_top, up_width, up_height).table
+# lower_table = prs.slides[13].shapes.add_table(9, 3, lower_left, lower_top, lower_width, lower_height).table
+
+# # Применение функции для заполнения верхней и нижней таблиц из DataFrame
+# fill_table_from_df(up_dff, up_table)
+# Стилизация верхней таблицы
+for r in range(up_num_rows):
+    for c in range(up_num_cols):
+        value = up_dff.iloc[r, c]
+        cell = up_table.cell(r, c)
+        cell.text = format_value(value)
+        cell.fill.solid()
+        cell.fill.fore_color.rgb = RGBColor(255, 255, 255)
+        cell.fill.fore_color.theme_color = MSO_THEME_COLOR_INDEX.LIGHT_1
+        cell.text_frame.paragraphs[0].font.size = Pt(14)
+        cell.text_frame.paragraphs[0].alignment = PP_PARAGRAPH_ALIGNMENT.CENTER
+        # cell.fill.background()
+        # if c == 1 or c == 2:
+
 print("Слайд №13 сформирован")
 # -------------------------------------------------------
 
