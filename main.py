@@ -98,16 +98,16 @@ def insert_images(names, positions, idx):
 
 # -----------------------------------------------------------------------------------------
 # Функция для форматирования значения
-def format_value(target_value):
-    if isinstance(target_value, (float, int)):
-        if (r == 7 and c == 1) or (r == 7 and c == 2) or (r == 8 and c == 1):
-            # Форматирование процентного значения
-            return "{:.2f}%".format(value * 100)
-        else:
-            # Округление числовых значений до сотых
-            return str(round(target_value, 2))
-    else:
-        return str(target_value) if target_value is not None else ""
+# def format_value(target_value):
+#     if isinstance(target_value, (float, int)):
+#         if (r == 7 and c == 1) or (r == 7 and c == 2) or (r == 8 and c == 1):
+#             # Форматирование процентного значения
+#             return "{:.2f}%".format(value * 100)
+#         else:
+#             # Округление числовых значений до сотых
+#             return str(round(target_value, 2))
+#     else:
+#         return str(target_value) if target_value is not None else ""
 
 
 # -----------------------------------------------------------------------------------------
@@ -159,46 +159,57 @@ ws = wb["Лист2"]
 
 # Создаем пустой DataFrame
 slideThree_data = []
-slideThree_dataF = []
-for row in ws.iter_rows(min_row=2, max_row=3, min_col=2, max_col=12, values_only=True):
-    slideThree_dataF.append(list(row))
-
-slideThree_dataS = []
+slideThree_MT = []
 for row in ws.iter_rows(min_row=2, max_row=9, min_col=16, max_col=17, values_only=True):
-    slideThree_dataS.append(list(row))
+    slideThree_MT.append(list(row))
 
-print(slideThree_dataF)
-print(slideThree_dataS)
+print(slideThree_MT)
 
 # Размер и положение данных на слайде
-left = Inches(3.7)  # Левая граница
-top = Inches(5.52)  # Верхняя граница
-cell_width = Inches(1.5)  # Ширина ячейки
-cell_height = Inches(0)  # Высота ячейки
+current_left = Inches(2.8)  # Левая граница
+current_top = Inches(5.53)  # Верхняя граница
+cell_width = Inches(2.5)  # Ширина ячейки
+cell_height = Inches(0.27)  # Высота ячейки
 font_size = Pt(12)  # Размер шрифта
-horizontal_spacing = Inches(1)  # Горизонтальный интервал между ячейками
-vertical_spacing = Inches(0.28)  # Вертикальный интервал между ячейками
 
-# Переменные для отслеживания текущей позиции в таблице
-current_left = left
-current_top = top
+
+def transform_data(data):
+    transformed_data = []
+    for idx, sublist in enumerate(data):
+        transformed_sublist = []
+        for item in sublist:
+            if isinstance(item, (int, float)):
+                # Проверяем, является ли текущий подсписок последним или предпоследним в массиве данных
+                if idx == len(data) - 2 or idx == len(data) - 1:
+                    transformed_sublist.append('{:.1f}%'.format(item * 100).replace('.', ','))
+                else:
+                    transformed_sublist.append(round(item, 2))
+            else:
+                transformed_sublist.append(item)
+        transformed_data.append(transformed_sublist)
+    return transformed_data
+
+
+
+
+transformed_dataframe = transform_data(slideThree_MT)
+print(transformed_dataframe)
+
 
 # Размещение данных на слайде
-for row_data in slideThree_dataS:
-    for value in row_data:
+for i, row_data in enumerate(transformed_dataframe):
+    for j, value in enumerate(row_data):
+        # Рассчитываем координаты для текущей ячейки
+        cell_left = current_left + j * cell_width
+        cell_top = current_top + i * cell_height
+
         # Добавление текстового блока на слайд с текущими координатами
-        text_frame = prs.slides[3].shapes.add_textbox(current_left, current_top, cell_width, cell_height).text_frame
-        # Запись значения в текстовый блок
+        text_frame = prs.slides[3].shapes.add_textbox(cell_left, cell_top, cell_width, cell_height).text_frame
         p = text_frame.add_paragraph()
         p.text = str(value)
-        # Установка размера шрифта
         p.font.size = font_size
-        # Переход к следующей ячейке справа
-        current_left += cell_width + horizontal_spacing
-    # Переход к следующей строке сверху
-    current_top += cell_height + vertical_spacing
-    # Сброс горизонтальной позиции
-    current_left = left
+        p.font.name = "Montserrat Medium"
+        p.alignment = PP_PARAGRAPH_ALIGNMENT.CENTER
 
 # Проходимся по строкам и столбцам в Excel и добавляем их в DataFrame
 for row in ws.iter_rows(values_only=True):
@@ -209,36 +220,29 @@ df = pd.DataFrame(slideThree_data).iloc[0:9, 14:18]
 sub_up_df = pd.DataFrame(slideThree_data).iloc[1:2, 1:13]
 sub_lower_df = pd.DataFrame(slideThree_data).iloc[2:3, 1:13]
 
-value = sub_up_df.iloc[0, 2]
 # Получаем количество строк и столбцов в таблице
 num_rows, num_cols = df.shape
 sub_up_num_rows, sub_up_num_cols = sub_up_df.shape
 sub_lower_num_rows, sub_lower_num_cols = sub_lower_df.shape
 
 # Определяем размеры и позицию таблицы на слайде
-left = Inches(0.55)
-top = Inches(9)
-width = Inches(7.1)
-height = Inches(3.5)
-
-sub_up_left = Inches(1)
-sub_up_top = Inches(2.2)
+sub_up_left = Inches(0.9)
+sub_up_top = Inches(2.3)
 sub_up_width = Inches(6)
 sub_up_height = Inches(0.3)
 
 sub_lower_left = Inches(1.05)
 sub_lower_top = Inches(3.8)
-sub_lower_width = Inches(6.2)
+sub_lower_width = Inches(6.1)
 sub_lower_height = Inches(0.3)
 
 # Добавляем таблицу на слайд
-# table = prs.slides[3].shapes.add_table(9, 3, left, top, width, height).table
 sub_up_table = prs.slides[3].shapes.add_table(1, 12, sub_up_left, sub_up_top, sub_up_width, sub_up_height).table
 sub_lower_table = prs.slides[3].shapes.add_table(1, 12, sub_lower_left, sub_lower_top, sub_lower_width,
                                                  sub_lower_height).table
 
 
-def fill_table_from_df(data_frame, taret_table):
+def fill_table_from_df(data_frame, target_table):
     # Определение количества строк и столбцов в DataFrame
     temp_num_rows, temp_num_cols = data_frame.shape
     # Проход по каждой строке DataFrame
@@ -248,34 +252,25 @@ def fill_table_from_df(data_frame, taret_table):
             # Получение значения из DataFrame
             temp_value = data_frame.iloc[rows, col]
             # Получение ячейки таблицы PowerPoint
-            temp_cell = taret_table.cell(rows, col)
+            temp_cell = target_table.cell(rows, col)
             # Преобразование значения в строку и запись в ячейку таблицы
             temp_cell.text = str(int(temp_value)) if isinstance(temp_value, float) else str(temp_value)
-            temp_cell.text_frame.paragraphs[0].font.size = Pt(18)
+            temp_cell.text_frame.paragraphs[0].font.name = "Montserrat Medium"
 
-
-# Заполнение таблицы данными из DataFrame и центрирование текста
-# for r in range(num_rows):
-#     for c in range(num_cols):
-#         value = df.iloc[r, c]
-#         cell = table.cell(r, c)
-#         cell.text = format_value(value)
-#         if c == 1 or c == 2:
-#             cell.text_frame.paragraphs[0].alignment = PP_PARAGRAPH_ALIGNMENT.CENTER
 
 # Применение функции для заполнения верхней и нижней таблиц из DataFrame
 fill_table_from_df(sub_up_df, sub_up_table)
 fill_table_from_df(sub_lower_df, sub_lower_table)
 
 sub_up_table.cell(0, 0).text_frame.paragraphs[0].alignment = PP_PARAGRAPH_ALIGNMENT.CENTER
-sub_up_table.columns[0].width = Inches(0.6)
-sub_up_table.columns[1].width = Inches(0.7)
+sub_up_table.columns[0].width = Inches(0.75)
+sub_up_table.columns[1].width = Inches(0.55)
 sub_up_table.columns[5].width = Inches(0.6)
 sub_up_table.columns[6].width = Inches(0.5)
 sub_up_table.columns[10].width = Inches(0.6)
 
 sub_lower_table.cell(0, 0).text_frame.paragraphs[0].alignment = PP_PARAGRAPH_ALIGNMENT.CENTER
-sub_lower_table.columns[0].width = Inches(0.9)
+sub_lower_table.columns[0].width = Inches(0.92)
 sub_lower_table.columns[1].width = Inches(0.5)
 sub_lower_table.columns[3].width = Inches(0.4)
 sub_lower_table.columns[4].width = Inches(0.4)
@@ -510,7 +505,7 @@ for r in range(up_num_rows):
     for c in range(up_num_cols):
         value = up_dff.iloc[r, c]
         cell = up_table.cell(r, c)
-        cell.text = format_value(value)
+        cell.text = str(value)
         cell.fill.solid()
         cell.fill.fore_color.rgb = RGBColor(255, 255, 255)
         cell.fill.fore_color.theme_color = MSO_THEME_COLOR_INDEX.LIGHT_1
