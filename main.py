@@ -326,18 +326,18 @@ print("Слайд №5 сформирован")
 # TODO image_names = [f"{folder_name}_{image}" for image in ["6q", "6w", "6e", "6r", "6t", "6y", "6u", "6i", "6o"]]
 images_name_6 = ["6q", "6w", "6e", "6r", "6t", "6y", "6u", "6i", "6o"]
 images_position_6 = [
-    (Inches(0.7), Inches(1.1), Inches(3.2), Inches(1.7)),
-    (Inches(4), Inches(1.1), Inches(3), Inches(1.6)),
+    (Inches(0.8), Inches(1.1), Inches(3.2), Inches(1.7)),
+    (Inches(4.2), Inches(1.1), Inches(3), Inches(1.6)),
 
-    (Inches(0.7), Inches(2.95), Inches(3.2), Inches(1.7)),
-    (Inches(4), Inches(3), Inches(3), Inches(1.6)),
+    (Inches(0.8), Inches(2.95), Inches(3.2), Inches(1.7)),
+    (Inches(4.2), Inches(3), Inches(3), Inches(1.6)),
 
-    (Inches(0.7), Inches(4.8), Inches(3.2), Inches(1.7)),
-    (Inches(4), Inches(4.9), Inches(3), Inches(1.6)),
+    (Inches(0.8), Inches(4.8), Inches(3.2), Inches(1.7)),
+    (Inches(4.2), Inches(4.9), Inches(3), Inches(1.6)),
 
-    (Inches(0.5), Inches(9.1), Inches(2.4), Inches(2)),
-    (Inches(2.9), Inches(9.1), Inches(2.4), Inches(2)),
-    (Inches(5.3), Inches(9.1), Inches(2.4), Inches(2))
+    (Inches(0.5), Inches(9.2), Inches(2.4), Inches(2)),
+    (Inches(2.9), Inches(9.2), Inches(2.4), Inches(2)),
+    (Inches(5.3), Inches(9.2), Inches(2.4), Inches(2))
 ]
 slide_index_6 = 6
 insert_images(images_name_6, images_position_6, slide_index_6)
