@@ -297,15 +297,14 @@ print("Слайд №4 сформирован")
 # Слайд № 5
 # Размеры и положения областей для изображений
 # Массив имен изображений с префиксом папки
-# TODO image_names = [f"{folder_name}_{image}" for image in ["5q", "5w", "5e", "5r", "5t", "5y", 5u]]
-images_name_5 = ["5q", "5w", "5e", "5r", "5t", "5y", "5u"]
+# TODO image_names = [f"{folder_name}_{image}" for image in ["5q", "5w", "5e", "5r", "5t", "5y"]]
+images_name_5 = ["5q", "5w", "5e", "5r", "5t", "5y",]
 images_position_5 = [
     (Inches(0.6), Inches(1.2), Inches(3.3), Inches(3)),
     (Inches(4.4), Inches(1.2), Inches(3.3), Inches(3)),
 
     (Inches(0.6), Inches(5), Inches(3.1), Inches(3)),
     (Inches(4.5), Inches(5), Inches(3.1), Inches(3)),
-    (Inches(3.8), Inches(4.9), Inches(0.6), Inches(3.2)),
 
     (Inches(0.6), Inches(9.2), Inches(3.4), Inches(1.4)),
     (Inches(4.2), Inches(9.2), Inches(3.4), Inches(1.4))
