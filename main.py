@@ -97,20 +97,6 @@ def insert_images(names, positions, idx):
 
 
 # -----------------------------------------------------------------------------------------
-# Функция для форматирования значения
-# def format_value(target_value):
-#     if isinstance(target_value, (float, int)):
-#         if (r == 7 and c == 1) or (r == 7 and c == 2) or (r == 8 and c == 1):
-#             # Форматирование процентного значения
-#             return "{:.2f}%".format(value * 100)
-#         else:
-#             # Округление числовых значений до сотых
-#             return str(round(target_value, 2))
-#     else:
-#         return str(target_value) if target_value is not None else ""
-
-
-# -----------------------------------------------------------------------------------------
 
 # Задаем имя пациента, врача и дату
 left = Inches(2.9)  # Расстояние от правого края слайда
@@ -160,10 +146,9 @@ ws = wb["Лист2"]
 # Создаем пустой DataFrame
 slideThree_data = []
 slideThree_MT = []
+
 for row in ws.iter_rows(min_row=2, max_row=9, min_col=16, max_col=17, values_only=True):
     slideThree_MT.append(list(row))
-
-print(slideThree_MT)
 
 # Размер и положение данных на слайде
 current_left = Inches(2.8)  # Левая граница
@@ -190,11 +175,7 @@ def transform_data(data):
     return transformed_data
 
 
-
-
 transformed_dataframe = transform_data(slideThree_MT)
-print(transformed_dataframe)
-
 
 # Размещение данных на слайде
 for i, row_data in enumerate(transformed_dataframe):
@@ -280,19 +261,12 @@ sub_lower_table.columns[7].width = Inches(0.4)
 sub_lower_table.columns[10].width = Inches(0.6)
 
 
-# Устанавливаем текст "Индекс Тона" в ячейку
-# table.cell(4, 0).text = "Индекс Тона"
-# Объединяем ячейки 4 и 5 в первом столбце
-# table.cell(4, 0).merge(table.cell(5, 0))
-
-
 # Устанавливаем прозрачный цвет заливки для каждой ячейки таблицы
 def set_transparent_fill(t_table):
     for t_row in t_table.rows:
         for t_cell in t_row.cells:
             t_cell.fill.solid()
             t_cell.text_frame.paragraphs[0].font.color.rgb = RGBColor(0, 0, 0)
-            t_cell.fill.fore_color.rgb = RGBColor(255, 255, 255)
             t_cell.fill.background()
 
 
@@ -308,12 +282,12 @@ print("Слайд №3 сформирован")
 # TODO image_names = [f"{folder_name}_{image}" for image in ["2.1", "2.2", "2.3", "2.4"]]
 images_name_4 = ["4q", "4w", "4e", "4r", "4t", "4y"]
 images_position_4 = [
-    (Inches(1.1), Inches(1.1), Inches(2.7), Inches(2.4)),
-    (Inches(4.7), Inches(1.1), Inches(2.7), Inches(2.4)),
-    (Inches(1.1), Inches(3.55), Inches(2.7), Inches(2.4)),
-    (Inches(4.7), Inches(3.55), Inches(2.7), Inches(2.4)),
-    (Inches(1), Inches(8.4), Inches(2.8), Inches(2.8)),
-    (Inches(3.8), Inches(8.7), Inches(3.8), Inches(2.4))
+    (Inches(0.9), Inches(1.2), Inches(2.9), Inches(2.75)),
+    (Inches(4.4), Inches(1.2), Inches(2.9), Inches(2.75)),
+    (Inches(0.9), Inches(4), Inches(2.9), Inches(2.75)),
+    (Inches(4.4), Inches(4), Inches(2.9), Inches(2.75)),
+    (Inches(0.8), Inches(9.1), Inches(2.4), Inches(2.2)),
+    (Inches(4.3), Inches(9.3), Inches(3.2), Inches(2))
 ]
 slide_index_4 = 4
 insert_images(images_name_4, images_position_4, slide_index_4)
