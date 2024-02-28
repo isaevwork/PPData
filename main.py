@@ -349,8 +349,8 @@ print("Слайд №6 сформирован")
 # TODO image_names = [f"{folder_name}_{image}" for image in ["9", "6"]]
 images_name_7 = ["9", "6"]
 images_position_7 = [
-    (Inches(0.6), Inches(1.3), Inches(7), Inches(4)),
-    (Inches(0.6), Inches(5.8), Inches(7), Inches(4.6)),
+    (Inches(0.6), Inches(1.5), Inches(7), Inches(4)),
+    (Inches(0.6), Inches(6.3), Inches(7), Inches(4.6)),
 ]
 slide_index_7 = 7
 insert_images(images_name_7, images_position_7, slide_index_7)
