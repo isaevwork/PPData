@@ -336,7 +336,7 @@ images_position_6 = [
     (Inches(4.2), Inches(4.9), Inches(3), Inches(1.6)),
 
     (Inches(0.5), Inches(9.2), Inches(2.4), Inches(2)),
-    (Inches(2.9), Inches(9.2), Inches(2.4), Inches(2)),
+    (Inches(2.9), Inches(9.3), Inches(2.4), Inches(1.8)),
     (Inches(5.3), Inches(9.2), Inches(2.4), Inches(2))
 ]
 slide_index_6 = 6
@@ -358,14 +358,12 @@ print("Слайд №7 сформирован")
 # -------------------------------------------------------
 
 # Слайд № 8
-# Размеры и положения областей для изображений
-# TODO image_names = [f"{folder_name}_{image}" for image in ["3", "33", "44"]]
-images_name_8 = ["444", "33", "44"]
+# TODO image_names = [f"{folder_name}_{image}" for image in ["11", "вч", "нч"]]
+images_name_8 = ["11", "вч", "нч"]
 images_position_8 = [
-    (Inches(0.6), Inches(1.5), Inches(7), Inches(4.6)),
-
-    (Inches(0.5), Inches(7.5), Inches(3.5), Inches(3.5)),
-    (Inches(4.1), Inches(7.5), Inches(3.5), Inches(3.5)),
+    (Inches(0.5), Inches(1.1), Inches(7.4), Inches(3.4)),
+    (Inches(0.5), Inches(5.1), Inches(7.2), Inches(2.9)),
+    (Inches(0.5), Inches(8.5), Inches(7.2), Inches(2.9)),
 ]
 slide_index_8 = 8
 insert_images(images_name_8, images_position_8, slide_index_8)
@@ -373,12 +371,13 @@ print("Слайд №8 сформирован")
 # -------------------------------------------------------
 
 # Слайд № 9
-# TODO image_names = [f"{folder_name}_{image}" for image in ["11", "вч", "нч"]]
-images_name_9 = ["11", "вч", "нч"]
+# Массив имен изображений с префиксом папки
+# TODO image_names = [f"{folder_name}_{image}" for image in ["22", "1", "2"]]
+images_name_9 = ["22", "1", "2"]
 images_position_9 = [
-    (Inches(0.5), Inches(1.2), Inches(7.4), Inches(3.4)),
-    (Inches(0.5), Inches(5.1), Inches(7.2), Inches(3.8)),
-    (Inches(0.5), Inches(7.8), Inches(7.2), Inches(3.8)),
+    (Inches(0.4), Inches(1.8), Inches(7.6), Inches(3.2)),
+    (Inches(1.5), Inches(5.8), Inches(5.9), Inches(2.6)),
+    (Inches(1.5), Inches(8.7), Inches(5.9), Inches(2.6)),
 ]
 slide_index_9 = 9
 insert_images(images_name_9, images_position_9, slide_index_9)
@@ -386,13 +385,14 @@ print("Слайд №9 сформирован")
 # -------------------------------------------------------
 
 # Слайд № 10
-# Массив имен изображений с префиксом папки
-# TODO image_names = [f"{folder_name}_{image}" for image in ["11", "вч", "нч"]]
-images_name_10 = ["22", "1", "2"]
+# Размеры и положения областей для изображений
+# TODO image_names = [f"{folder_name}_{image}" for image in ["444", "33", "44"]]
+images_name_10 = ["444", "33", "44"]
 images_position_10 = [
-    (Inches(0.4), Inches(1.8), Inches(7.6), Inches(3.2)),
-    (Inches(1.4), Inches(5.8), Inches(5.7), Inches(2.6)),
-    (Inches(1.4), Inches(8.7), Inches(5.7), Inches(2.6)),
+    (Inches(0.6), Inches(1.5), Inches(7), Inches(4.6)),
+
+    (Inches(0.5), Inches(7.5), Inches(3.5), Inches(3.5)),
+    (Inches(4.1), Inches(7.5), Inches(3.5), Inches(3.5)),
 ]
 slide_index_10 = 10
 insert_images(images_name_10, images_position_10, slide_index_10)
