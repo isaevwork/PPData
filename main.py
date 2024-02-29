@@ -324,20 +324,17 @@ print("Слайд №5 сформирован")
 
 # Массив имен изображений с префиксом папки
 # TODO image_names = [f"{folder_name}_{image}" for image in ["6q", "6w", "6e", "6r", "6t", "6y", "6u", "6i", "6o"]]
-images_name_6 = ["6q", "6w", "6e", "6r", "6t", "6y", "6u", "6i", "6o"]
+images_name_6 = ["6q", "6w", "6e", "6r", "6t", "6y"]
 images_position_6 = [
-    (Inches(0.8), Inches(1.1), Inches(3.2), Inches(1.7)),
-    (Inches(4.2), Inches(1.1), Inches(3), Inches(1.6)),
+    (Inches(0.8), Inches(1.3), Inches(3.5), Inches(1.8)),
 
-    (Inches(0.8), Inches(2.95), Inches(3.2), Inches(1.7)),
-    (Inches(4.2), Inches(3), Inches(3), Inches(1.6)),
+    (Inches(0.8), Inches(3.15), Inches(3.5), Inches(1.8)),
 
-    (Inches(0.8), Inches(4.8), Inches(3.2), Inches(1.7)),
-    (Inches(4.2), Inches(4.9), Inches(3), Inches(1.6)),
+    (Inches(0.8), Inches(5), Inches(3.5), Inches(1.8)),
 
-    (Inches(0.5), Inches(9.2), Inches(2.4), Inches(2)),
-    (Inches(2.9), Inches(9.3), Inches(2.4), Inches(1.8)),
-    (Inches(5.3), Inches(9.2), Inches(2.4), Inches(2))
+    (Inches(0.8), Inches(7.1), Inches(2.6), Inches(2.2)),
+    (Inches(2.9), Inches(9.4), Inches(2.6), Inches(2.2)),
+    (Inches(5), Inches(7.1), Inches(2.6), Inches(2.2))
 ]
 slide_index_6 = 6
 insert_images(images_name_6, images_position_6, slide_index_6)
@@ -389,7 +386,7 @@ print("Слайд №9 сформирован")
 # TODO image_names = [f"{folder_name}_{image}" for image in ["444", "33", "44"]]
 images_name_10 = ["444", "33", "44"]
 images_position_10 = [
-    (Inches(0.6), Inches(1.5), Inches(7), Inches(4.6)),
+    (Inches(1.2), Inches(1.4), Inches(6), Inches(5.5)),
 
     (Inches(0.5), Inches(7.5), Inches(3.5), Inches(3.5)),
     (Inches(4.1), Inches(7.5), Inches(3.5), Inches(3.5)),
@@ -398,13 +395,15 @@ slide_index_10 = 10
 insert_images(images_name_10, images_position_10, slide_index_10)
 print("Слайд №10 сформирован")
 # -------------------------------------------------------
-
 # Слайд № 11
-# TODO image_names = [f"{folder_name}_{image}" for image in ["222", "333"]]
-images_name_11 = ["222", "333"]
+# Размеры и положения областей для изображений
+# TODO image_names = [f"{folder_name}_{image}" for image in ["4", "5", "55"]]
+images_name_11 = ["4", "5", "55"]
 images_position_11 = [
-    (Inches(0.5), Inches(1.3), Inches(7.1), Inches(4.7)),
-    (Inches(0.5), Inches(6.6), Inches(7.1), Inches(4.7)),
+    (Inches(0.6), Inches(1.4), Inches(3.5), Inches(3.8)),
+    (Inches(4.2), Inches(1.4), Inches(3.5), Inches(3.8)),
+
+    (Inches(1.4), Inches(5.8), Inches(5.4), Inches(5.6)),
 ]
 slide_index_11 = 11
 insert_images(images_name_11, images_position_11, slide_index_11)
@@ -412,10 +411,10 @@ print("Слайд №11 сформирован")
 # -------------------------------------------------------
 
 # Слайд № 12
-# TODO image_names = [f"{folder_name}_{image}" for image in ["0"]]
-images_name_12 = ["0"]
+# TODO image_names = [f"{folder_name}_{image}" for image in ["12q"]]
+images_name_12 = ["12q"]
 images_position_12 = [
-    (Inches(0.8), Inches(1.3), Inches(6.8), Inches(6.8)),
+    (Inches(0.7), Inches(1.4), Inches(7), Inches(8.5)),
 ]
 slide_index_12 = 12
 insert_images(images_name_12, images_position_12, slide_index_12)
@@ -423,6 +422,100 @@ print("Слайд №12 сформирован")
 # -------------------------------------------------------
 
 # Слайд № 13
+# TODO image_names = [f"{folder_name}_{image}" for image in ["13q"]]
+images_name_13 = ["13q"]
+images_position_13 = [
+    (Inches(0.7), Inches(1.4), Inches(7), Inches(7.2)),
+]
+slide_index_13 = 13
+insert_images(images_name_13, images_position_13, slide_index_13)
+
+ws = wb["Лист1"]
+
+# Создаем пустой DataFrame
+slideOneThree_data = []
+
+for row in ws.iter_rows(min_row=28, max_row=36, min_col=3, max_col=6, values_only=True):
+    slideOneThree_data.append(list(row))
+
+# Размер и положение данных на слайде
+current_left = Inches(2.7)  # Левая граница
+current_top = Inches(5.53)  # Верхняя граница
+cell_width = Inches(2.5)  # Ширина ячейки
+cell_height = Inches(0.27)  # Высота ячейки
+font_size = Pt(12)  # Размер шрифта
+
+print(slideOneThree_data)
+# def transform_data(data):
+#     transformed_data = []
+#     for idx, sublist in enumerate(data):
+#         transformed_sublist = []
+#         for item in sublist:
+#             if isinstance(item, (int, float)):
+#                 # Проверяем, является ли текущий подсписок последним или предпоследним в массиве данных
+#                 if idx == len(data) - 2 or idx == len(data) - 1:
+#                     transformed_sublist.append('{:.1f}%'.format(item * 100).replace('.', ','))
+#                 else:
+#                     transformed_sublist.append(round(item, 2))
+#             else:
+#                 transformed_sublist.append(item)
+#         transformed_data.append(transformed_sublist)
+#     return transformed_data
+#
+#
+# transformed_dataframe = transform_data(slideOneThree_data)
+
+# Размещение данных на слайде
+for i, row_data in enumerate(slideOneThree_data):
+    for j, value in enumerate(row_data):
+        # Рассчитываем координаты для текущей ячейки
+        cell_left = current_left + j * cell_width
+        cell_top = current_top + i * cell_height
+
+        # Добавление текстового блока на слайд с текущими координатами
+        text_frame = prs.slides[13].shapes.add_textbox(cell_left, cell_top, cell_width, cell_height).text_frame
+        p = text_frame.add_paragraph()
+        p.text = str(value)
+        p.font.size = font_size
+        p.font.name = "Montserrat Medium"
+        p.alignment = PP_PARAGRAPH_ALIGNMENT.CENTER
+
+# Создаем DataFrame из данных
+# df = pd.DataFrame(slideOneThree_data).iloc[0:9, 14:18]
+
+
+# Получаем количество строк и столбцов в таблице
+num_rows, num_cols = df.shape
+
+
+print("Слайд №13 сформирован")
+# -------------------------------------------------------
+
+
+# # Слайд № 11
+# # TODO image_names = [f"{folder_name}_{image}" for image in ["222", "333"]]
+# images_name_11 = ["222", "333"]
+# images_position_11 = [
+#     (Inches(0.5), Inches(1.3), Inches(7.1), Inches(4.7)),
+#     (Inches(0.5), Inches(6.6), Inches(7.1), Inches(4.7)),
+# ]
+# slide_index_11 = 11
+# insert_images(images_name_11, images_position_11, slide_index_11)
+# print("Слайд №11 сформирован")
+# # -------------------------------------------------------
+
+# # Слайд № 12
+# # TODO image_names = [f"{folder_name}_{image}" for image in ["0"]]
+# images_name_12 = ["0"]
+# images_position_12 = [
+#     (Inches(0.8), Inches(1.3), Inches(6.8), Inches(6.8)),
+# ]
+# slide_index_12 = 12
+# insert_images(images_name_12, images_position_12, slide_index_12)
+# print("Слайд №12 сформирован")
+# # -------------------------------------------------------
+
+# Слайд № 14
 # Размеры и положения областей для изображений
 # left = Inches(1)     # Левая граница изображения
 # top = Inches(1)      # Верхняя граница изображения
@@ -430,65 +523,60 @@ print("Слайд №12 сформирован")
 # height = Inches(3)   # Высота изображения
 # Массив имен изображений с префиксом папки
 # TODO image_names = [f"{folder_name}_{image}" for image in ["77", "88", "3", "000"]]
-images_name_13 = ["77", "88", "3", "000"]
-images_position_13 = [
-    (Inches(1.4), Inches(3.2), Inches(2.3), Inches(2.1)),
-    (Inches(4.8), Inches(3.2), Inches(2.3), Inches(2.1)),
-    (Inches(1), Inches(8.6), Inches(3), Inches(2.5)),
-    (Inches(4.5), Inches(8.6), Inches(3), Inches(2.5)),
-]
-slide_index_13 = 13
-insert_images(images_name_13, images_position_13, slide_index_13)
-
-mt = wb["Лист1"]
-
-# Пустой DataFrame
-slideFour_data = []
-
-for row in mt.iter_rows(values_only=True):
-    slideFour_data.append(row)
-
-up_dff = pd.DataFrame(slideFour_data).iloc[8:14, 2:6]
-# lower_dff = pd.DataFrame(slideFour_data).iloc[14:24, 0:4]
-
-up_num_rows, up_num_cols = up_dff.shape
-# lower_num_rows, lower_num_cols = dff_lower.shape
-
-# Определяем размеры и позицию таблицы на слайде
-up_left = Inches(3.7)
-up_top = Inches(0.8)
-up_width = Inches(3)
-up_height = Inches(1)
-
-# lower_left = Inches(0.55)
-# lower_top = Inches(6.2)
-# lower_width = Inches(7.1)
-# lower_height = Inches(3.5)
-
-
-# Добавляем таблицу на слайд
-# up_table = prs.slides[13].shapes.add_table(6, 4, up_left, up_top, up_width, up_height).table
-up_table = prs.slides[0].shapes.add_table(6, 4, up_left, up_top, up_width, up_height).table
-# lower_table = prs.slides[13].shapes.add_table(9, 3, lower_left, lower_top, lower_width, lower_height).table
-
-# # Применение функции для заполнения верхней и нижней таблиц из DataFrame
-# fill_table_from_df(up_dff, up_table)
-# Стилизация верхней таблицы
-for r in range(up_num_rows):
-    for c in range(up_num_cols):
-        value = up_dff.iloc[r, c]
-        cell = up_table.cell(r, c)
-        cell.text = str(value)
-        cell.fill.solid()
-        cell.fill.fore_color.rgb = RGBColor(255, 255, 255)
-        cell.fill.fore_color.theme_color = MSO_THEME_COLOR_INDEX.LIGHT_1
-        cell.text_frame.paragraphs[0].font.size = Pt(14)
-        cell.text_frame.paragraphs[0].alignment = PP_PARAGRAPH_ALIGNMENT.CENTER
-        # cell.fill.background()
-        # if c == 1 or c == 2:
-
-print("Слайд №13 сформирован")
-# -------------------------------------------------------
+# images_name_13 = ["77", "88", "3", "000"]
+# images_position_13 = [
+#     (Inches(1.4), Inches(3.2), Inches(2.3), Inches(2.1)),
+#     (Inches(4.8), Inches(3.2), Inches(2.3), Inches(2.1)),
+#     (Inches(1), Inches(8.6), Inches(3), Inches(2.5)),
+#     (Inches(4.5), Inches(8.6), Inches(3), Inches(2.5)),
+# ]
+# slide_index_13 = 13
+# insert_images(images_name_13, images_position_13, slide_index_13)
+#
+# mt = wb["Лист1"]
+#
+# # Пустой DataFrame
+# slideFour_data = []
+#
+# for row in mt.iter_rows(values_only=True):
+#     slideFour_data.append(row)
+#
+# up_dff = pd.DataFrame(slideFour_data).iloc[8:14, 2:6]
+# # lower_dff = pd.DataFrame(slideFour_data).iloc[14:24, 0:4]
+#
+# up_num_rows, up_num_cols = up_dff.shape
+# # lower_num_rows, lower_num_cols = dff_lower.shape
+#
+# # Определяем размеры и позицию таблицы на слайде
+# up_left = Inches(3.7)
+# up_top = Inches(0.8)
+# up_width = Inches(3)
+# up_height = Inches(1)
+#
+#
+# # Добавляем таблицу на слайд
+# # up_table = prs.slides[13].shapes.add_table(6, 4, up_left, up_top, up_width, up_height).table
+# up_table = prs.slides[0].shapes.add_table(6, 4, up_left, up_top, up_width, up_height).table
+# # lower_table = prs.slides[13].shapes.add_table(9, 3, lower_left, lower_top, lower_width, lower_height).table
+#
+# # # Применение функции для заполнения верхней и нижней таблиц из DataFrame
+# # fill_table_from_df(up_dff, up_table)
+# # Стилизация верхней таблицы
+# for r in range(up_num_rows):
+#     for c in range(up_num_cols):
+#         value = up_dff.iloc[r, c]
+#         cell = up_table.cell(r, c)
+#         cell.text = str(value)
+#         cell.fill.solid()
+#         cell.fill.fore_color.rgb = RGBColor(255, 255, 255)
+#         cell.fill.fore_color.theme_color = MSO_THEME_COLOR_INDEX.LIGHT_1
+#         cell.text_frame.paragraphs[0].font.size = Pt(14)
+#         cell.text_frame.paragraphs[0].alignment = PP_PARAGRAPH_ALIGNMENT.CENTER
+#         # cell.fill.background()
+#         # if c == 1 or c == 2:
+#
+# print("Слайд №13 сформирован")
+# # -------------------------------------------------------
 
 if folder_name:
     prs.save(os.path.join(work_folder, f"{folder_name}.pptx"))
