@@ -96,6 +96,76 @@ def insert_images(names, positions, idx):
             print(f"Изображение {name} не найдено на слайде {idx}.")
 
 
+def get_text_color(last_value):
+    """
+    Возвращает цвет текста в зависимости от значения last_value.
+    """
+    if isinstance(last_value, (int, float)):
+        last_value = float(last_value)
+
+        if last_value is not None:
+            if last_value > 3 or last_value < -3:
+                return RGBColor(255, 0, 0)  # Красный цвет
+            elif -2 <= last_value <= 2:
+                if -0.9 <= last_value <= 0.9:
+                    return RGBColor(0, 0, 0)  # Черный цвет
+                elif last_value < 0:
+                    return RGBColor(0, 0, 255)  # Синий цвет
+                else:
+                    return RGBColor(0, 255, 0)  # Зеленый цвет
+    return RGBColor(0, 0, 0)  # Черный цвет по умолчанию
+
+
+def add_text_to_slide(prs, slide_index, slide_data, current_left, current_top, cell_width, cell_height, font_size):
+    """
+    Добавляет текст на слайд на основе данных slide_data.
+    """
+    for i, row_data in enumerate(slide_data):
+        for j, value in enumerate(row_data):
+            # Рассчитываем координаты для текущей ячейки
+            cell_left = current_left + j * cell_width
+            cell_top = current_top + i * cell_height
+
+            # Получаем значение last_value из последней ячейки текущей строки
+            last_value = row_data[-1]
+
+            # Получаем цвет текста на основе значения last_value
+            color = get_text_color(last_value)
+
+            # Преобразуем значение в строку, если оно не None
+            if value is not None:
+                if isinstance(value, (int, float)):
+                    text_value = str(round(value, 2))
+                else:
+                    text_value = str(value)
+            else:
+                text_value = ""
+
+            if j == 1:
+                cell_left += Inches(0.8)
+            if j == 2:
+                cell_left += Inches(0.8)
+            if j == 3:
+                cell_left += Inches(0.8)
+            if j == 4:
+                cell_left += Inches(0.8)
+
+            if i == 6:
+                cell_top += Inches(0.03)
+            if i == 7:
+                cell_top += Inches(0.03)
+
+            # Добавление текстового блока на слайд с текущими координатами и цветом
+            table_frame = prs.slides[slide_index].shapes.add_textbox(cell_left, cell_top, cell_width,
+                                                                     cell_height).text_frame
+            q = table_frame.add_paragraph()
+            q.text = text_value
+            q.font.size = font_size
+            q.font.name = "Montserrat Medium"
+            q.alignment = PP_PARAGRAPH_ALIGNMENT.CENTER
+            q.font.color.rgb = color  # Устанавливаем цвет текста
+
+
 # -----------------------------------------------------------------------------------------
 
 # Задаем имя пациента, врача и дату
@@ -298,7 +368,7 @@ print("Слайд №4 сформирован")
 # Размеры и положения областей для изображений
 # Массив имен изображений с префиксом папки
 # TODO image_names = [f"{folder_name}_{image}" for image in ["5q", "5w", "5e", "5r", "5t", "5y"]]
-images_name_5 = ["5q", "5w", "5e", "5r", "5t", "5y",]
+images_name_5 = ["5q", "5w", "5e", "5r", "5t", "5y", ]
 images_position_5 = [
     (Inches(0.6), Inches(1.2), Inches(3.3), Inches(3)),
     (Inches(4.4), Inches(1.2), Inches(3.3), Inches(3)),
@@ -425,68 +495,32 @@ print("Слайд №12 сформирован")
 # TODO image_names = [f"{folder_name}_{image}" for image in ["13q"]]
 images_name_13 = ["13q"]
 images_position_13 = [
-    (Inches(0.7), Inches(1.4), Inches(7), Inches(7.2)),
+    (Inches(0.6), Inches(1.8), Inches(7), Inches(6.8)),
 ]
 slide_index_13 = 13
 insert_images(images_name_13, images_position_13, slide_index_13)
 
 ws = wb["Лист1"]
+params13_data = []
 
-# Создаем пустой DataFrame
-slideOneThree_data = []
+# Заполняем DataFrame данными из листа Excel
+for row in ws.iter_rows(min_row=29, max_row=36, min_col=2, max_col=6, values_only=True):
+    params13_data.append(list(row))
 
-for row in ws.iter_rows(min_row=28, max_row=36, min_col=3, max_col=6, values_only=True):
-    slideOneThree_data.append(list(row))
+# Размеры и положение данных на слайде
 
-# Размер и положение данных на слайде
-current_left = Inches(2.7)  # Левая граница
-current_top = Inches(5.53)  # Верхняя граница
-cell_width = Inches(2.5)  # Ширина ячейки
-cell_height = Inches(0.27)  # Высота ячейки
-font_size = Pt(12)  # Размер шрифта
+title13_left = Inches(1.3)  # Левая граница
+title13_top = Inches(9.05)  # Верхняя граница
+title13_width = Inches(1.12)  # Ширина ячейки
+title13_height = Inches(0.27)  # Высота ячейки
 
-print(slideOneThree_data)
-# def transform_data(data):
-#     transformed_data = []
-#     for idx, sublist in enumerate(data):
-#         transformed_sublist = []
-#         for item in sublist:
-#             if isinstance(item, (int, float)):
-#                 # Проверяем, является ли текущий подсписок последним или предпоследним в массиве данных
-#                 if idx == len(data) - 2 or idx == len(data) - 1:
-#                     transformed_sublist.append('{:.1f}%'.format(item * 100).replace('.', ','))
-#                 else:
-#                     transformed_sublist.append(round(item, 2))
-#             else:
-#                 transformed_sublist.append(item)
-#         transformed_data.append(transformed_sublist)
-#     return transformed_data
-#
-#
-# transformed_dataframe = transform_data(slideOneThree_data)
+params13_left = Inches(1.3)  # Левая граница
+params13_top = Inches(9.08)  # Верхняя граница
+params13_width = Inches(1.12)  # Ширина ячейки
+params13_height = Inches(0.27)  # Высота ячейки
+font_size = Pt(11)  # Размер шрифта
 
-# Размещение данных на слайде
-for i, row_data in enumerate(slideOneThree_data):
-    for j, value in enumerate(row_data):
-        # Рассчитываем координаты для текущей ячейки
-        cell_left = current_left + j * cell_width
-        cell_top = current_top + i * cell_height
-
-        # Добавление текстового блока на слайд с текущими координатами
-        text_frame = prs.slides[13].shapes.add_textbox(cell_left, cell_top, cell_width, cell_height).text_frame
-        p = text_frame.add_paragraph()
-        p.text = str(value)
-        p.font.size = font_size
-        p.font.name = "Montserrat Medium"
-        p.alignment = PP_PARAGRAPH_ALIGNMENT.CENTER
-
-# Создаем DataFrame из данных
-# df = pd.DataFrame(slideOneThree_data).iloc[0:9, 14:18]
-
-
-# Получаем количество строк и столбцов в таблице
-num_rows, num_cols = df.shape
-
+add_text_to_slide(prs, 13, params13_data, params13_left, params13_top, params13_width, params13_height, font_size)
 
 print("Слайд №13 сформирован")
 # -------------------------------------------------------
