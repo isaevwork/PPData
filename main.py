@@ -562,8 +562,8 @@ print("Слайд №14 сформирован")
 
 # Слайд №15
 # Массив имен изображений с префиксом папки
-# TODO image_names = [f"{folder_name}_{image}" for image in ["333", "222"]]
-images_name_15 = ["333", "222"]
+# TODO image_names = [f"{folder_name}_{image}" for image in ["333", "temp15"]]
+images_name_15 = ["333", "temp15"]
 images_position_15 = [
     (Inches(0.6), Inches(1.5), Inches(7), Inches(4.7)),
     (Inches(0.6), Inches(7), Inches(7), Inches(4.4)),
@@ -573,6 +573,18 @@ insert_images(images_name_15, images_position_15, slide_index_15)
 print("Слайд №15 сформирован")
 # -------------------------------------------------------
 
+# Слайд №16
+# Массив имен изображений с префиксом папки
+# TODO image_names = [f"{folder_name}_{image}" for image in ["222", "0"]]
+images_name_16 = ["222", "0"]
+images_position_16 = [
+    (Inches(0.8), Inches(1.2), Inches(6.5), Inches(4)),
+    (Inches(2), Inches(7.65), Inches(4.3), Inches(3.9)),
+]
+slide_index_16 = 16
+insert_images(images_name_16, images_position_16, slide_index_16)
+print("Слайд №16 сформирован")
+# -------------------------------------------------------
 
 
 if folder_name:
