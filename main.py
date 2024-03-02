@@ -560,16 +560,19 @@ add_text_to_slide(prs, 14, lower_params14_data, lower_params14_left, lower_param
 print("Слайд №14 сформирован")
 # -------------------------------------------------------
 
-# # Слайд № 12
-# # TODO image_names = [f"{folder_name}_{image}" for image in ["0"]]
-# images_name_12 = ["0"]
-# images_position_12 = [
-#     (Inches(0.8), Inches(1.3), Inches(6.8), Inches(6.8)),
-# ]
-# slide_index_12 = 12
-# insert_images(images_name_12, images_position_12, slide_index_12)
-# print("Слайд №12 сформирован")
-# # -------------------------------------------------------
+# Слайд №15
+# Массив имен изображений с префиксом папки
+# TODO image_names = [f"{folder_name}_{image}" for image in ["333", "222"]]
+images_name_15 = ["333", "222"]
+images_position_15 = [
+    (Inches(0.6), Inches(1.5), Inches(7), Inches(4.7)),
+    (Inches(0.6), Inches(7), Inches(7), Inches(4.4)),
+]
+slide_index_15 = 15
+insert_images(images_name_15, images_position_15, slide_index_15)
+print("Слайд №15 сформирован")
+# -------------------------------------------------------
+
 
 
 if folder_name:
