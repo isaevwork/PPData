@@ -27,9 +27,11 @@ wb = None
 for root, dirs, files in os.walk(work_folder):
     # Просматриваем все файлы в текущей подпапке
     for file in files:
-        # Если файл имеет расширение .xlsx, добавляем его путь в список
-        if file.endswith(".xlsx"):
-            excel_files.append(os.path.join(root, file))
+        # Составляем полный путь к текущему файлу
+        file_path = os.path.join(root, file)
+        # Если файл имеет расширение .xlsx и находится не в корневой папке work, добавляем его путь в список
+        if file.endswith(".xlsx") and root != work_folder:
+            excel_files.append(file_path)
 
 # Если найден хотя бы один файл Excel, загружаем первый из них
 if excel_files:
@@ -42,7 +44,7 @@ if excel_files:
         # Извлекаем имя папки из пути
         folder_name = os.path.basename(os.path.dirname(excel_file_path))
 else:
-    print("Файл Excel не найден в папке work.")
+    print("Файл Excel не найден в подпапках папки work.")
 
 # Загружаем презентацию
 prs = Presentation(os.path.join(os.getenv('USERPROFILE'), 'Downloads', 'parser', 'PPData', 'FDTemp.pptx'))
@@ -116,10 +118,8 @@ def get_text_color(last_value):
     return RGBColor(0, 0, 0)  # Черный цвет по умолчанию
 
 
-def add_text_to_slide(prs, slide_index, slide_data, current_left, current_top, cell_width, cell_height, font_size):
-    """
-    Добавляет текст на слайд на основе данных slide_data.
-    """
+def add_text_to_slide(presentation, slide_index, slide_data, current_left, current_top, cell_width, cell_height,
+                      font_s):
     for i, row_data in enumerate(slide_data):
         for j, value in enumerate(row_data):
             # Рассчитываем координаты для текущей ячейки
@@ -156,11 +156,11 @@ def add_text_to_slide(prs, slide_index, slide_data, current_left, current_top, c
                 cell_top += Inches(0.04)
 
             # Добавление текстового блока на слайд с текущими координатами и цветом
-            table_frame = prs.slides[slide_index].shapes.add_textbox(cell_left, cell_top, cell_width,
-                                                                     cell_height).text_frame
+            table_frame = presentation.slides[slide_index].shapes.add_textbox(cell_left, cell_top, cell_width,
+                                                                              cell_height).text_frame
             q = table_frame.add_paragraph()
             q.text = text_value
-            q.font.size = font_size
+            q.font.size = font_s
             q.font.name = "Montserrat Medium"
             q.alignment = PP_PARAGRAPH_ALIGNMENT.CENTER
             q.font.color.rgb = color  # Устанавливаем цвет текста
@@ -203,7 +203,7 @@ images_position_2 = [
     (Inches(0.4), Inches(1.5), Inches(2.6), Inches(3.6)),
     (Inches(5.4), Inches(1.5), Inches(2.6), Inches(3.6)),
     (Inches(0.7), Inches(7.8), Inches(3), Inches(3.6)),
-    (Inches(4.5), Inches(7.8), Inches(3), Inches(3.6))
+    (Inches(4.6), Inches(7.7), Inches(3), Inches(3.7))
 ]
 slide_index_2 = 2
 insert_images(images_name_2, images_position_2, slide_index_2)
@@ -211,21 +211,21 @@ print("Слайд №2 сформирован")
 # -------------------------------------------------------
 
 # Слайд № 3
-ws = wb["Лист2"]
+ws2 = wb["Лист2"]
 
 # Создаем пустой DataFrame
 slideThree_data = []
 slideThree_MT = []
 
-for row in ws.iter_rows(min_row=2, max_row=9, min_col=16, max_col=17, values_only=True):
+for row in ws2.iter_rows(min_row=2, max_row=9, min_col=16, max_col=17, values_only=True):
     slideThree_MT.append(list(row))
 
 # Размер и положение данных на слайде
-current_left = Inches(2.8)  # Левая граница
-current_top = Inches(5.53)  # Верхняя граница
-cell_width = Inches(2.5)  # Ширина ячейки
-cell_height = Inches(0.27)  # Высота ячейки
-font_size = Pt(12)  # Размер шрифта
+c_left = Inches(2.8)  # Левая граница
+c_top = Inches(5.53)  # Верхняя граница
+c_width = Inches(2.5)  # Ширина ячейки
+c_height = Inches(0.27)  # Высота ячейки
+f_size = Pt(12)  # Размер шрифта
 
 
 def transform_data(data):
@@ -251,19 +251,19 @@ transformed_dataframe = transform_data(slideThree_MT)
 for i, row_data in enumerate(transformed_dataframe):
     for j, value in enumerate(row_data):
         # Рассчитываем координаты для текущей ячейки
-        cell_left = current_left + j * cell_width
-        cell_top = current_top + i * cell_height
+        cell_left = c_left + j * c_width
+        cell_top = c_top + i * c_height
 
         # Добавление текстового блока на слайд с текущими координатами
-        text_frame = prs.slides[3].shapes.add_textbox(cell_left, cell_top, cell_width, cell_height).text_frame
+        text_frame = prs.slides[3].shapes.add_textbox(cell_left, cell_top, c_width, c_height).text_frame
         p = text_frame.add_paragraph()
         p.text = str(value)
-        p.font.size = font_size
+        p.font.size = f_size
         p.font.name = "Montserrat Medium"
         p.alignment = PP_PARAGRAPH_ALIGNMENT.CENTER
 
 # Проходимся по строкам и столбцам в Excel и добавляем их в DataFrame
-for row in ws.iter_rows(values_only=True):
+for row in ws2.iter_rows(values_only=True):
     slideThree_data.append(row)
 
 # Создаем DataFrame из данных
@@ -365,7 +365,6 @@ print("Слайд №4 сформирован")
 # -------------------------------------------------------
 
 # Слайд № 5
-# Размеры и положения областей для изображений
 # Массив имен изображений с префиксом папки
 # TODO image_names = [f"{folder_name}_{image}" for image in ["5q", "5w", "5e", "5r", "5t", "5y"]]
 images_name_5 = ["5q", "5w", "5e", "5r", "5t", "5y", ]
@@ -386,12 +385,6 @@ print("Слайд №5 сформирован")
 
 
 # Слайд № 6
-# Размеры и положения областей для изображений
-# left = Inches(1)     # Левая граница изображения
-# top = Inches(1)      # Верхняя граница изображения
-# width = Inches(5)    # Ширина изображения
-# height = Inches(3)   # Высота изображения
-
 # Массив имен изображений с префиксом папки
 # TODO image_names = [f"{folder_name}_{image}" for image in ["6q", "6w", "6e", "6r", "6t", "6y", "6u", "6i", "6o"]]
 images_name_6 = ["6q", "6w", "6e", "6r", "6t", "6y"]
@@ -500,11 +493,11 @@ images_position_13 = [
 slide_index_13 = 13
 insert_images(images_name_13, images_position_13, slide_index_13)
 
-ws = wb["Лист1"]
+ws1 = wb["Лист1"]
 params13_data = []
 
 # Заполняем DataFrame данными из листа Excel
-for row in ws.iter_rows(min_row=29, max_row=36, min_col=2, max_col=6, values_only=True):
+for row in ws1.iter_rows(min_row=29, max_row=36, min_col=2, max_col=6, values_only=True):
     params13_data.append(list(row))
 
 # Размеры и положение данных на слайде
@@ -535,9 +528,9 @@ up_params14_data = []
 lower_params14_data = []
 
 # Заполняем DataFrame данными из листа Excel
-for row in ws.iter_rows(min_row=9, max_row=14, min_col=2, max_col=6, values_only=True):
+for row in ws1.iter_rows(min_row=9, max_row=14, min_col=2, max_col=6, values_only=True):
     up_params14_data.append(list(row))
-for row in ws.iter_rows(min_row=17, max_row=26, min_col=2, max_col=6, values_only=True):
+for row in ws1.iter_rows(min_row=17, max_row=26, min_col=2, max_col=6, values_only=True):
     lower_params14_data.append(list(row))
 
 # Размеры и положение данных на слайде
@@ -587,5 +580,105 @@ print("Слайд №16 сформирован")
 # -------------------------------------------------------
 
 
+# Слайд №16
+# cephalometry = """Цефалометрия.
+# Соотношение челюстей в сагиттальной плоскости.
+# Межапикальный угол (<ANB) – 1,2˚, что соответствует соотношению челюстей по III скелетному классу с тенденцией к III классу (N = 2,0˚ ± 2,0˚).
+# Угол Бета (< Beta Angle) – 32,0˚, что cоответствует соотношению челюстей по III скелетному классу с тенденцией к III классу (N = 31,0˚ ± 4,0˚).
+# Параметр Wits (Wits Appraisal.) – -1,2 мм что указывает на отсутствие \ наличие диспропорции в расположении апикальных базисов верхней и нижней челюстей в сагиттальной плоскости и говорит за III скелетный класс с тенденцией к III классу (N = -0,4 мм ± 2,5 мм) (N= -1,0 мм ±2,0 мм).
+# Соотношение челюстей по методике Sassouni говорит за III скелетный класс с тенденцией к III классу — базальная дуга проходит на 1,2 мм кзади \ кпереди от точки В (N = 0,0 мм ± 3,0 мм).
+# Параметр APDI, указывающий на дисплазию развития челюстей в сагиттальной плоскости, равен 79,0˚  и говорит за III скелетный класс  с тенденцией к III классу (N = 81,4˚ ± 5,0˚).
+# Размер и положение верхней челюсти.
+# Длина основания верхней челюсти (PNS-A) – 43,0 мм, что соответствует норме \ увеличению \ уменьшению в пределах нормы (N = 47,0 мм ± 3,5 мм).
+# Ширина основания верхней (J-J) челюсти –  58,0 мм, что соответствует норме \ расширению \ сужению в пределах нормы (N = 60,0 мм ± 3,0 мм):  справа – 27,9 мм, слева – 26,9 мм  (N = 30,0 мм ± 1,5 мм).
+# Положение верхней челюсти по сагиттали  (<SNA) – 82,0˚, что соответствует норме \  про  \ ретро гнатии \  тенденции к про \ ретрогнатии (N = 82,0˚ ±  3,0˚).
+# Положение верхней челюсти по вертикали  (<SN-Palatal Plane) – 1,2˚, что соответствует нормо \ анте \ ретро инклинации \ тенденции к анте \ ретроинклинации (N= 8,0˚ ± 3,0˚).
+# Roll ротация отсутствует\  вправо (по часовой стрелке) \ влево (против часовой стрелки).
+# Yaw ротация отсутствует \ вправо  (по часовой стрелке) \ влево (против часовой стрелки)."""
+
+
+# Определяем тенденцию к классу
+anb_value = ws1['L42'].value
+beta_angle = ws1['L44'].value
+wits_appraisal = ws1['L46'].value
+
+# Определяем класс в зависимости от значения ANB
+anb_trend_class = ""
+if anb_value > 4:
+    anb_skeletal_class = "II"
+elif anb_value < 0:
+    anb_skeletal_class = "III"
+else:
+    anb_skeletal_class = "I"
+    # Если класс "I", проверяем дополнительные условия
+    if 0 <= anb_value <= 0.4:
+        anb_trend_class = "с тенденцией к III классу"
+    elif 3.6 <= anb_value <= 4:
+        anb_trend_class = "с тенденцией к II классу"
+
+# Определяем класс в зависимости от значения BETA ANGLE
+beta_trend_class = ""
+if beta_angle > 35:
+    beta_skeletal_class = "III"
+elif beta_angle < 27:
+    beta_skeletal_class = "II"
+else:
+    beta_skeletal_class = "I"
+    # Если класс "I", проверяем дополнительные условия
+    if 34.6 <= beta_angle <= 35:
+        beta_trend_class = "с тенденцией к III классу"
+    elif 27 <= beta_angle <= 27.4:
+        beta_trend_class = "с тенденцией к II классу"
+
+# Определяем класс в зависимости от значения Wits Appraisal
+has_value = ""
+wits_trend_class = ""
+if wits_appraisal > 2.1:
+    wits_skeletal_class = "II"
+    has_value = "наличие"
+elif wits_appraisal < -2.9:
+    wits_skeletal_class = "III"
+    has_value = "наличие"
+else:
+    wits_skeletal_class = "I"
+    has_value = "отсутствие"
+    # Если класс "I", проверяем дополнительные условия
+    if -2.5 <= wits_appraisal <= -2.9:
+        wits_trend_class = "с тенденцией к III классу"
+    elif 1.7 <= wits_appraisal <= 2.1:
+        wits_trend_class = "с тенденцией к II классу"
+
+
+
+
+
+# Формируем текст, вставляя значения переменных
+resume_text = f"""
+Соотношение челюстей в сагиттальной плоскости.
+Межапикальный угол (<ANB) – {anb_value}˚, что соответствует соотношению челюстей по {anb_skeletal_class} скелетному классу {anb_trend_class} (N = 2,0˚ ± 2,0˚).
+Угол Бета (< Beta Angle) – {beta_angle}˚, что cоответствует соотношению челюстей по {beta_skeletal_class} скелетному классу {beta_trend_class} (N = 31,0˚ ± 4,0˚).
+Параметр Wits (Wits Appraisal.) – {wits_appraisal} мм что указывает на {has_value} в расположении апикальных базисов верхней и нижней челюстей в сагиттальной плоскости и говорит за {wits_skeletal_class} скелетный класс {wits_trend_class} (N = -0,4 мм ± 2,5 мм).
+
+"""
+
+
+# Добавляем текст на слайд
+text_left = Inches(0.6)
+text_top = Inches(1)
+text_width = Inches(7)
+text_height = Inches(5)
+name_textbox = prs.slides[0].shapes.add_textbox(text_left, text_top, text_width, text_height)
+text_frame = name_textbox.text_frame
+text_frame.word_wrap = True
+paragraph = text_frame.add_paragraph()
+paragraph.text = resume_text
+paragraph.font.size = Pt(10.5)
+paragraph.font.bold = False
+paragraph.font.name = "Montserrat"
+
+print("Слайд №17 сформирован")
+# -------------------------------------------------------
+
 if folder_name:
-    prs.save(os.path.join(work_folder, f"{folder_name}.pptx"))
+    save_folder = os.path.join(work_folder, folder_name)
+    prs.save(os.path.join(save_folder, f"{folder_name}.pptx"))
