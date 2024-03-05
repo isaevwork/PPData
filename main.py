@@ -580,165 +580,225 @@ print("Слайд №16 сформирован")
 # -------------------------------------------------------
 
 
+# Слайд №17
+# Определяем тенденцию к классу
+# anb_value = ws1['L42'].value
+# beta_angle = ws1['L44'].value
+# wits_appraisal = ws1['L46'].value
+# sassouni = ws1['L125'].value
+# apdi_value = ws1['L43'].value
+# pnsa_value = ws1['C9'].value
+# jj_value = ws1['C10'].value
+# sna_value = ws1['C13'].value
+# ppsn_value = ws1['C14'].value
+#
+#
+# # Определяем класс в зависимости от значения ANB
+# anb_trend_class = ""
+# if anb_value > 4:
+#     anb_skeletal_class = "II"
+# elif anb_value < 0:
+#     anb_skeletal_class = "III"
+# else:
+#     anb_skeletal_class = "I"
+#     # Если класс "I", проверяем дополнительные условия
+#     if 0 <= anb_value <= 0.4:
+#         anb_trend_class = "с тенденцией к III классу"
+#     elif 3.6 <= anb_value <= 4:
+#         anb_trend_class = "с тенденцией к II классу"
+#
+# # Определяем класс в зависимости от значения BETA ANGLE
+# beta_trend_class = ""
+# if beta_angle > 35:
+#     beta_skeletal_class = "III"
+# elif beta_angle < 27:
+#     beta_skeletal_class = "II"
+# else:
+#     beta_skeletal_class = "I"
+#     # Если класс "I", проверяем дополнительные условия
+#     if 34.6 <= beta_angle <= 35:
+#         beta_trend_class = "с тенденцией к III классу"
+#     elif 27 <= beta_angle <= 27.4:
+#         beta_trend_class = "с тенденцией к II классу"
+#
+# # Определяем класс в зависимости от значения Wits Appraisal
+# has_value = ""
+# wits_trend_class = ""
+# if wits_appraisal > 2.1:
+#     wits_skeletal_class = "II"
+#     has_value = "наличие"
+# elif wits_appraisal < -2.9:
+#     wits_skeletal_class = "III"
+#     has_value = "наличие"
+# else:
+#     wits_skeletal_class = "I"
+#     has_value = "отсутствие"
+#     # Если класс "I", проверяем дополнительные условия
+#     if -2.5 <= wits_appraisal <= -2.9:
+#         wits_trend_class = "с тенденцией к III классу"
+#     elif 1.7 <= wits_appraisal <= 2.1:
+#         wits_trend_class = "с тенденцией к II классу"
+#
+#
+# # Определяем класс в зависимости от значения Wits Appraisal
+# sassouni_text = ""
+# sassouni_trend_class = ""
+# has_direction = ""
+# if sassouni > 3:
+#     sassouni_skeletal_class = "III"
+#     has_direction = "кзади"
+# elif sassouni < 0:
+#     sassouni_skeletal_class = "II"
+#     has_direction = "кпереди"
+# else:
+#     sassouni_skeletal_class = "I"
+#     # Если класс "I", проверяем дополнительные условия
+#     if 2.6 <= sassouni <= 3:
+#         sassouni_trend_class = "с тенденцией к III классу"
+#     elif 0.1 <= sassouni <= 0.4:
+#         sassouni_trend_class = "с тенденцией к II классу"
+#
+# sassouni_text_not_null = f"""Соотношение челюстей по методике Sassouni говорит за {sassouni_skeletal_class} скелетный класс {sassouni_trend_class} — базальная дуга проходит на {sassouni} мм {has_direction} от точки В (N = 0,0 мм ± 3,0 мм)."""
+# sassouni_text_null = f"""Соотношение челюстей по методике Sassouni говорит за I скелетный класс — базальная дуга проходит через точку B (N = 0,0 мм ± 3,0 мм)."""
+#
+# if sassouni == 0:
+#     sassouni_text = sassouni_text_null
+# else:
+#     sassouni_text = sassouni_text_not_null
+#
+# # Определяем класс в зависимости от значения APDI
+# apdi_trend_class = ""
+# if apdi_value > 86.4:
+#     apdi_skeletal_class = "III"
+# elif apdi_value < 76.4:
+#     apdi_skeletal_class = "II"
+# else:
+#     apdi_skeletal_class = "I"
+#     # Если класс "I", проверяем дополнительные условия
+#     if 86 <= apdi_value <= 86.4:
+#         apdi_trend_class = "с тенденцией к III классу"
+#     elif 76.4 <= apdi_value <= 76.8:
+#         apdi_trend_class = "с тенденцией к II классу"
+#
+# # Определяем класс в зависимости от значения PNSA
+# pnsa_upper_limit = ws1['D9'].value + 3.5
+# pnsa_lower_limit = ws1['D9'].value - 3.5
+# pnsa_trend_class = ""
+# pnsa_status = ""
+# if pnsa_value > pnsa_upper_limit:
+#     pnsa_status = "увеличению"
+# elif pnsa_value < pnsa_lower_limit:
+#     pnsa_status = "уменьшению"
+# else:
+#     pnsa_status = "норме"
+#     # Если класс "I", проверяем дополнительные условия
+#     if 86 <= pnsa_value <= 86.4:
+#         pnsa_trend_class = "с тенденцией к III классу"
+#     elif 76.4 <= pnsa_value <= 76.8:
+#         pnsa_trend_class = "с тенденцией к II классу"
+#
+# # Определяем класс в зависимости от значения Ширины скелетного базиса (J-J)
+# jj_upper_limit = ws1['D10'].value + 3
+# jj_lower_limit = ws1['D10'].value - 3
+# jj_status = ""
+# if jj_value > jj_upper_limit:
+#     jj_status = "расширению"
+# elif jj_value < jj_lower_limit:
+#     jj_status = "сужению"
+# else:
+#     jj_status = "норме"
+#
+# # Определяем класс в зависимости от значения SNA
+# if sna_value > 85:
+#     sna_status = "прогнатии"
+# elif sna_value < 79:
+#     sna_status = "ретрогнатии"
+# else:
+#     sna_status = "нормогнатии"
+#
+# # Определяем класс в зависимости от значения PP/SN
+# if ppsn_value > 12:
+#     ppsn_status = "ретроинклинации"
+# elif ppsn_value < 5:
+#     ppsn_status = "антеинклинации"
+# else:
+#     ppsn_status = "нормоинклинации"
+#
+# # Формируем текст, вставляя значения переменных
+# resume_text1 = f"""
+# Соотношение челюстей в сагиттальной плоскости.
+# Межапикальный угол (<ANB) – {anb_value}˚, что соответствует соотношению челюстей по {anb_skeletal_class} скелетному классу {anb_trend_class} (N = 2,0˚ ± 2,0˚).
+# Угол Бета (< Beta Angle) – {beta_angle}˚, что cоответствует соотношению челюстей по {beta_skeletal_class} скелетному классу {beta_trend_class} (N = 31,0˚ ± 4,0˚).
+# Параметр Wits (Wits Appraisal.) – {wits_appraisal} мм что указывает на {has_value} в расположении апикальных базисов верхней и нижней челюстей в сагиттальной плоскости и говорит за {wits_skeletal_class} скелетный класс {wits_trend_class} (N = -0,4 мм ± 2,5 мм).
+# {sassouni_text}
+# Параметр APDI, указывающий на дисплазию развития челюстей в сагиттальной плоскости, равен {apdi_value}˚ и говорит за {apdi_skeletal_class} скелетный класс {apdi_trend_class} (N = 81,4˚ ± 5,0˚).
+# Размер и положение верхней челюсти.
+# Длина основания верхней челюсти (PNS-A) – {pnsa_value} мм, что соответствует {pnsa_status} в пределах нормы (N = {ws1['D9'].value} мм ± 3,5 мм).
+# Ширина основания верхней (J-J) челюсти –  {jj_value} мм, что соответствует {jj_status} в пределах нормы (N = {ws1['D10'].value} мм ± 3,0 мм):  справа – {ws1['C11'].value} мм, слева – {ws1['C12'].value} мм (N = {ws1['D10'].value / 2} мм ± 1,5 мм).
+# Положение верхней челюсти по сагиттали  (<SNA) – {sna_value}˚, что соответствует {sna_status} (N = 82,0˚ ±  3,0˚).
+# Положение верхней челюсти по вертикали  (<SN-Palatal Plane) – {ppsn_value}˚, что соответствует {ppsn_status} (N = 8,0˚ ± 3,0˚).
+# Roll ротация отсутствует\  вправо (по часовой стрелке) \ влево (против часовой стрелки).
+# Yaw ротация отсутствует \ вправо  (по часовой стрелке) \ влево (против часовой стрелки).
+#
+# """
+#
+#
+#
+# # Добавляем текст на слайд
+# text_left = Inches(0.6)
+# text_top = Inches(1)
+# text_width = Inches(7)
+# text_height = Inches(5)
+# name_textbox = prs.slides[0].shapes.add_textbox(text_left, text_top, text_width, text_height)
+# text_frame = name_textbox.text_frame
+# text_frame.word_wrap = True
+# paragraph = text_frame.add_paragraph()
+# paragraph.font.size = Pt(10.5)
+# paragraph.font.bold = False
+# paragraph.font.name = "Montserrat"
+# paragraph.text = cephalometry_text
+#
+# print("Слайд №17 сформирован")
+# -------------------------------------------------------
+
+# -------------------------------------------------------
 # Слайд №16
 # Определяем тенденцию к классу
-anb_value = ws1['L42'].value
-beta_angle = ws1['L44'].value
-wits_appraisal = ws1['L46'].value
-sassouni = ws1['L125'].value
-apdi_value = ws1['L43'].value
-pnsa_value = ws1['C9'].value
-jj_value = ws1['C10'].value
-sna_value = ws1['C13'].value
-ppsn_value = ws1['C14'].value
+
+go_me_r_value = ws1['C17'].value
+go_me_l_value = ws1['C18'].value
+
+go_go_r_value = ws1['C19'].value
+go_go_l_value = ws1['C20'].value
+
+ar_go_r_value = ws1['C21'].value
+ar_go_l_value = ws1['C22'].value
 
 
-# Определяем класс в зависимости от значения ANB
-anb_trend_class = ""
-if anb_value > 4:
-    anb_skeletal_class = "II"
-elif anb_value < 0:
-    anb_skeletal_class = "III"
+if go_me_r_value < go_me_l_value:
+    go_me_status = "меньше"
 else:
-    anb_skeletal_class = "I"
-    # Если класс "I", проверяем дополнительные условия
-    if 0 <= anb_value <= 0.4:
-        anb_trend_class = "с тенденцией к III классу"
-    elif 3.6 <= anb_value <= 4:
-        anb_trend_class = "с тенденцией к II классу"
+    go_me_status = "больше"
 
-# Определяем класс в зависимости от значения BETA ANGLE
-beta_trend_class = ""
-if beta_angle > 35:
-    beta_skeletal_class = "III"
-elif beta_angle < 27:
-    beta_skeletal_class = "II"
+if go_go_r_value < go_go_l_value:
+    go_go_status = "меньше"
 else:
-    beta_skeletal_class = "I"
-    # Если класс "I", проверяем дополнительные условия
-    if 34.6 <= beta_angle <= 35:
-        beta_trend_class = "с тенденцией к III классу"
-    elif 27 <= beta_angle <= 27.4:
-        beta_trend_class = "с тенденцией к II классу"
+    go_go_status = "больше"
 
-# Определяем класс в зависимости от значения Wits Appraisal
-has_value = ""
-wits_trend_class = ""
-if wits_appraisal > 2.1:
-    wits_skeletal_class = "II"
-    has_value = "наличие"
-elif wits_appraisal < -2.9:
-    wits_skeletal_class = "III"
-    has_value = "наличие"
+if ar_go_r_value < ar_go_l_value:
+    ar_go_status = "меньше"
 else:
-    wits_skeletal_class = "I"
-    has_value = "отсутствие"
-    # Если класс "I", проверяем дополнительные условия
-    if -2.5 <= wits_appraisal <= -2.9:
-        wits_trend_class = "с тенденцией к III классу"
-    elif 1.7 <= wits_appraisal <= 2.1:
-        wits_trend_class = "с тенденцией к II классу"
-
-
-# Определяем класс в зависимости от значения Wits Appraisal
-sassouni_text = ""
-sassouni_trend_class = ""
-has_direction = ""
-if sassouni > 3:
-    sassouni_skeletal_class = "III"
-    has_direction = "кзади"
-elif sassouni < 0:
-    sassouni_skeletal_class = "II"
-    has_direction = "кпереди"
-else:
-    sassouni_skeletal_class = "I"
-    # Если класс "I", проверяем дополнительные условия
-    if 2.6 <= sassouni <= 3:
-        sassouni_trend_class = "с тенденцией к III классу"
-    elif 0.1 <= sassouni <= 0.4:
-        sassouni_trend_class = "с тенденцией к II классу"
-
-sassouni_text_not_null = f"""Соотношение челюстей по методике Sassouni говорит за {sassouni_skeletal_class} скелетный класс {sassouni_trend_class} — базальная дуга проходит на {sassouni} мм {has_direction} от точки В (N = 0,0 мм ± 3,0 мм)."""
-sassouni_text_null = f"""Соотношение челюстей по методике Sassouni говорит за I скелетный класс — базальная дуга проходит через точку B (N = 0,0 мм ± 3,0 мм)."""
-
-if sassouni == 0:
-    sassouni_text = sassouni_text_null
-else:
-    sassouni_text = sassouni_text_not_null
-
-# Определяем класс в зависимости от значения APDI
-apdi_trend_class = ""
-if apdi_value > 86.4:
-    apdi_skeletal_class = "III"
-elif apdi_value < 76.4:
-    apdi_skeletal_class = "II"
-else:
-    apdi_skeletal_class = "I"
-    # Если класс "I", проверяем дополнительные условия
-    if 86 <= apdi_value <= 86.4:
-        apdi_trend_class = "с тенденцией к III классу"
-    elif 76.4 <= apdi_value <= 76.8:
-        apdi_trend_class = "с тенденцией к II классу"
-
-# Определяем класс в зависимости от значения PNSA
-pnsa_upper_limit = ws1['D9'].value + 3.5
-pnsa_lower_limit = ws1['D9'].value - 3.5
-pnsa_trend_class = ""
-pnsa_status = ""
-if pnsa_value > pnsa_upper_limit:
-    pnsa_status = "увеличению"
-elif pnsa_value < pnsa_lower_limit:
-    pnsa_status = "уменьшению"
-else:
-    pnsa_status = "норме"
-    # Если класс "I", проверяем дополнительные условия
-    if 86 <= pnsa_value <= 86.4:
-        pnsa_trend_class = "с тенденцией к III классу"
-    elif 76.4 <= pnsa_value <= 76.8:
-        pnsa_trend_class = "с тенденцией к II классу"
-
-# Определяем класс в зависимости от значения Ширины скелетного базиса (J-J)
-jj_upper_limit = ws1['D10'].value + 3
-jj_lower_limit = ws1['D10'].value - 3
-jj_status = ""
-if jj_value > jj_upper_limit:
-    jj_status = "расширению"
-elif jj_value < jj_lower_limit:
-    jj_status = "сужению"
-else:
-    jj_status = "норме"
-
-# Определяем класс в зависимости от значения SNA
-if sna_value > 85:
-    sna_status = "прогнатии"
-elif sna_value < 79:
-    sna_status = "ретрогнатии"
-else:
-    sna_status = "нормогнатии"
-
-# Определяем класс в зависимости от значения PP/SN
-if ppsn_value > 12:
-    ppsn_status = "ретроинклинации"
-elif ppsn_value < 5:
-    ppsn_status = "антеинклинации"
-else:
-    ppsn_status = "нормоинклинации"
+    ar_go_status = "больше"
 
 # Формируем текст, вставляя значения переменных
-resume_text = f"""
-Соотношение челюстей в сагиттальной плоскости.
-Межапикальный угол (<ANB) – {anb_value}˚, что соответствует соотношению челюстей по {anb_skeletal_class} скелетному классу {anb_trend_class} (N = 2,0˚ ± 2,0˚).
-Угол Бета (< Beta Angle) – {beta_angle}˚, что cоответствует соотношению челюстей по {beta_skeletal_class} скелетному классу {beta_trend_class} (N = 31,0˚ ± 4,0˚).
-Параметр Wits (Wits Appraisal.) – {wits_appraisal} мм что указывает на {has_value} в расположении апикальных базисов верхней и нижней челюстей в сагиттальной плоскости и говорит за {wits_skeletal_class} скелетный класс {wits_trend_class} (N = -0,4 мм ± 2,5 мм).
-{sassouni_text}
-Параметр APDI, указывающий на дисплазию развития челюстей в сагиттальной плоскости, равен {apdi_value}˚ и говорит за {apdi_skeletal_class} скелетный класс {apdi_trend_class} (N = 81,4˚ ± 5,0˚).
-Размер и положение верхней челюсти.
-Длина основания верхней челюсти (PNS-A) – {pnsa_value} мм, что соответствует {pnsa_status} в пределах нормы (N = {ws1['D9'].value} мм ± 3,5 мм).
-Ширина основания верхней (J-J) челюсти –  {jj_value} мм, что соответствует {jj_status} в пределах нормы (N = {ws1['D10'].value} мм ± 3,0 мм):  справа – {ws1['C11'].value} мм, слева – {ws1['C12'].value} мм (N = {ws1['D10'].value / 2} мм ± 1,5 мм).
-Положение верхней челюсти по сагиттали  (<SNA) – {sna_value}˚, что соответствует {sna_status} (N = 82,0˚ ±  3,0˚).
-Положение верхней челюсти по вертикали  (<SN-Palatal Plane) – {ppsn_value}˚, что соответствует {ppsn_status} (N = 8,0˚ ± 3,0˚).
-Roll ротация отсутствует\  вправо (по часовой стрелке) \ влево (против часовой стрелки).
-Yaw ротация отсутствует \ вправо  (по часовой стрелке) \ влево (против часовой стрелки). 
+resume_text2 = f"""
+Размер и положение нижней челюсти.
+Длина тела нижней челюсти (Go-Me): справа – {go_me_r_value} мм, слева – {go_me_l_value}  мм (N = {ws1['M59'].value} мм ± 5,0 мм).
+Длина тела нижней челюсти справа {go_me_status}, чем слева на {round(abs(go_me_r_value - go_me_l_value), 2)} мм.
+Длина ветви нижней челюсти (Co-Go) : справа – {go_go_r_value}  мм,  слева – {go_go_l_value}  мм (N = {ws1['D19'].value} мм ± 4,0 мм).
+Длина ветви нижней челюсти справа {go_go_status}, чем слева на {round(abs(go_go_r_value - go_go_l_value), 2)} мм.
+Гониальный угол (<Ar-Go-Me): справа –  {ar_go_r_value}˚,  слева – {ar_go_l_value}˚ (N = {ws1['D21'].value}˚ ± 5,0˚).
+Гониальный угол справа {ar_go_status}, чем слева на {round(abs(ar_go_r_value - ar_go_l_value), 2)}˚.
 
 """
 
@@ -753,14 +813,41 @@ name_textbox = prs.slides[0].shapes.add_textbox(text_left, text_top, text_width,
 text_frame = name_textbox.text_frame
 text_frame.word_wrap = True
 paragraph = text_frame.add_paragraph()
-paragraph.text = resume_text
 paragraph.font.size = Pt(10.5)
 paragraph.font.bold = False
 paragraph.font.name = "Montserrat"
+paragraph.text = resume_text2
 
-print("Слайд №17 сформирован")
-# -------------------------------------------------------
+print("Слайд №18 сформирован")
 
 if folder_name:
     save_folder = os.path.join(work_folder, folder_name)
     prs.save(os.path.join(save_folder, f"{folder_name}.pptx"))
+
+
+
+# Ширина базиса нижней челюсти (Md-Md) – 55,0 мм, что соответствует норме \ расширению \ сужению (N = 55,0 мм ± 3,0 мм).
+# Положение нижней челюсти по сагиттали  (<SNB) – 80,0˚, что соответствует норме  \ про  \ ретро гнатии тенденции к про \ ретрогнатии (N = 80,0˚ ± 3,0˚).
+# Положение нижней челюсти по вертикали (<MP-SN) – 43,6˚, что соответствует нормо  \ анте  \ретро инклинации \ тенденции к антре \ ретроинклинации (N= 32,0˚ ± 4,0˚).
+# Смещение подбородка не выявлено \ вправо \ влево на 1,2 мм.
+# Roll ротация отсутствует \  вправо (по часовой стрелке) \ влево (против часовой стрелки).
+#  Yaw ротация отсутствует \ вправо  (по часовой стрелке) \ влево (против часовой стрелки).
+#
+# Вертикальные параметры.
+# Вертикальное лицевое соотношение (N-ANS/ANS-Gn) не \гармоничное –  0,72 (N = 0,8 ± 0,09).
+# Отношение задней высоты лица к передней (S-Go/N-Gn) – 56,8% (N = 63,0% ± 2,0%).
+# Высота нижней трети лица по Ricketts (<ANS-Xi-Pm) – 42,9˚, что соответствует норме \ увеличению \ уменьшению (N = IVP 44,6˚ ± 5,5˚).
+# Параметр ODI – 53,9˚, что соответствует норме  \ тенденции к  \ вертикальной резцовой дизокклюзии \ глубокой резцовой окклюзии (N = 74,5˚ ±  5,0˚).
+#
+# Положение резцов.
+# Межрезцовый угол : справа – 134,0˚, слева – 129,0˚(N = 130,0˚ ± 5,0˚).
+# Наклон зуба 1.1 – 102,1˚,  зуба 2.1 – 104,9˚ (N = 110,0˚± 5,0˚).
+# Наклон зуба 3.1 – 93,4˚, зуба 4.1 – 95,8˚ (N = 95,0˚ ± 5,0˚).
+#
+# Penn анализ.
+# Ширина базиса нижней челюсти – 55,0 мм. Фактическая ширина базиса верхней челюсти – 58,0 мм.
+# Требуемая ширина базиса верхней челюсти = 60,0 мм.
+# Дефицит ширины скелетного базиса верхней челюсти  отсутствует \ составляет 2,0 мм.
+#
+# Воздухоносные пути.
+# Сужение \и уменьшение объема нижних воздухоносных путей. Сужения \и уменьшения объема нижних воздухоносных путей не выявлено. Значительное сужение на  уровне середины\ верхней  \ нижней трети C2 \ между С2-С3 = 182 мм², (N = 182 мм²).
