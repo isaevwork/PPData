@@ -763,7 +763,7 @@ print("Слайд №16 сформирован")
 
 # -------------------------------------------------------
 # Слайд №16
-# Определяем тенденцию к классу
+# Переменные с тенденциями к классу
 
 go_me_r_value = ws1['C17'].value
 go_me_l_value = ws1['C18'].value
@@ -774,21 +774,78 @@ go_go_l_value = ws1['C20'].value
 ar_go_r_value = ws1['C21'].value
 ar_go_l_value = ws1['C22'].value
 
+md_md_value = ws1['c23'].value
 
-if go_me_r_value < go_me_l_value:
-    go_me_status = "меньше"
-else:
-    go_me_status = "больше"
+snb_value = ws1['c24'].value
 
-if go_go_r_value < go_go_l_value:
-    go_go_status = "меньше"
-else:
-    go_go_status = "больше"
+mp_sn_value = ws1['C25'].value
 
-if ar_go_r_value < ar_go_l_value:
-    ar_go_status = "меньше"
+chin_displacement = ws1['C26'].value
+
+ans_quotient = ws1['N9'].value
+
+assessment_growth_type = ws1['L98'].value
+
+
+
+def compare_value(value1, value2, name):
+    if value1 is None or value2 is None:
+        print(f"Ошибка: Недостаточно данных для сравнения {name}")
+        return "None"
+    return 'меньше' if value1 < value2 else 'больше'
+
+
+# Определяем класс в зависимости от значения Go-Me
+go_me_status = compare_value(go_me_r_value, go_me_l_value, "Go-Me")
+
+# Определяем класс в зависимости от значения Go-Go
+go_go_status = compare_value(go_go_r_value, go_go_l_value, "Go-Go")
+
+# Определяем класс в зависимости от значения Ar-Go
+ar_go_status = compare_value(ar_go_r_value, ar_go_l_value, "Ar-Go")
+
+# Определяем класс в зависимости от значения Md-Md
+md_upper_limit = ws1['D23'].value + 3
+md_lower_limit = ws1['D23'].value - 3
+md_status = ""
+if md_md_value > md_upper_limit:
+    md_status = "расширению"
+elif md_md_value < md_lower_limit:
+    md_status = "сужению"
 else:
-    ar_go_status = "больше"
+    md_status = "норме"
+
+# Определяем класс в зависимости от значения <SNB
+if snb_value > 83:
+    snb_status = "прогнатии"
+elif snb_value < 77:
+    snb_status = "ретрогнатии"
+else:
+    snb_status = "нормогнатии"
+
+# Определяем класс в зависимости от значения <MP\SN
+if mp_sn_value > 36:
+    mp_sn_status = "ретроинклинации"
+elif mp_sn_value < 28:
+    mp_sn_status = "антеинклинации"
+else:
+    mp_sn_status = "нормоинклинации"
+
+# Определение смещения подбородка
+if chin_displacement > 0:
+    chin_displacement_status = f"влево на {round(chin_displacement, 2)} мм."
+elif chin_displacement < 0:
+    chin_displacement_status = f"вправо на {round(chin_displacement, 2)} мм."
+else:
+    chin_displacement_status = "не выявлено."
+
+# Определяем класс в зависимости от значения (N-ANS) / (ANS-Gn)
+if ans_quotient > 0.89:
+    ans_quotient_status = "негармоничное"
+elif ans_quotient < 0.71:
+    ans_quotient_status = "негармоничное"
+else:
+    ans_quotient_status = "гармоничное."
 
 # Формируем текст, вставляя значения переменных
 resume_text2 = f"""
@@ -799,10 +856,17 @@ resume_text2 = f"""
 Длина ветви нижней челюсти справа {go_go_status}, чем слева на {round(abs(go_go_r_value - go_go_l_value), 2)} мм.
 Гониальный угол (<Ar-Go-Me): справа –  {ar_go_r_value}˚,  слева – {ar_go_l_value}˚ (N = {ws1['D21'].value}˚ ± 5,0˚).
 Гониальный угол справа {ar_go_status}, чем слева на {round(abs(ar_go_r_value - ar_go_l_value), 2)}˚.
+Ширина базиса нижней челюсти (Md-Md) – {md_md_value} мм, что соответствует {md_status} (N = {ws1['D23'].value} мм ± 3,0 мм).
+Положение нижней челюсти по сагиттали  (<SNB) – {snb_value}˚, что соответствует {snb_status} (N = 80,0˚ ± 3,0˚).
+Положение нижней челюсти по вертикали (<MP-SN) – {mp_sn_value}˚, что соответствует {mp_sn_status} (N = 32,0˚ ± 4,0˚).
+Смещение подбородка {chin_displacement_status}
+Roll ротация отсутствует \  вправо (по часовой стрелке) \ влево (против часовой стрелки).
+Yaw ротация отсутствует \ вправо  (по часовой стрелке) \ влево (против часовой стрелки).
+Вертикальные параметры.
+Вертикальное лицевое соотношение (N-ANS/ANS-Gn) {ans_quotient_status} – {round(ans_quotient, 2)} (N = 0,8 ± 0,09).
+Отношение задней высоты лица к передней (S-Go/N-Gn) – {assessment_growth_type}% (N = 63,0% ± 2,0%).
 
 """
-
-
 
 # Добавляем текст на слайд
 text_left = Inches(0.6)
@@ -826,16 +890,6 @@ if folder_name:
 
 
 
-# Ширина базиса нижней челюсти (Md-Md) – 55,0 мм, что соответствует норме \ расширению \ сужению (N = 55,0 мм ± 3,0 мм).
-# Положение нижней челюсти по сагиттали  (<SNB) – 80,0˚, что соответствует норме  \ про  \ ретро гнатии тенденции к про \ ретрогнатии (N = 80,0˚ ± 3,0˚).
-# Положение нижней челюсти по вертикали (<MP-SN) – 43,6˚, что соответствует нормо  \ анте  \ретро инклинации \ тенденции к антре \ ретроинклинации (N= 32,0˚ ± 4,0˚).
-# Смещение подбородка не выявлено \ вправо \ влево на 1,2 мм.
-# Roll ротация отсутствует \  вправо (по часовой стрелке) \ влево (против часовой стрелки).
-#  Yaw ротация отсутствует \ вправо  (по часовой стрелке) \ влево (против часовой стрелки).
-#
-# Вертикальные параметры.
-# Вертикальное лицевое соотношение (N-ANS/ANS-Gn) не \гармоничное –  0,72 (N = 0,8 ± 0,09).
-# Отношение задней высоты лица к передней (S-Go/N-Gn) – 56,8% (N = 63,0% ± 2,0%).
 # Высота нижней трети лица по Ricketts (<ANS-Xi-Pm) – 42,9˚, что соответствует норме \ увеличению \ уменьшению (N = IVP 44,6˚ ± 5,5˚).
 # Параметр ODI – 53,9˚, что соответствует норме  \ тенденции к  \ вертикальной резцовой дизокклюзии \ глубокой резцовой окклюзии (N = 74,5˚ ±  5,0˚).
 #
