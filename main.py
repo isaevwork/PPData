@@ -867,38 +867,17 @@ else:
     odi_value_status = "норме."
 
 
-def get_tooth_status(slant_value, difference, upper_threshold, lower_threshold):
+def get_tooth_status(slant_value, difference, upper_threshold, lower_threshold, tooth_num):
     if slant_value is None:
-        return "Нормальное положение зуба"
+        return f"Нормальное положение зуба {tooth_num}"
     elif slant_value > upper_threshold:
-        return f"Протрузия зуба на {difference}˚"
+        return f"Протрузия зуба  {tooth_num} на {difference}˚"
     elif slant_value < lower_threshold:
-        return f"Ретрузия зуба на {difference}˚"
+        return f"Ретрузия зуба  {tooth_num} на {difference}˚"
     else:
-        return "Нормальное положение зуба"
+        return f"Нормальное положение зуба  {tooth_num}"
 
 
-slant_r1_1 = ws1['C33'].value
-slant_l2_1 = ws1['C34'].value
-slant_l3_1 = ws1['C36'].value
-slant_r4_1 = ws1['C35'].value
-
-slant_r1_1_dif = round(ws1['G33'].value, 1) if ws1['G33'].value is not None else None
-slant_l2_1_dif = round(ws1['G34'].value, 1) if ws1['G34'].value is not None else None
-slant_l3_1_dif = round(ws1['G35'].value, 1) if ws1['G35'].value is not None else None
-slant_r4_1_dif = round(ws1['G36'].value, 1) if ws1['G36'].value is not None else None
-
-r1_1_value_status = get_tooth_status(slant_r1_1, slant_r1_1_dif, 115, 105)
-l2_1_value_status = get_tooth_status(slant_l2_1, slant_l2_1_dif, 115, 105)
-l3_1_value_status = get_tooth_status(slant_l3_1, slant_l3_1_dif, 100, 90)
-r4_1_value_status = get_tooth_status(slant_r4_1, slant_r4_1_dif, 100, 90)
-
-# Формирование строки с динамическими данными
-u1_pp_sentence = f"{r1_1_value_status}, {l2_1_value_status}"
-l1_mp_sentence = f"{l3_1_value_status}, {r4_1_value_status}"
-
-
-# Разделение строки по запятой и применение capitalize() ко второй части
 # Функция для коррекции первой буквы после запятой на строчную
 def correct_sentence(sentence):
     parts = sentence.split(',')
@@ -906,6 +885,28 @@ def correct_sentence(sentence):
         parts[1] = parts[1].strip()[0].lower() + parts[1].strip()[1:]
     return ', '.join(parts)
 
+
+slant_r1_1 = ws1['C33'].value
+slant_l2_1 = ws1['C34'].value
+slant_l3_1 = ws1['C36'].value
+slant_r4_1 = ws1['C35'].value
+
+
+slant_r1_1_dif = round(ws1['G33'].value, 1) if ws1['G33'].value is not None else None
+slant_l2_1_dif = round(ws1['G34'].value, 1) if ws1['G34'].value is not None else None
+slant_l3_1_dif = round(ws1['G36'].value, 1) if ws1['G36'].value is not None else None
+slant_r4_1_dif = round(ws1['G35'].value, 1) if ws1['G35'].value is not None else None
+
+print(slant_r4_1)
+print(slant_r4_1_dif)
+r1_1_value_status = get_tooth_status(slant_r1_1, slant_r1_1_dif, 115, 105, 1.1)
+l2_1_value_status = get_tooth_status(slant_l2_1, slant_l2_1_dif, 115, 105, 2.1)
+l3_1_value_status = get_tooth_status(slant_l3_1, slant_l3_1_dif, 100, 90, 3.1)
+r4_1_value_status = get_tooth_status(slant_r4_1, slant_r4_1_dif, 100, 90, 4.1)
+
+# Формирование строки с динамическими данными
+u1_pp_sentence = f"{r1_1_value_status}, {l2_1_value_status}"
+l1_mp_sentence = f"{l3_1_value_status}, {r4_1_value_status}"
 
 # Применение функции к динамическим строкам
 u1_pp = correct_sentence(u1_pp_sentence)
