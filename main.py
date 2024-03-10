@@ -482,8 +482,8 @@ print("Слайд №13 сформирован")
 
 
 # Слайд № 14
-# TODO image_names = [f"{folder_name}_{image}" for image in ["77", "88"]]
-images_name_14 = ["77", "88"]
+# TODO image_names = [f"{folder_name}_{image}" for image in ["3", "000"]]
+images_name_14 = ["3", "000"]
 images_position_14 = [
     (Inches(0.6), Inches(8.1), Inches(3.4), Inches(3.3)),
     (Inches(4.2), Inches(8.1), Inches(3.4), Inches(3.3)),
@@ -872,6 +872,7 @@ r4_1_value_status = get_tooth_status(slant_r4_1, slant_r4_1_dif, 100, 90, 4.1)
 u1_pp_sentence = f"{r1_1_value_status}, {l2_1_value_status}"
 l1_mp_sentence = f"{l3_1_value_status}, {r4_1_value_status}"
 
+
 # Применение функции к динамическим строкам
 u1_pp = correct_sentence(u1_pp_sentence)
 l1_pp = correct_sentence(l1_mp_sentence)
@@ -903,6 +904,18 @@ resume_text4 = f"""
 Межрезцовый угол: справа – {u1_l1_r}˚, слева – {u1_l1_l}˚ (N = 130,0˚ ± 6,0˚).
 {u1_pp} (N = 110,0˚± 5,0˚).
 {l1_pp} (N = 95,0˚ ± 5,0˚).
+"""
+
+width_lower_jaw = ws1['C23'].value
+width_upper_jaw = ws1['C10'].value
+width_dif_jaw = width_lower_jaw + 5
+jaw_dif = abs(width_dif_jaw - width_upper_jaw)
+jaw_status = f"составляет {jaw_dif} мм." if jaw_dif > 0 else "отсутствует."
+
+resume_text5 = f"""
+Ширина базиса нижней челюсти – {width_lower_jaw} мм. Фактическая ширина базиса верхней челюсти – {width_upper_jaw} мм. 
+Требуемая ширина базиса верхней челюсти = {width_dif_jaw} мм. 
+Дефицит ширины скелетного базиса верхней челюсти {jaw_status}
 """
 
 # Добавляем текст на слайд
@@ -941,8 +954,196 @@ paragraph.font.bold = False
 paragraph.font.name = "Montserrat"
 paragraph.text = resume_text4
 
+# Добавляем текст на слайд
+name_textbox_18_4 = prs.slides[18].shapes.add_textbox(Inches(0.5), Inches(6.9), text_width_17, text_height_17)
+text_frame = name_textbox_18_4.text_frame
+text_frame.word_wrap = True
+paragraph = text_frame.add_paragraph()
+paragraph.font.size = Pt(10.5)
+paragraph.font.bold = False
+paragraph.font.name = "Montserrat"
+paragraph.text = resume_text5
+
 print("Слайд №18 сформирован")
 
+# -------------------------------------------------------
+# Слайд №19
+
+# Верхняя челюсть: пункт 1
+if jaw_dif == 0:
+    width_basis_lower_jaw = "норме"
+elif width_upper_jaw > width_dif_jaw:
+    width_basis_lower_jaw = f"расширении базиса верхней челюсти на {round(jaw_dif, 2)} мм"
+else:
+    width_basis_lower_jaw = f"сужении базиса верхней челюсти на {round(jaw_dif, 2)} мм"
+
+# Нижняя челюсть: пункт 3
+if go_me_r_value > ws1['D17'].value + ws1['E17'].value:
+    go_me_r_status = "увеличена"
+elif go_me_r_value < ws1['D17'].value + ws1['E17'].value:
+    go_me_r_status = "уменьшена"
+else:
+    go_me_r_status = "в норме"
+
+# Нижняя челюсть: пункт 3
+if go_me_l_value > ws1['D18'].value + ws1['E18'].value:
+    go_me_l_status = "увеличена"
+elif go_me_l_value < ws1['D18'].value + ws1['E18'].value:
+    go_me_l_status = "уменьшена"
+else:
+    go_me_l_status = "в норме"
+
+# Нижняя челюсть: пункт 4
+if go_go_r_value > ws1['D19'].value + ws1['E19'].value:
+    go_go_r_status = "увеличена"
+elif go_go_r_value < ws1['D19'].value + ws1['E19'].value:
+    go_go_r_status = "уменьшена"
+else:
+    go_go_r_status = "в норме"
+
+# Нижняя челюсть: пункт 4
+if go_go_l_value > ws1['D20'].value + ws1['E20'].value:
+    go_go_l_status = "увеличена"
+elif go_go_l_value < ws1['D20'].value + ws1['E20'].value:
+    go_go_l_status = "уменьшена"
+else:
+    go_go_l_status = "в норме"
+
+snb_value_finish = ws1['c24'].value
+
+# Определяем класс в зависимости от значения <SNB
+if snb_value_finish > 83:
+    snb_status_finish = "прогнатия"
+elif snb_value_finish < 77:
+    snb_status_finish = "ретрогнатия"
+else:
+    snb_status_finish = "нормогнатия"
+
+snb_status_uppercase = snb_status.capitalize()
+
+incisor_tilt_r1_1 = r1_1_value_status.split("на")[0].strip()
+incisor_tilt_l2_1 = l2_1_value_status.split("на")[0].strip()
+incisor_tilt_l3_1 = l3_1_value_status.split("на")[0].strip()
+incisor_tilt_r4_1 = r4_1_value_status.split("на")[0].strip()
+
+overbite_value = ws1['C29'].value
+overjet_value = ws1['C30'].value
+
+
+# Определяем класс в зависимости от значения Overbite
+if overbite_value > 4.4:
+    overbite_value_status = f"Глубокая резцовая окклюзия. Вертикальное резцовое перекрытие увеличено до {overbite_value} мм (N = 2,5 мм ± 2,0 мм)."
+elif overbite_value < 0.5:
+    overbite_value_status = f"Вертикальная резцовая дизокклюзия – {overbite_value} мм (N = 2,5 мм ± 2,0 мм)."
+else:
+    overbite_value_status = f"Вертикальное резцовое перекрытие в норме – {overbite_value} мм (N = 2,5 мм ± 2,0 мм)."
+
+# Определяем класс в зависимости от значения Overjet
+if overjet_value > 5:
+    overjet_value_status = f"Сагиттальная щель – {overjet_value} мм (N = 2,5 мм ± 2,5 мм)."
+elif overjet_value < 0:
+    overjet_value_status = f"Обратная сагиттальная щель {abs(overjet_value)} мм (от -0,1 и выше) (N = 2,5 мм ± 2,5 мм)."
+else:
+    overjet_value_status = f"Сагиттальное резцовое перекрытие в норме – {overjet_value} мм (N = 2,5 мм ± 2,5 мм)."
+
+slide20_text1 = f"""
+1. Скелетный III класс обусловленный диспропорцией расположения апикальных 
+    базисов челюстей в сагиттальном направлении. Зубоальвеолярная форма 
+    дистальной \ мезиальной окклюзии.
+2. Мезофациальный тип строения лицевого отдела черепа. 
+3. Нейтральный тип роста с тенденцией к вертикальному\ горизонтальному росту.
+4. Высота нижней трети лица по Ricketts  в {ans_xi_pm_status}.
+5. Профиль лица  выпуклый. 
+6. Ретроположение верхней и нижней губы относительно 
+    эстетической плоскости Ricketts. 
+7. Сужение и уменьшение объема воздухоносных путей. Сужения и уменьшения 
+    объема воздухоносных путей не выявлено. 
+8. Нормальное \ Переднее \ Заднее положение правой \ левой суставной головки
+    височно-нижнечелюстного сустава.
+9. Скелетный возраст соответствует IIIVI стадии созревания шейных позвонков.
+"""
+
+slide20_text2 = f"""
+1. Ширина базиса верхней челюсти в {width_basis_lower_jaw} 
+    (Penn анализ).
+2. {sna_status} верхней челюсти. {ppsn_status} верхней челюсти.
+3. Ротация верхней челюсти в Roll \Yaw плоскости вправо (по часовой стрелке)
+    \влево (против часовой стрелки).
+"""
+slide20_text3 = f"""
+1. Ширина базиса нижней челюсти в {md_status} базиса нижней челюсти
+    относительно возрастной нормы.
+2. {snb_status_uppercase} нижней челюсти. {mp_sn_status} нижней челюсти.
+3. Длина тела нижней челюсти справа {go_me_r_status}. Длина тела нижней челюсти слева
+    {go_me_l_status}.
+4. Длина ветви нижней челюсти справа {go_go_r_status}. Длина ветви нижней челюсти 
+    слева {go_go_l_status}.
+5. Смещение подбородка {chin_displacement_status}.
+6. Ротация нижней челюсти в Roll \Yaw плоскости вправо (по часовой стрелке) \влево 
+    (против часовой стрелки).
+"""
+
+slide20_text4 = f"""
+1. Межрезцовая линия на верхней челюсти смещена относительно
+    срединно сагиттальной линии на 1,2 мм вправо, на нижней челюсти смещена 
+    на 1,2 мм влево.
+2. Сужение верхнего зубного ряда в области клыков, премоляров, моляров.
+    Сужение нижнего зубного ряда в области клыков, моляров, премоляров.
+3. Длина фронтального участка верхнего зубного ряда в норме , нижнего зубного ряда
+    в норме.
+4. {incisor_tilt_r1_1}. {incisor_tilt_l2_1}. {incisor_tilt_l3_1}.
+    {incisor_tilt_r4_1}
+5. {overbite_value_status}
+6. {overjet_value_status}
+7. Глубина кривой Шпее в увеличена справа \ слева.
+"""
+
+# Добавляем текст на слайд
+text_frame = prs.slides[19].shapes.add_textbox(Inches(0.6), Inches(0.6), Inches(7), Inches(5)).text_frame
+text_frame.word_wrap = True
+paragraph = text_frame.add_paragraph()
+paragraph.font.size = Pt(10.5)
+paragraph.font.bold = False
+paragraph.font.name = "Montserrat"
+paragraph.text = slide20_text1
+
+# Добавляем текст на слайд
+text_frame = prs.slides[19].shapes.add_textbox(Inches(0.6), Inches(3.6), Inches(7), Inches(5)).text_frame
+text_frame.word_wrap = True
+paragraph = text_frame.add_paragraph()
+paragraph.font.size = Pt(10.5)
+paragraph.font.bold = False
+paragraph.font.name = "Montserrat"
+paragraph.text = slide20_text2
+
+# Добавляем текст на слайд
+text_frame = prs.slides[19].shapes.add_textbox(Inches(0.6), Inches(5), Inches(7), Inches(5)).text_frame
+text_frame.word_wrap = True
+paragraph = text_frame.add_paragraph()
+paragraph.font.size = Pt(10.5)
+paragraph.font.bold = False
+paragraph.font.name = "Montserrat"
+paragraph.text = slide20_text3
+
+# Добавляем текст на слайд
+text_frame = prs.slides[19].shapes.add_textbox(Inches(0.6), Inches(7.35), Inches(7), Inches(5)).text_frame
+text_frame.word_wrap = True
+paragraph = text_frame.add_paragraph()
+paragraph.font.size = Pt(10.5)
+paragraph.font.bold = False
+paragraph.font.name = "Montserrat"
+paragraph.text = slide20_text4
+
+print("Слайд №19 сформирован")
+
+# -------------------------------------------------------
 if folder_name:
     save_folder = os.path.join(work_folder, folder_name)
     prs.save(os.path.join(save_folder, f"{folder_name}.pptx"))
+
+# Верхняя челюсть:
+
+# Нижняя челюсть:
+#
+#
+# Параметры наклона и положения зубов:
