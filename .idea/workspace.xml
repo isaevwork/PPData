@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bf6c7617-7d1d-4c28-8fb7-0f4019ec218e" name="Changes" comment="[parsing-data] - добавил логику расчета значения наклона объекта.">
+    <list default="true" id="bf6c7617-7d1d-4c28-8fb7-0f4019ec218e" name="Changes" comment="[parsing-data] - пофиксил баг в неккоректной логике расчета значения наклона объекта.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
@@ -41,23 +41,23 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_ADD_EXTERNAL_FILES": "true",
-    "Python.main.executor": "Run",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "master",
-    "last_opened_file_path": "C:/Users/guzal/Downloads/parser/PPData",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "preferences.pluginManager",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
+    &quot;Python.main.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/guzal/Downloads/parser/PPData&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\guzal\Downloads\parser\PPData" />
@@ -111,7 +111,9 @@
       <workItem from="1708382524570" duration="197013000" />
       <workItem from="1709886109688" duration="19838000" />
       <workItem from="1709940240272" duration="17000" />
-      <workItem from="1709974649130" duration="14946000" />
+      <workItem from="1709974649130" duration="17104000" />
+      <workItem from="1710024040380" duration="312000" />
+      <workItem from="1710024369628" duration="13039000" />
     </task>
     <task id="LOCAL-00001" summary="[parsing-data] - Добавлено сохранение презентации с именем папки в скрипте парсинга.">
       <option name="closed" value="true" />
@@ -385,7 +387,15 @@
       <option name="project" value="LOCAL" />
       <updated>1710005831105</updated>
     </task>
-    <option name="localTasksCounter" value="35" />
+    <task id="LOCAL-00035" summary="[parsing-data] - пофиксил баг в неккоректной логике расчета значения наклона объекта.">
+      <option name="closed" value="true" />
+      <created>1710019539389</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1710019539389</updated>
+    </task>
+    <option name="localTasksCounter" value="36" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -403,7 +413,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="[parsing-data] - добавлен 6 слайд." />
     <MESSAGE value="[parsing-data] - добавлен 7 слайд." />
     <MESSAGE value="[parsing-data] - добавлены 8, 9 слайды." />
     <MESSAGE value="[parsing-data] - добавлен 10 слайд." />
@@ -428,9 +437,10 @@
     <MESSAGE value="[parsing-data] - добавил логику генерации второй части заключения." />
     <MESSAGE value="[parsing-data] - добавил логику генерации третьей части заключения." />
     <MESSAGE value="[parsing-data] - добавил логику расчета значения наклона объекта." />
-    <option name="LAST_COMMIT_MESSAGE" value="[parsing-data] - добавил логику расчета значения наклона объекта." />
+    <MESSAGE value="[parsing-data] - пофиксил баг в неккоректной логике расчета значения наклона объекта." />
+    <option name="LAST_COMMIT_MESSAGE" value="[parsing-data] - пофиксил баг в неккоректной логике расчета значения наклона объекта." />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/PPData$main.coverage" NAME="main Coverage Results" MODIFIED="1710018225484" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/PPData$main.coverage" NAME="main Coverage Results" MODIFIED="1710076756609" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

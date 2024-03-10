@@ -1,6 +1,5 @@
 import os
 import warnings
-import pandas as pd
 from pptx.dml.color import RGBColor
 from openpyxl import load_workbook
 from pptx import Presentation
@@ -214,11 +213,7 @@ print("Слайд №2 сформирован")
 ws2 = wb["Лист2"]
 
 # Создаем пустой DataFrame
-slideThree_data = []
-slideThree_MT = []
-
-for row in ws2.iter_rows(min_row=2, max_row=9, min_col=16, max_col=17, values_only=True):
-    slideThree_MT.append(list(row))
+slideThree_MT = list(ws2.iter_rows(min_row=2, max_row=9, min_col=16, max_col=17, values_only=True))
 
 # Размер и положение данных на слайде
 c_left = Inches(2.8)  # Левая граница
@@ -262,87 +257,59 @@ for i, row_data in enumerate(transformed_dataframe):
         p.font.name = "Montserrat Medium"
         p.alignment = PP_PARAGRAPH_ALIGNMENT.CENTER
 
-# Проходимся по строкам и столбцам в Excel и добавляем их в DataFrame
-for row in ws2.iter_rows(values_only=True):
-    slideThree_data.append(row)
 
-# Создаем DataFrame из данных
-df = pd.DataFrame(slideThree_data).iloc[0:9, 14:18]
-sub_up_df = pd.DataFrame(slideThree_data).iloc[1:2, 1:13]
-sub_lower_df = pd.DataFrame(slideThree_data).iloc[2:3, 1:13]
+def fill_table(present, slide_index, slide_data, cl, ct, cw, ch, fs, column_offsets):
+    for i, row_datas in enumerate(slide_data):
+        for j, ce_value in enumerate(row_datas):
+            # Рассчитываем координаты для текущей ячейки
+            ce_left = cl + j * cw
 
-# Получаем количество строк и столбцов в таблице
-num_rows, num_cols = df.shape
-sub_up_num_rows, sub_up_num_cols = sub_up_df.shape
-sub_lower_num_rows, sub_lower_num_cols = sub_lower_df.shape
+            # Преобразуем значение в строку, если оно не None
+            text_value = str(round(ce_value, 2)) if isinstance(ce_value, (int, float)) else str(ce_value)
 
-# Определяем размеры и позицию таблицы на слайде
-sub_up_left = Inches(0.9)
-sub_up_top = Inches(2.3)
-sub_up_width = Inches(6)
-sub_up_height = Inches(0.3)
+            # Получаем информацию о смещении для текущего столбца
+            offset_info = column_offsets.get(j)
+            if offset_info:
+                add_offset, offset_value = offset_info
+                if add_offset:
+                    ce_left += offset_value
+                else:
+                    ce_left = offset_value
 
-sub_lower_left = Inches(1.05)
-sub_lower_top = Inches(3.8)
-sub_lower_width = Inches(6.1)
-sub_lower_height = Inches(0.3)
-
-# Добавляем таблицу на слайд
-sub_up_table = prs.slides[3].shapes.add_table(1, 12, sub_up_left, sub_up_top, sub_up_width, sub_up_height).table
-sub_lower_table = prs.slides[3].shapes.add_table(1, 12, sub_lower_left, sub_lower_top, sub_lower_width,
-                                                 sub_lower_height).table
+            # Добавление текстового блока на слайд с текущими координатами и цветом
+            table_frame = present.slides[slide_index].shapes.add_textbox(ce_left, ct, cw, ch).text_frame
+            p = table_frame.add_paragraph()
+            p.text = text_value
+            p.font.size = fs
+            p.font.name = "Montserrat Medium"
+            p.alignment = PP_PARAGRAPH_ALIGNMENT.CENTER
 
 
-def fill_table_from_df(data_frame, target_table):
-    # Определение количества строк и столбцов в DataFrame
-    temp_num_rows, temp_num_cols = data_frame.shape
-    # Проход по каждой строке DataFrame
-    for rows in range(temp_num_rows):
-        # Проход по каждому столбцу DataFrame
-        for col in range(temp_num_cols):
-            # Получение значения из DataFrame
-            temp_value = data_frame.iloc[rows, col]
-            # Получение ячейки таблицы PowerPoint
-            temp_cell = target_table.cell(rows, col)
-            # Преобразование значения в строку и запись в ячейку таблицы
-            temp_cell.text = str(int(temp_value)) if isinstance(temp_value, float) else str(temp_value)
-            temp_cell.text_frame.paragraphs[0].font.name = "Montserrat Medium"
+up_data3 = list(ws2.iter_rows(min_row=2, max_row=2, min_col=2, max_col=13, values_only=True))
+lower_data3 = list(ws2.iter_rows(min_row=3, max_row=3, min_col=2, max_col=13, values_only=True))
 
+column_offsets_up = {
+    1: (True, Inches(0.1)),
+    2: (True, Inches(0.05)),
+    7: (False, Inches(4.65)),
+    8: (False, Inches(5.15)),
+    9: (False, Inches(5.65)),
+    10: (False, Inches(6.2)),
+    11: (False, Inches(6.76))
+}
+column_offsets_lower = {
+    1: (True, Inches(0.15)),
+    2: (True, Inches(0.2)),
+    3: (True, Inches(0.2)),
+    4: (False, Inches(3.3)),
+    5: (False, Inches(3.74)),
+    6: (False, Inches(4.1)),
+    10: (False, Inches(5.9)),
+    11: (False, Inches(6.5))
+}
 
-# Применение функции для заполнения верхней и нижней таблиц из DataFrame
-fill_table_from_df(sub_up_df, sub_up_table)
-fill_table_from_df(sub_lower_df, sub_lower_table)
-
-sub_up_table.cell(0, 0).text_frame.paragraphs[0].alignment = PP_PARAGRAPH_ALIGNMENT.CENTER
-sub_up_table.columns[0].width = Inches(0.75)
-sub_up_table.columns[1].width = Inches(0.55)
-sub_up_table.columns[5].width = Inches(0.6)
-sub_up_table.columns[6].width = Inches(0.5)
-sub_up_table.columns[10].width = Inches(0.6)
-
-sub_lower_table.cell(0, 0).text_frame.paragraphs[0].alignment = PP_PARAGRAPH_ALIGNMENT.CENTER
-sub_lower_table.columns[0].width = Inches(0.92)
-sub_lower_table.columns[1].width = Inches(0.5)
-sub_lower_table.columns[3].width = Inches(0.4)
-sub_lower_table.columns[4].width = Inches(0.4)
-sub_lower_table.columns[5].width = Inches(0.4)
-sub_lower_table.columns[6].width = Inches(0.4)
-sub_lower_table.columns[7].width = Inches(0.4)
-sub_lower_table.columns[10].width = Inches(0.6)
-
-
-# Устанавливаем прозрачный цвет заливки для каждой ячейки таблицы
-def set_transparent_fill(t_table):
-    for t_row in t_table.rows:
-        for t_cell in t_row.cells:
-            t_cell.fill.solid()
-            t_cell.text_frame.paragraphs[0].font.color.rgb = RGBColor(0, 0, 0)
-            t_cell.fill.background()
-
-
-# Применяем функцию к верхней и нижней таблицам
-set_transparent_fill(sub_up_table)
-set_transparent_fill(sub_lower_table)
+fill_table(prs, 3, up_data3, Inches(0.9), Inches(2.45), Inches(0.55), Inches(0.27), Pt(14), column_offsets_up)
+fill_table(prs, 3, lower_data3, Inches(1.3), Inches(3.65), Inches(0.45), Inches(0.27), Pt(14), column_offsets_lower)
 
 print("Слайд №3 сформирован")
 # -------------------------------------------------------
@@ -891,14 +858,11 @@ slant_l2_1 = ws1['C34'].value
 slant_l3_1 = ws1['C36'].value
 slant_r4_1 = ws1['C35'].value
 
-
 slant_r1_1_dif = round(ws1['G33'].value, 1) if ws1['G33'].value is not None else None
 slant_l2_1_dif = round(ws1['G34'].value, 1) if ws1['G34'].value is not None else None
 slant_l3_1_dif = round(ws1['G36'].value, 1) if ws1['G36'].value is not None else None
 slant_r4_1_dif = round(ws1['G35'].value, 1) if ws1['G35'].value is not None else None
 
-print(slant_r4_1)
-print(slant_r4_1_dif)
 r1_1_value_status = get_tooth_status(slant_r1_1, slant_r1_1_dif, 115, 105, 1.1)
 l2_1_value_status = get_tooth_status(slant_l2_1, slant_l2_1_dif, 115, 105, 2.1)
 l3_1_value_status = get_tooth_status(slant_l3_1, slant_l3_1_dif, 100, 90, 3.1)
