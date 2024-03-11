@@ -419,42 +419,42 @@ images_name_10 = ["33", "44"]
 image_path = os.path.join(image_folder, images_name_10[0]  + ".jpg")
 
 
-def crop_image(image_path, output_path, new_width, new_height):
+def crop_image(img_path, out_path, new_width, new_height):
     """
     Обрезает и изменяет размеры изображения и сохраняет его.
     Args:
-        image_path (str): Путь к исходному изображению.
-        output_path (str): Путь для сохранения обрезанного изображения.
+        img_path (str): Путь к исходному изображению.
+        out_path (str): Путь для сохранения обрезанного изображения.
         new_width (int): Новая ширина изображения.
         new_height (int): Новая высота изображения.
     """
-    image = Image.open(image_path)
-    width, height = image.size
+    image = Image.open(img_path)
+    width_i, height_i = image.size
 
     # Определяем координаты области обрезки относительно центра изображения
-    left = (width - new_width) // 2
-    top = (height - new_height) // 2
-    right = (width + new_width) // 2
-    bottom = (height + new_height) // 2
+    left_i = (width_i - new_width) // 2
+    top_i = (height_i - new_height) // 2
+    right_i = (width_i + new_width) // 2
+    bottom_i = (height_i + new_height) // 2
 
-    cropped_image = image.crop((left, top, right, bottom))
-    cropped_image.save(output_path)
+    cropped_image = image.crop((left_i, top_i, right_i, bottom_i))
+    cropped_image.save(out_path)
 
 
 # Пример использования
-image_path = os.path.join(image_folder, "444" + ".jpg") # Путь к исходному изображению
-output_path = os.path.join(image_folder, "444" + ".jpg")  # Путь для сохранения обрезанного изображения
+img_path = os.path.join(image_folder, "444" + ".jpg") # Путь к исходному изображению
+out_path = os.path.join(image_folder, "444" + ".jpg")  # Путь для сохранения обрезанного изображения
 new_width = 1200
 new_height = 1068
-crop_image(image_path, output_path, new_width, new_height)
+crop_image(img_path, out_path, new_width, new_height)
 
 images_position_10 = [
     (Inches(0.5), Inches(7.5), Inches(3.5), Inches(3.5)),
     (Inches(4.1), Inches(7.5), Inches(3.5), Inches(3.5)),
 ]
-slide_index_10 = 10
-prs.slides[slide_index_10].shapes.add_picture(output_path, Inches(1.2), Inches(1.4), Inches(6), Inches(5.5))
-insert_images(images_name_10, images_position_10, slide_index_10)
+
+prs.slides[10].shapes.add_picture(out_path, Inches(1.2), Inches(1.4), Inches(6), Inches(5.5))
+insert_images(images_name_10, images_position_10, 10)
 print("Слайд №10 сформирован")
 # -------------------------------------------------------
 # Слайд № 11

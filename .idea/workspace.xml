@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bf6c7617-7d1d-4c28-8fb7-0f4019ec218e" name="Changes" comment="[parsing-data] - добавил заключительную логику для формирования результата.">
+    <list default="true" id="bf6c7617-7d1d-4c28-8fb7-0f4019ec218e" name="Changes" comment="[parsing-data] - добавил логику обрезки больших картинок.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
@@ -115,7 +115,7 @@
       <workItem from="1710024040380" duration="312000" />
       <workItem from="1710024369628" duration="32026000" />
       <workItem from="1710106308446" duration="51000" />
-      <workItem from="1710177729779" duration="6718000" />
+      <workItem from="1710177729779" duration="7042000" />
     </task>
     <task id="LOCAL-00001" summary="[parsing-data] - Добавлено сохранение презентации с именем папки в скрипте парсинга.">
       <option name="closed" value="true" />
@@ -413,7 +413,15 @@
       <option name="project" value="LOCAL" />
       <updated>1710106062923</updated>
     </task>
-    <option name="localTasksCounter" value="38" />
+    <task id="LOCAL-00038" summary="[parsing-data] - добавил логику обрезки больших картинок.">
+      <option name="closed" value="true" />
+      <created>1710190778762</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1710190778762</updated>
+    </task>
+    <option name="localTasksCounter" value="39" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -431,7 +439,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="[parsing-data] - добавлен 10 слайд." />
     <MESSAGE value="[parsing-data] - добавлен 11 слайд." />
     <MESSAGE value="[parsing-data] - добавлен 12 слайд." />
     <MESSAGE value="[parsing-data] - внес первую часть исправлений согласно новому шаблону." />
@@ -456,7 +463,8 @@
     <MESSAGE value="[parsing-data] - пофиксил баг в неккоректной логике расчета значения наклона объекта." />
     <MESSAGE value="[parsing-data] - порефакторил и удалил pandas lib." />
     <MESSAGE value="[parsing-data] - добавил заключительную логику для формирования результата." />
-    <option name="LAST_COMMIT_MESSAGE" value="[parsing-data] - добавил заключительную логику для формирования результата." />
+    <MESSAGE value="[parsing-data] - добавил логику обрезки больших картинок." />
+    <option name="LAST_COMMIT_MESSAGE" value="[parsing-data] - добавил логику обрезки больших картинок." />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/PPData$main.coverage" NAME="main Coverage Results" MODIFIED="1710190631891" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
