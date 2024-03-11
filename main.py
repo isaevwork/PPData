@@ -1,10 +1,11 @@
 import os
 import warnings
+from PIL import Image
 from pptx.dml.color import RGBColor
 from openpyxl import load_workbook
 from pptx import Presentation
 from datetime import datetime
-from pptx.util import Inches, Pt, Cm
+from pptx.util import Inches, Pt
 from pptx.enum.text import PP_PARAGRAPH_ALIGNMENT
 
 # Путь к папке work
@@ -414,14 +415,45 @@ print("Слайд №9 сформирован")
 # Слайд № 10
 # Размеры и положения областей для изображений
 # TODO image_names = [f"{folder_name}_{image}" for image in ["444", "33", "44"]]
-images_name_10 = ["444", "33", "44"]
-images_position_10 = [
-    (Inches(1.2), Inches(1.4), Inches(6), Inches(5.5)),
+images_name_10 = ["33", "44"]
+image_path = os.path.join(image_folder, images_name_10[0]  + ".jpg")
 
+
+def crop_image(image_path, output_path, new_width, new_height):
+    """
+    Обрезает и изменяет размеры изображения и сохраняет его.
+    Args:
+        image_path (str): Путь к исходному изображению.
+        output_path (str): Путь для сохранения обрезанного изображения.
+        new_width (int): Новая ширина изображения.
+        new_height (int): Новая высота изображения.
+    """
+    image = Image.open(image_path)
+    width, height = image.size
+
+    # Определяем координаты области обрезки относительно центра изображения
+    left = (width - new_width) // 2
+    top = (height - new_height) // 2
+    right = (width + new_width) // 2
+    bottom = (height + new_height) // 2
+
+    cropped_image = image.crop((left, top, right, bottom))
+    cropped_image.save(output_path)
+
+
+# Пример использования
+image_path = os.path.join(image_folder, "444" + ".jpg") # Путь к исходному изображению
+output_path = os.path.join(image_folder, "444" + ".jpg")  # Путь для сохранения обрезанного изображения
+new_width = 1200
+new_height = 1068
+crop_image(image_path, output_path, new_width, new_height)
+
+images_position_10 = [
     (Inches(0.5), Inches(7.5), Inches(3.5), Inches(3.5)),
     (Inches(4.1), Inches(7.5), Inches(3.5), Inches(3.5)),
 ]
 slide_index_10 = 10
+prs.slides[slide_index_10].shapes.add_picture(output_path, Inches(1.2), Inches(1.4), Inches(6), Inches(5.5))
 insert_images(images_name_10, images_position_10, slide_index_10)
 print("Слайд №10 сформирован")
 # -------------------------------------------------------
@@ -872,7 +904,6 @@ r4_1_value_status = get_tooth_status(slant_r4_1, slant_r4_1_dif, 100, 90, 4.1)
 u1_pp_sentence = f"{r1_1_value_status}, {l2_1_value_status}"
 l1_mp_sentence = f"{l3_1_value_status}, {r4_1_value_status}"
 
-
 # Применение функции к динамическим строкам
 u1_pp = correct_sentence(u1_pp_sentence)
 l1_pp = correct_sentence(l1_mp_sentence)
@@ -1028,7 +1059,6 @@ incisor_tilt_r4_1 = r4_1_value_status.split("на")[0].strip()
 
 overbite_value = ws1['C29'].value
 overjet_value = ws1['C30'].value
-
 
 # Определяем класс в зависимости от значения Overbite
 if overbite_value > 4.4:
