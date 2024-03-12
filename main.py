@@ -197,8 +197,8 @@ print("Слайд №1 сформирован")
 
 # Слайд № 2
 # Массив имен изображений с префиксом папки
-# TODO image_names = [f"{folder_name}_{image}" for image in ["2.1", "2.2", "2.3", "2.4"]]
-images_name_2 = ["2q", "2w", "2e", "2r"]
+# images_name_2 = ["2q", "2w", "2e", "2r"]
+images_name_2 = [f"{folder_name}_{image}" for image in ["2q", "2w", "2e", "2r"]]
 images_position_2 = [
     (Inches(0.4), Inches(1.5), Inches(2.6), Inches(3.6)),
     (Inches(5.4), Inches(1.5), Inches(2.6), Inches(3.6)),
@@ -317,8 +317,8 @@ print("Слайд №3 сформирован")
 
 # Слайд № 4
 # Массив имен изображений с префиксом папки
-# TODO image_names = [f"{folder_name}_{image}" for image in ["2.1", "2.2", "2.3", "2.4"]]
-images_name_4 = ["4q", "4w", "4e", "4r", "4t", "4y"]
+# images_name_4 = ["4q", "4w", "4e", "4r", "4t", "4y"]
+images_name_4 = [f"{folder_name}_{image}" for image in ["4q", "4w", "4e", "4r", "4t", "4y"]]
 images_position_4 = [
     (Inches(0.9), Inches(1.2), Inches(2.9), Inches(2.75)),
     (Inches(4.4), Inches(1.2), Inches(2.9), Inches(2.75)),
@@ -334,8 +334,7 @@ print("Слайд №4 сформирован")
 
 # Слайд № 5
 # Массив имен изображений с префиксом папки
-# TODO image_names = [f"{folder_name}_{image}" for image in ["5q", "5w", "5e", "5r", "5t", "5y"]]
-images_name_5 = ["5q", "5w", "5e", "5r", "5t", "5y", ]
+images_name_5 = [f"{folder_name}_{image}" for image in ["5q", "5w", "5e", "5r", "5t", "5y"]]
 images_position_5 = [
     (Inches(0.6), Inches(1.2), Inches(3.3), Inches(3)),
     (Inches(4.4), Inches(1.2), Inches(3.3), Inches(3)),
@@ -354,8 +353,7 @@ print("Слайд №5 сформирован")
 
 # Слайд № 6
 # Массив имен изображений с префиксом папки
-# TODO image_names = [f"{folder_name}_{image}" for image in ["6q", "6w", "6e", "6r", "6t", "6y", "6u", "6i", "6o"]]
-images_name_6 = ["6q", "6w", "6e", "6r", "6t", "6y"]
+images_name_6 = [f"{folder_name}_{image}" for image in ["6q", "6w", "6e", "6r", "6t", "6y"]]
 images_position_6 = [
     (Inches(0.8), Inches(1.3), Inches(3.5), Inches(1.8)),
 
@@ -374,8 +372,7 @@ print("Слайд №6 сформирован")
 
 # Слайд № 7
 # Массив имен изображений с префиксом папки
-# TODO image_names = [f"{folder_name}_{image}" for image in ["9", "6"]]
-images_name_7 = ["9", "6"]
+images_name_7 = [f"{folder_name}_{image}" for image in ["9", "6"]]
 images_position_7 = [
     (Inches(0.6), Inches(1.5), Inches(7), Inches(4)),
     (Inches(0.6), Inches(6.3), Inches(7), Inches(4.6)),
@@ -386,8 +383,7 @@ print("Слайд №7 сформирован")
 # -------------------------------------------------------
 
 # Слайд № 8
-# TODO image_names = [f"{folder_name}_{image}" for image in ["11", "вч", "нч"]]
-images_name_8 = ["11", "вч", "нч"]
+images_name_8 = [f"{folder_name}_{image}" for image in ["11", "вч", "нч"]]
 images_position_8 = [
     (Inches(0.5), Inches(1.1), Inches(7.4), Inches(3.4)),
     (Inches(0.5), Inches(5.1), Inches(7.2), Inches(2.9)),
@@ -400,8 +396,7 @@ print("Слайд №8 сформирован")
 
 # Слайд № 9
 # Массив имен изображений с префиксом папки
-# TODO image_names = [f"{folder_name}_{image}" for image in ["22", "1", "2"]]
-images_name_9 = ["22", "1", "2"]
+images_name_9 = [f"{folder_name}_{image}" for image in ["22", "1", "2"]]
 images_position_9 = [
     (Inches(0.4), Inches(1.8), Inches(7.6), Inches(3.2)),
     (Inches(1.5), Inches(5.8), Inches(5.9), Inches(2.6)),
@@ -414,10 +409,8 @@ print("Слайд №9 сформирован")
 
 # Слайд № 10
 # Размеры и положения областей для изображений
-# TODO image_names = [f"{folder_name}_{image}" for image in ["444", "33", "44"]]
-images_name_10 = ["33", "44"]
-image_path = os.path.join(image_folder, images_name_10[0]  + ".jpg")
-
+images_name_10 = [f"{folder_name}_{image}" for image in ["444", "33", "44"]]
+img_name10_1 = os.path.join(image_folder, images_name_10[0] + ".jpg")
 
 def crop_image(img_path, out_path, new_width, new_height):
     """
@@ -442,7 +435,7 @@ def crop_image(img_path, out_path, new_width, new_height):
 
 
 # Пример использования
-img_path = os.path.join(image_folder, "444" + ".jpg") # Путь к исходному изображению
+img_path = os.path.join(image_folder, images_name_10[0] + ".jpg") # Путь к исходному изображению
 out_path = os.path.join(image_folder, "444" + ".jpg")  # Путь для сохранения обрезанного изображения
 new_width = 1200
 new_height = 1068
@@ -459,8 +452,7 @@ print("Слайд №10 сформирован")
 # -------------------------------------------------------
 # Слайд № 11
 # Размеры и положения областей для изображений
-# TODO image_names = [f"{folder_name}_{image}" for image in ["4", "5", "55"]]
-images_name_11 = ["4", "5", "55"]
+images_name_11 = [f"{folder_name}_{image}" for image in ["4", "5", "55"]]
 images_position_11 = [
     (Inches(0.6), Inches(1.4), Inches(3.5), Inches(3.8)),
     (Inches(4.2), Inches(1.4), Inches(3.5), Inches(3.8)),
@@ -473,8 +465,7 @@ print("Слайд №11 сформирован")
 # -------------------------------------------------------
 
 # Слайд № 12
-# TODO image_names = [f"{folder_name}_{image}" for image in ["12q"]]
-images_name_12 = ["12q"]
+images_name_12 = [f"{folder_name}_{image}" for image in ["12q"]]
 images_position_12 = [
     (Inches(0.65), Inches(1.6), Inches(7.1), Inches(8.5)),
 ]
@@ -484,8 +475,7 @@ print("Слайд №12 сформирован")
 # -------------------------------------------------------
 
 # Слайд № 13
-# TODO image_names = [f"{folder_name}_{image}" for image in ["13q"]]
-images_name_13 = ["13q"]
+images_name_13 = [f"{folder_name}_{image}" for image in ["13q"]]
 images_position_13 = [
     (Inches(0.6), Inches(1.8), Inches(6.8), Inches(6.6)),
 ]
@@ -514,8 +504,7 @@ print("Слайд №13 сформирован")
 
 
 # Слайд № 14
-# TODO image_names = [f"{folder_name}_{image}" for image in ["3", "000"]]
-images_name_14 = ["3", "000"]
+images_name_14 = [f"{folder_name}_{image}" for image in ["3", "000"]]
 images_position_14 = [
     (Inches(0.6), Inches(8.1), Inches(3.4), Inches(3.3)),
     (Inches(4.2), Inches(8.1), Inches(3.4), Inches(3.3)),
@@ -554,8 +543,7 @@ print("Слайд №14 сформирован")
 
 # Слайд №15
 # Массив имен изображений с префиксом папки
-# TODO image_names = [f"{folder_name}_{image}" for image in ["333", "temp15"]]
-images_name_15 = ["333", "temp15"]
+images_name_15 = [f"{folder_name}_{image}" for image in ["333", "temp15"]]
 images_position_15 = [
     (Inches(0.6), Inches(1.5), Inches(7), Inches(4.7)),
     (Inches(0.6), Inches(7), Inches(7), Inches(4.4)),
@@ -567,8 +555,7 @@ print("Слайд №15 сформирован")
 
 # Слайд №16
 # Массив имен изображений с префиксом папки
-# TODO image_names = [f"{folder_name}_{image}" for image in ["222", "0"]]
-images_name_16 = ["222", "0"]
+images_name_16 = [f"{folder_name}_{image}" for image in ["222", "0"]]
 images_position_16 = [
     (Inches(0.8), Inches(1.2), Inches(6.5), Inches(4)),
     (Inches(2), Inches(7.65), Inches(4.3), Inches(3.9)),
