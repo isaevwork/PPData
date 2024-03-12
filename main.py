@@ -8,6 +8,26 @@ from datetime import datetime
 from pptx.util import Inches, Pt
 from pptx.enum.text import PP_PARAGRAPH_ALIGNMENT
 
+
+def main():
+    work_folder = os.path.join(os.environ['USERPROFILE'], 'Downloads', 'WORK')
+    os.chdir(work_folder)
+    print("Предупреждение: использование этого скрипта полностью лежит на ответственности конечного пользователя.")
+    print("Автор скрипта не несет никакой ответственности.")
+    print("Мы просим всех пользователей внимательно изучить результаты этого скрипта перед его использованием.")
+
+    for folder_name in os.listdir():
+        if os.path.isdir(folder_name):
+            os.chdir(folder_name)
+            for filename in os.listdir():
+                if not filename.endswith(('.xlsx', '.xls')):
+                    new_filename = f"{folder_name}_{filename}"
+                    os.rename(filename, new_filename)
+            os.chdir('..')
+
+    print("Renaming done!")
+
+
 # Путь к папке work
 user_profile = os.getenv('USERPROFILE')
 work_folder = os.path.join(user_profile, 'Downloads', 'work')
