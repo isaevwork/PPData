@@ -9,12 +9,33 @@ from pptx.util import Inches, Pt
 from pptx.enum.text import PP_PARAGRAPH_ALIGNMENT
 
 
+def draw_table(text):
+    # Определение длины самой длинной строки в тексте
+    max_length = max(len(line) for line in text.split('\n'))
+
+    # Верхняя граница таблицы
+    print("-" * (max_length + 4))
+
+    # Выводим текст с отступами слева и справа
+    for line in text.split('\n'):
+        print(f"| {line.center(max_length)} |")
+
+    # Нижняя граница таблицы
+    print("-" * (max_length + 4))
+
+
+# Текст для помещения внутрь таблицы
+text = """Предупреждение: использование этого скрипта полностью лежит на ответственности конечного пользователя.
+Автор скрипта не несет никакой ответственности!
+Мы просим всех пользователей внимательно изучить результаты этого скрипта перед его использованием."""
+
+
 def main():
     work_folder = os.path.join(os.environ['USERPROFILE'], 'Downloads', 'WORK')
     os.chdir(work_folder)
-    print("Предупреждение: использование этого скрипта полностью лежит на ответственности конечного пользователя.")
-    print("Автор скрипта не несет никакой ответственности.")
-    print("Мы просим всех пользователей внимательно изучить результаты этого скрипта перед его использованием.")
+
+    # Вызываем функцию и передаем текст внутрь таблицы
+    draw_table(text)
 
     for folder_name in os.listdir():
         if os.path.isdir(folder_name):
@@ -25,8 +46,7 @@ def main():
                     os.rename(filename, new_filename)
             os.chdir('..')
 
-    print("Renaming done!")
-
+main()
 
 # Путь к папке work
 user_profile = os.getenv('USERPROFILE')
@@ -67,8 +87,8 @@ else:
 
 # Загружаем презентацию
 prs = Presentation(os.path.join(os.getenv('USERPROFILE'), 'Downloads', 'parser', 'PPData', 'FDTemp.pptx'))
+# C:\Users\guzal\Downloads\work\Чеков Андрей Татекович
 image_folder = os.path.join(work_folder, folder_name)
-
 # -----------------------------------------------------------------------------------------
 # Определение параметров текстового блока
 left = Inches(6.9)
@@ -429,8 +449,10 @@ print("Слайд №9 сформирован")
 
 # Слайд № 10
 # Размеры и положения областей для изображений
-images_name_10 = [f"{folder_name}_{image}" for image in ["444", "33", "44"]]
-img_name10_1 = os.path.join(image_folder, images_name_10[0] + ".jpg")
+images_name_10_444 = [f"{folder_name}_{image}" for image in ["444"]]
+images_name_10 = [f"{folder_name}_{image}" for image in ["33", "44"]]
+img_name10_1 = os.path.join(images_name_10_444[0] + ".jpg")
+
 
 def crop_image(img_path, out_path, new_width, new_height):
     """
@@ -454,12 +476,12 @@ def crop_image(img_path, out_path, new_width, new_height):
     cropped_image.save(out_path)
 
 
+# C:\Users\guzal\Downloads\work\Чеков Андрей Татекович
 # Пример использования
-img_path = os.path.join(image_folder, images_name_10[0] + ".jpg") # Путь к исходному изображению
-out_path = os.path.join(image_folder, "444" + ".jpg")  # Путь для сохранения обрезанного изображения
-new_width = 1200
-new_height = 1068
-crop_image(img_path, out_path, new_width, new_height)
+img_path = os.path.join(image_folder, images_name_10_444[0] + ".jpg")  # Путь к исходному изображению
+out_path = os.path.join(image_folder, images_name_10_444[0] + ".jpg")  # Путь для сохранения обрезанного изображения
+
+crop_image(img_path, out_path, 1200, 1068)
 
 images_position_10 = [
     (Inches(0.5), Inches(7.5), Inches(3.5), Inches(3.5)),
@@ -948,7 +970,7 @@ width_lower_jaw = ws1['C23'].value
 width_upper_jaw = ws1['C10'].value
 width_dif_jaw = width_lower_jaw + 5
 jaw_dif = abs(width_dif_jaw - width_upper_jaw)
-jaw_status = f"составляет {jaw_dif} мм." if jaw_dif > 0 else "отсутствует."
+jaw_status = f"составляет {round(jaw_dif, 1)} мм." if jaw_dif > 0 else "отсутствует."
 
 resume_text5 = f"""
 Ширина базиса нижней челюсти – {width_lower_jaw} мм. Фактическая ширина базиса верхней челюсти – {width_upper_jaw} мм. 
