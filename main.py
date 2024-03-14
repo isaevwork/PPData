@@ -37,14 +37,20 @@ def main():
     # Вызываем функцию и передаем текст внутрь таблицы
     draw_table(text)
 
+    extensions = [".jpg", ".png", ".jpeg", ".gif"]  # Расширения изображений для переименования
+
     for folder_name in os.listdir():
         if os.path.isdir(folder_name):
             os.chdir(folder_name)
+            renamed_files = set()  # Сет для отслеживания уже переименованных файлов
             for filename in os.listdir():
-                if not filename.endswith(('.xlsx', '.xls')):
-                    new_filename = f"{folder_name}_{filename}"
-                    os.rename(filename, new_filename)
+                if any(filename.lower().endswith(ext) for ext in extensions):
+                    if folder_name not in filename and filename not in renamed_files:
+                        new_filename = f"{folder_name}_{filename}"
+                        os.rename(filename, new_filename)
+                        renamed_files.add(new_filename)  # Добавляем новое имя файла в сет
             os.chdir('..')
+
 
 main()
 
@@ -86,8 +92,7 @@ else:
     print("Файл Excel не найден в подпапках папки work.")
 
 # Загружаем презентацию
-prs = Presentation(os.path.join(os.getenv('USERPROFILE'), 'Downloads', 'parser', 'PPData', 'FDTemp.pptx'))
-# C:\Users\guzal\Downloads\work\Чеков Андрей Татекович
+prs = Presentation(os.path.join(os.getenv('USERPROFILE'), 'Downloads', 'work', 'FDTemp.pptx'))
 image_folder = os.path.join(work_folder, folder_name)
 # -----------------------------------------------------------------------------------------
 # Определение параметров текстового блока
@@ -111,30 +116,53 @@ for index in slide_indexes:
     p.font.size = Pt(12)
     p.font.name = "Montserrat"
 
-
 # Функция для вставки изображений на слайд
+
+# def insert_images(names, positions, idx):
+#     """
+#       Функция для добавления изображений на конкретный слайд презентации.
+#       Args:
+#           names (list): Список имен изображений.
+#           positions (list): Словарь с позициями изображений для каждого слайда.
+#           idx (int): Индекс слайда, на который добавляются изображения.
+#       """
+#     extensions = [".jpg", ".png", ".jpeg", ".gif"]  # Расширения изображений для проверки
+#     slide = prs.slides[idx]  # Получаем слайд по индексу
+#
+#     for name, position in zip(names, positions):
+#         found_image = False
+#         for extension in extensions:
+#             image_path = os.path.join(image_folder, name + extension)
+#             if os.path.exists(image_path):
+#                 img_left, img_top, img_width, img_height = position
+#                 slide.shapes.add_picture(image_path, img_left, img_top, img_width, img_height)
+#                 found_image = True
+#                 break  # Нашли изображение, прекращаем поиск расширения
+#         if not found_image:
+#             print(f"Изображение {name} не найдено на слайде {idx}.")
+
+import os
+
 
 def insert_images(names, positions, idx):
     """
-      Функция для добавления изображений на конкретный слайд презентации.
-      Args:
-          names (list): Список имен изображений.
-          positions (list): Словарь с позициями изображений для каждого слайда.
-          idx (int): Индекс слайда, на который добавляются изображения.
-      """
+    Функция для добавления изображений на конкретный слайд презентации.
+    Args:
+        names (list): Список имен изображений.
+        positions (list): Словарь с позициями изображений для каждого слайда.
+        idx (int): Индекс слайда, на который добавляются изображения.
+    """
     extensions = [".jpg", ".png", ".jpeg", ".gif"]  # Расширения изображений для проверки
     slide = prs.slides[idx]  # Получаем слайд по индексу
 
     for name, position in zip(names, positions):
-        found_image = False
         for extension in extensions:
             image_path = os.path.join(image_folder, name + extension)
             if os.path.exists(image_path):
                 img_left, img_top, img_width, img_height = position
                 slide.shapes.add_picture(image_path, img_left, img_top, img_width, img_height)
-                found_image = True
-                break  # Нашли изображение, прекращаем поиск расширения
-        if not found_image:
+                break
+        else:
             print(f"Изображение {name} не найдено на слайде {idx}.")
 
 
@@ -1200,9 +1228,46 @@ if folder_name:
     save_folder = os.path.join(work_folder, folder_name)
     prs.save(os.path.join(save_folder, f"{folder_name}.pptx"))
 
-# Верхняя челюсть:
 
-# Нижняя челюсть:
-#
-#
-# Параметры наклона и положения зубов:
+def extract_text_from_slides(prs, slide_indices):
+    """
+    Функция для извлечения текста с указанных слайдов презентации.
+    Args:
+        prs (Presentation): Объект презентации PowerPoint.
+        slide_indices (list): Список индексов слайдов для извлечения текста.
+    Returns:
+        str: Текст с указанных слайдов.
+    """
+    text = ""
+    for idx in slide_indices:
+        slide = prs.slides[idx]
+        for shape in slide.shapes:
+            if hasattr(shape, "text"):
+                text += shape.text + "\n"
+    return text
+
+# Индексы слайдов, с которых нужно извлечь текст
+slide_indices_to_extract = [17, 18, 19]  # Пример: извлечение текста с первых трех слайдов
+
+# Извлечение текста с указанных слайдов
+extracted_text = extract_text_from_slides(prs, slide_indices_to_extract)
+
+# Путь к файлу, в который будет сохранен текст
+output_file_path = os.path.join(os.path.join(work_folder, folder_name), f"{folder_name}.txt")
+
+def save_text_to_file(text, file_path):
+    """
+    Функция для сохранения текста в файл.
+    Args:
+        text (str): Текст для сохранения.
+        file_path (str): Путь к файлу, в который будет сохранен текст.
+    """
+    with open(file_path, "w", encoding="utf-8") as file:
+        file.write(text)
+
+
+
+# Сохранение текста в файл
+save_text_to_file(extracted_text, output_file_path)
+
+print(f"Текст успешно извлечен с выбранных слайдов и сохранен в файл {output_file_path}.")
