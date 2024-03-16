@@ -116,33 +116,6 @@ for index in slide_indexes:
     p.font.size = Pt(12)
     p.font.name = "Montserrat"
 
-# Функция для вставки изображений на слайд
-
-# def insert_images(names, positions, idx):
-#     """
-#       Функция для добавления изображений на конкретный слайд презентации.
-#       Args:
-#           names (list): Список имен изображений.
-#           positions (list): Словарь с позициями изображений для каждого слайда.
-#           idx (int): Индекс слайда, на который добавляются изображения.
-#       """
-#     extensions = [".jpg", ".png", ".jpeg", ".gif"]  # Расширения изображений для проверки
-#     slide = prs.slides[idx]  # Получаем слайд по индексу
-#
-#     for name, position in zip(names, positions):
-#         found_image = False
-#         for extension in extensions:
-#             image_path = os.path.join(image_folder, name + extension)
-#             if os.path.exists(image_path):
-#                 img_left, img_top, img_width, img_height = position
-#                 slide.shapes.add_picture(image_path, img_left, img_top, img_width, img_height)
-#                 found_image = True
-#                 break  # Нашли изображение, прекращаем поиск расширения
-#         if not found_image:
-#             print(f"Изображение {name} не найдено на слайде {idx}.")
-
-import os
-
 
 def insert_images(names, positions, idx):
     """
@@ -164,6 +137,14 @@ def insert_images(names, positions, idx):
                 break
         else:
             print(f"Изображение {name} не найдено на слайде {idx}.")
+
+
+def format_with_comma(number):
+    """
+    Форматирует число с одним десятичным знаком и заменяет точку на запятую.
+    """
+    formatted_number = "{:,.1f}".format(number)
+    return formatted_number.replace(".", ",")
 
 
 def get_text_color(last_value):
@@ -707,12 +688,13 @@ elif sassouni < 0:
 else:
     sassouni_skeletal_class = "I"
     # Если класс "I", проверяем дополнительные условия
+    has_direction = "кпереди"
     if 2.6 <= sassouni <= 3:
         sassouni_trend_class = "с тенденцией к III классу"
     elif 0.1 <= sassouni <= 0.4:
         sassouni_trend_class = "с тенденцией к II классу"
 
-sassouni_text_not_null = f"""Соотношение челюстей по методике Sassouni говорит за {sassouni_skeletal_class} скелетный класс {sassouni_trend_class} — базальная дуга проходит на {sassouni} мм {has_direction} от точки В (N = 0,0 мм ± 3,0 мм)."""
+sassouni_text_not_null = f"""Соотношение челюстей по методике Sassouni говорит за {sassouni_skeletal_class} скелетный класс {sassouni_trend_class} — базальная дуга проходит на {format_with_comma(sassouni)} мм {has_direction} от точки В (N = 0,0 мм ± 3,0 мм)."""
 sassouni_text_null = f"""Соотношение челюстей по методике Sassouni говорит за I скелетный класс — базальная дуга проходит через точку B (N = 0,0 мм ± 3,0 мм)."""
 
 if sassouni == 0:
@@ -770,6 +752,8 @@ elif sna_value < 79:
 else:
     sna_status = "нормогнатии"
 
+sna_status_uppercase = sna_status.capitalize()
+
 # Определяем класс в зависимости от значения PP/SN
 if ppsn_value > 12:
     ppsn_status = "ретроинклинации"
@@ -778,18 +762,21 @@ elif ppsn_value < 5:
 else:
     ppsn_status = "нормоинклинации"
 
+ppsn_status_uppercase = ppsn_status.capitalize()
+
 # Формируем текст, вставляя значения переменных
 resume_text1 = f"""
-Межапикальный угол (<ANB) – {anb_value}˚, что соответствует соотношению челюстей по {anb_skeletal_class} скелетному классу {anb_trend_class} (N = 2,0˚ ± 2,0˚).
-Угол Бета (< Beta Angle) – {beta_angle}˚, что cоответствует соотношению челюстей по {beta_skeletal_class} скелетному классу {beta_trend_class} (N = 31,0˚ ± 4,0˚).
-Параметр Wits (Wits Appraisal.) – ({wits_appraisal}) мм что указывает на {has_value} в расположении апикальных базисов верхней и нижней челюстей в сагиттальной плоскости и говорит за {wits_skeletal_class} скелетный класс {wits_trend_class} (N = -0,4 мм ± 2,5 мм).
+Межапикальный угол (<ANB) – {format_with_comma(anb_value)}˚, что соответствует соотношению челюстей по {anb_skeletal_class} скелетному классу {anb_trend_class} (N = 2,0˚ ± 2,0˚).
+Угол Бета (< Beta Angle) – {format_with_comma(beta_angle)}˚, что cоответствует соотношению челюстей по {beta_skeletal_class} скелетному классу {beta_trend_class} (N = 31,0˚ ± 4,0˚).
+Параметр Wits (Wits Appraisal.) –  {format_with_comma(wits_appraisal)} мм что указывает на {has_value} диспропорции в расположении апикальных базисов верхней и нижней челюстей в сагиттальной плоскости и говорит за {wits_skeletal_class} скелетный класс {wits_trend_class} (N = -1,0 мм ± 2,0 мм).
 {sassouni_text}
-Параметр APDI, указывающий на дисплазию развития челюстей в сагиттальной плоскости, равен {apdi_value}˚ и говорит за {apdi_skeletal_class} скелетный класс {apdi_trend_class} (N = 81,4˚ ± 5,0˚).
-Размер и положение верхней челюсти.
-Длина основания верхней челюсти (PNS-A) – {pnsa_value} мм, что соответствует {pnsa_status} в пределах нормы (N = {ws1['D9'].value} мм ± 3,5 мм).
-Ширина основания верхней (J-J) челюсти –  {jj_value} мм, что соответствует {jj_status} в пределах нормы (N = {ws1['D10'].value} мм ± 3,0 мм):  справа – {ws1['C11'].value} мм, слева – {ws1['C12'].value} мм (N = {ws1['D10'].value / 2} мм ± 1,5 мм).
-Положение верхней челюсти по сагиттали  (<SNA) – {sna_value}˚, что соответствует {sna_status} (N = 82,0˚ ±  3,0˚).
-Положение верхней челюсти по вертикали  (<SN-Palatal Plane) – {ppsn_value}˚, что соответствует {ppsn_status} (N = 8,0˚ ± 3,0˚).
+Параметр APDI, указывающий на дисплазию развития челюстей в сагиттальной плоскости, равен {format_with_comma(apdi_value)}˚ и говорит за {apdi_skeletal_class} скелетный класс {apdi_trend_class} (N = 81,4˚ ± 5,0˚).
+"""
+resume_text1_1 = f"""
+Длина основания верхней челюсти (PNS-A) – {format_with_comma(pnsa_value)} мм, что соответствует {pnsa_status} (N = {format_with_comma(round(ws1['D9'].value, 1))} мм ± 3,5 мм).
+Ширина основания верхней (J-J) челюсти –  {format_with_comma(jj_value)} мм, что соответствует {jj_status} (N = {format_with_comma(round(ws1['D10'].value, 1))} мм ± 3,0 мм):  справа – {format_with_comma(ws1['C11'].value)} мм, слева – {format_with_comma(ws1['C12'].value)} мм (N = {format_with_comma(ws1['D10'].value / 2)} мм ± 1,5 мм).
+Положение верхней челюсти по сагиттали  (<SNA) – {format_with_comma(sna_value)}˚, что соответствует {sna_status} (N = 82,0˚ ±  3,0˚).
+Положение верхней челюсти по вертикали  (<SN-Palatal Plane) – {format_with_comma(ppsn_value)}˚, что соответствует {ppsn_status} (N = 8,0˚ ± 3,0˚).
 Roll ротация отсутствует\  вправо (по часовой стрелке) \ влево (против часовой стрелки).
 Yaw ротация отсутствует \ вправо  (по часовой стрелке) \ влево (против часовой стрелки).
 """
@@ -807,6 +794,16 @@ paragraph.font.size = Pt(10.5)
 paragraph.font.bold = False
 paragraph.font.name = "Montserrat"
 paragraph.text = resume_text1
+
+# Добавляем текст на слайд
+name_textbox_17 = prs.slides[17].shapes.add_textbox(Inches(0.4), Inches(8.85), Inches(7.21), Inches(5.1))
+text_frame = name_textbox_17.text_frame
+text_frame.word_wrap = True
+paragraph = text_frame.add_paragraph()
+paragraph.font.size = Pt(10.5)
+paragraph.font.bold = False
+paragraph.font.name = "Montserrat"
+paragraph.text = resume_text1_1
 
 print("Слайд №17 сформирован")
 # -------------------------------------------------------
@@ -886,13 +883,15 @@ elif mp_sn_value < 28:
 else:
     mp_sn_status = "нормоинклинации"
 
+mp_sn_status_uppercase = mp_sn_status.capitalize()
+
 # Определение смещения подбородка
 if chin_displacement > 0:
-    chin_displacement_status = f"влево на {round(chin_displacement, 2)} мм."
+    chin_displacement_status = f"влево на {format_with_comma(round(chin_displacement, 2))} мм"
 elif chin_displacement < 0:
-    chin_displacement_status = f"вправо на {round(chin_displacement, 2)} мм."
+    chin_displacement_status = f"вправо на {format_with_comma(round(chin_displacement, 2))} мм"
 else:
-    chin_displacement_status = "не выявлено."
+    chin_displacement_status = "не выявлено"
 
 # Определяем класс в зависимости от значения (N-ANS) / (ANS-Gn)
 if ans_quotient > 0.89:
@@ -900,7 +899,7 @@ if ans_quotient > 0.89:
 elif ans_quotient < 0.71:
     ans_quotient_status = "негармоничное"
 else:
-    ans_quotient_status = "гармоничное."
+    ans_quotient_status = "гармоничное"
 
 # Определяем класс в зависимости от значения ANS-Xi-Pm
 ans_xi_pm_upper_limit = round(ws1['N8'].value, 1) + 5.5
@@ -920,7 +919,7 @@ if odi_value > 79.5:
 elif odi_value < 69.5:
     odi_value_status = "вертикальной резцовой дизокклюзии"
 else:
-    odi_value_status = "норме."
+    odi_value_status = "норме"
 
 
 def get_tooth_status(slant_value, difference, upper_threshold, lower_threshold, tooth_num):
@@ -933,24 +932,15 @@ def get_tooth_status(slant_value, difference, upper_threshold, lower_threshold, 
     else:
         return f"Нормальное положение зуба  {tooth_num}"
 
-
-# Функция для коррекции первой буквы после запятой на строчную
-def correct_sentence(sentence):
-    parts = sentence.split(',')
-    if len(parts) > 1:
-        parts[1] = parts[1].strip()[0].lower() + parts[1].strip()[1:]
-    return ', '.join(parts)
-
-
 slant_r1_1 = ws1['C33'].value
 slant_l2_1 = ws1['C34'].value
 slant_l3_1 = ws1['C36'].value
 slant_r4_1 = ws1['C35'].value
 
-slant_r1_1_dif = round(ws1['G33'].value, 1) if ws1['G33'].value is not None else None
-slant_l2_1_dif = round(ws1['G34'].value, 1) if ws1['G34'].value is not None else None
-slant_l3_1_dif = round(ws1['G36'].value, 1) if ws1['G36'].value is not None else None
-slant_r4_1_dif = round(ws1['G35'].value, 1) if ws1['G35'].value is not None else None
+slant_r1_1_dif = format_with_comma(round(ws1['G33'].value, 1)) if ws1['G33'].value is not None else None
+slant_l2_1_dif = format_with_comma(round(ws1['G34'].value, 1)) if ws1['G34'].value is not None else None
+slant_l3_1_dif = format_with_comma(round(ws1['G36'].value, 1)) if ws1['G36'].value is not None else None
+slant_r4_1_dif = format_with_comma(round(ws1['G35'].value, 1)) if ws1['G35'].value is not None else None
 
 r1_1_value_status = get_tooth_status(slant_r1_1, slant_r1_1_dif, 115, 105, 1.1)
 l2_1_value_status = get_tooth_status(slant_l2_1, slant_l2_1_dif, 115, 105, 2.1)
@@ -958,38 +948,33 @@ l3_1_value_status = get_tooth_status(slant_l3_1, slant_l3_1_dif, 100, 90, 3.1)
 r4_1_value_status = get_tooth_status(slant_r4_1, slant_r4_1_dif, 100, 90, 4.1)
 
 # Формирование строки с динамическими данными
-u1_pp_sentence = f"{r1_1_value_status}, {l2_1_value_status}"
-l1_mp_sentence = f"{l3_1_value_status}, {r4_1_value_status}"
-
-# Применение функции к динамическим строкам
-u1_pp = correct_sentence(u1_pp_sentence)
-l1_pp = correct_sentence(l1_mp_sentence)
+u1_pp = f"{r1_1_value_status}. {l2_1_value_status}"
+l1_pp = f"{l3_1_value_status}. {r4_1_value_status}"
 
 # Формируем текст, вставляя значения переменных
 resume_text2 = f"""
-Длина тела нижней челюсти (Go-Me): справа – {go_me_r_value} мм, слева – {go_me_l_value}  мм (N = {ws1['M59'].value} мм ± 5,0 мм).
-Длина тела нижней челюсти справа {go_me_status}, чем слева на {round(abs(go_me_r_value - go_me_l_value), 2)} мм.
-Длина ветви нижней челюсти (Co-Go) : справа – {go_go_r_value}  мм,  слева – {go_go_l_value}  мм (N = {ws1['D19'].value} мм ± 4,0 мм).
-Длина ветви нижней челюсти справа {go_go_status}, чем слева на {round(abs(go_go_r_value - go_go_l_value), 2)} мм.
-Гониальный угол (<Ar-Go-Me): справа –  {ar_go_r_value}˚,  слева – {ar_go_l_value}˚ (N = {ws1['D21'].value}˚ ± 5,0˚).
-Гониальный угол справа {ar_go_status}, чем слева на {round(abs(ar_go_r_value - ar_go_l_value), 2)}˚.
-Ширина базиса нижней челюсти (Md-Md) – {md_md_value} мм, что соответствует {md_status} (N = {ws1['D23'].value} мм ± 3,0 мм).
-Положение нижней челюсти по сагиттали  (<SNB) – {snb_value}˚, что соответствует {snb_status} (N = 80,0˚ ± 3,0˚).
-Положение нижней челюсти по вертикали (<MP-SN) – {mp_sn_value}˚, что соответствует {mp_sn_status} (N = 32,0˚ ± 4,0˚).
-Смещение подбородка {chin_displacement_status}
+Длина тела нижней челюсти (Go-Me): справа – {format_with_comma(go_me_r_value)} мм, слева – {format_with_comma(go_me_l_value)}  мм (N = {format_with_comma(round(ws1['M59'].value, 1))} мм ± 5,0 мм).
+Длина тела нижней челюсти справа {go_me_status}, чем слева на {format_with_comma(round(abs(go_me_r_value - go_me_l_value), 2))} мм.
+Длина ветви нижней челюсти (Co-Go) : справа – {format_with_comma(go_go_r_value)}  мм,  слева – {format_with_comma(go_go_l_value)}  мм (N = {format_with_comma(round(ws1['D19'].value, 1))} мм ± 4,0 мм).
+Длина ветви нижней челюсти справа {go_go_status}, чем слева на {format_with_comma(round(abs(go_go_r_value - go_go_l_value), 2))} мм.
+Гониальный угол (<Ar-Go-Me): справа –  {format_with_comma(ar_go_r_value)}˚,  слева – {format_with_comma(ar_go_l_value)}˚ (N = {format_with_comma(round(ws1['D21'].value, 1))}˚ ± 5,0˚).
+Гониальный угол справа {ar_go_status}, чем слева на {format_with_comma(round(abs(ar_go_r_value - ar_go_l_value), 2))}˚.
+Ширина базиса нижней челюсти (Md-Md) – {format_with_comma(md_md_value)} мм, что соответствует {md_status} (N = {format_with_comma(round(ws1['D23'].value, 1))} мм ± 3,0 мм).
+Положение нижней челюсти по сагиттали  (<SNB) – {format_with_comma(snb_value)}˚, что соответствует {snb_status} (N = 80,0˚ ± 3,0˚).
+Положение нижней челюсти по вертикали (<MP-SN) – {format_with_comma(mp_sn_value)}˚, что соответствует {mp_sn_status} (N = 32,0˚ ± 4,0˚).
+Смещение подбородка {chin_displacement_status}, \ за счет скелетной ассиметрии.
 Roll ротация отсутствует \  вправо (по часовой стрелке) \ влево (против часовой стрелки).
 Yaw ротация отсутствует \ вправо  (по часовой стрелке) \ влево (против часовой стрелки).
 """
-
 resume_text3 = f"""
-Вертикальное лицевое соотношение (N-ANS/ANS-Gn) {ans_quotient_status} – {round(ans_quotient, 2)} (N = 0,8 ± 0,09).
-Отношение задней высоты лица к передней (S-Go/N-Gn) – {assessment_growth_type}% (N = 63,0% ± 2,0%).
-Высота нижней трети лица по Ricketts (<ANS-Xi-Pm) – {ans_xi_pm}˚, что соответствует {ans_xi_pm_status} (N = {round(ws1['N8'].value, 1)}˚ ± 5,5˚).
-Параметр ODI – {odi_value}˚, что соответствует {odi_value_status} (N = 74,5˚ ±  5,0˚).
+Вертикальное лицевое соотношение (N-ANS/ANS-Gn) {ans_quotient_status} – {format_with_comma(round(ans_quotient, 2))} (N = 0,8 ± 0,09).
+Отношение задней высоты лица к передней (S-Go/N-Gn) – {format_with_comma(assessment_growth_type)}% (N = 63,0% ± 2,0%).
+Высота нижней трети лица по Ricketts (<ANS-Xi-Pm) – {format_with_comma(ans_xi_pm)}˚, что соответствует {ans_xi_pm_status} (N = {format_with_comma(round(ws1['N8'].value, 1))}˚ ± 5,5˚).
+Параметр ODI – {format_with_comma(odi_value)}˚, что соответствует {odi_value_status} (N = 74,5˚ ±  5,0˚).
 """
 
 resume_text4 = f"""
-Межрезцовый угол: справа – {u1_l1_r}˚, слева – {u1_l1_l}˚ (N = 130,0˚ ± 6,0˚).
+Межрезцовый угол: справа – {format_with_comma(u1_l1_r)}˚, слева – {format_with_comma(u1_l1_l)}˚ (N = 130,0˚ ± 6,0˚).
 {u1_pp} (N = 110,0˚± 5,0˚).
 {l1_pp} (N = 95,0˚ ± 5,0˚).
 """
@@ -998,11 +983,11 @@ width_lower_jaw = ws1['C23'].value
 width_upper_jaw = ws1['C10'].value
 width_dif_jaw = width_lower_jaw + 5
 jaw_dif = abs(width_dif_jaw - width_upper_jaw)
-jaw_status = f"составляет {round(jaw_dif, 1)} мм." if jaw_dif > 0 else "отсутствует."
+jaw_status = f"составляет {format_with_comma(round(jaw_dif, 1))} мм." if jaw_dif > 0 else "отсутствует."
 
 resume_text5 = f"""
-Ширина базиса нижней челюсти – {width_lower_jaw} мм. Фактическая ширина базиса верхней челюсти – {width_upper_jaw} мм. 
-Требуемая ширина базиса верхней челюсти = {width_dif_jaw} мм. 
+Ширина базиса нижней челюсти – {format_with_comma(width_lower_jaw)} мм. Фактическая ширина базиса верхней челюсти – {format_with_comma(width_upper_jaw)} мм. 
+Требуемая ширина базиса верхней челюсти = {format_with_comma(width_dif_jaw)} мм. 
 Дефицит ширины скелетного базиса верхней челюсти {jaw_status}
 """
 
@@ -1061,9 +1046,9 @@ print("Слайд №18 сформирован")
 if jaw_dif == 0:
     width_basis_lower_jaw = "норме"
 elif width_upper_jaw > width_dif_jaw:
-    width_basis_lower_jaw = f"расширении базиса верхней челюсти на {round(jaw_dif, 2)} мм"
+    width_basis_lower_jaw = f"расширении базиса верхней челюсти на {format_with_comma(round(jaw_dif, 2))} мм"
 else:
-    width_basis_lower_jaw = f"сужении базиса верхней челюсти на {round(jaw_dif, 2)} мм"
+    width_basis_lower_jaw = f"сужении базиса верхней челюсти на {format_with_comma(round(jaw_dif, 2))} мм"
 
 # Нижняя челюсть: пункт 3
 if go_me_r_value > ws1['D17'].value + ws1['E17'].value:
@@ -1090,9 +1075,10 @@ else:
     go_go_r_status = "в норме"
 
 # Нижняя челюсть: пункт 4
+# 59
 if go_go_l_value > ws1['D20'].value + ws1['E20'].value:
     go_go_l_status = "увеличена"
-elif go_go_l_value < ws1['D20'].value + ws1['E20'].value:
+elif go_go_l_value < ws1['D20'].value - ws1['E20'].value:
     go_go_l_status = "уменьшена"
 else:
     go_go_l_status = "в норме"
@@ -1121,17 +1107,17 @@ overjet_value = ws1['C30'].value
 if overbite_value > 4.4:
     overbite_value_status = f"Глубокая резцовая окклюзия. Вертикальное резцовое перекрытие увеличено до {overbite_value} мм (N = 2,5 мм ± 2,0 мм)."
 elif overbite_value < 0.5:
-    overbite_value_status = f"Вертикальная резцовая дизокклюзия – {overbite_value} мм (N = 2,5 мм ± 2,0 мм)."
+    overbite_value_status = f"Вертикальная резцовая дизокклюзия – {format_with_comma(overbite_value)} мм (N = 2,5 мм ± 2,0 мм)."
 else:
-    overbite_value_status = f"Вертикальное резцовое перекрытие в норме – {overbite_value} мм (N = 2,5 мм ± 2,0 мм)."
+    overbite_value_status = f"Вертикальное резцовое перекрытие в норме – {format_with_comma(overbite_value)} мм (N = 2,5 мм ± 2,0 мм)."
 
 # Определяем класс в зависимости от значения Overjet
 if overjet_value > 5:
-    overjet_value_status = f"Сагиттальная щель – {overjet_value} мм (N = 2,5 мм ± 2,5 мм)."
+    overjet_value_status = f"Сагиттальная щель – {format_with_comma(round(overjet_value, 1))} мм (N = 2,5 мм ± 2,5 мм)."
 elif overjet_value < 0:
-    overjet_value_status = f"Обратная сагиттальная щель {abs(overjet_value)} мм (от -0,1 и выше) (N = 2,5 мм ± 2,5 мм)."
+    overjet_value_status = f"Обратная сагиттальная щель {format_with_comma(round(overjet_value, 1))} мм (от -0,1 и выше) (N = 2,5 мм ± 2,5 мм)."
 else:
-    overjet_value_status = f"Сагиттальное резцовое перекрытие в норме – {overjet_value} мм (N = 2,5 мм ± 2,5 мм)."
+    overjet_value_status = f"Сагиттальное резцовое перекрытие в норме – {format_with_comma(round(overjet_value, 1))} мм (N = 2,5 мм ± 2,5 мм)."
 
 slide20_text1 = f"""
 1. Скелетный III класс обусловленный диспропорцией расположения апикальных 
@@ -1153,21 +1139,21 @@ slide20_text1 = f"""
 slide20_text2 = f"""
 1. Ширина базиса верхней челюсти в {width_basis_lower_jaw} 
     (Penn анализ).
-2. {sna_status} верхней челюсти. {ppsn_status} верхней челюсти.
+2. {sna_status_uppercase} верхней челюсти. {ppsn_status_uppercase} верхней челюсти.
 3. Ротация верхней челюсти в Roll \Yaw плоскости вправо (по часовой стрелке)
     \влево (против часовой стрелки).
 """
 slide20_text3 = f"""
 1. Ширина базиса нижней челюсти в {md_status} базиса нижней челюсти
     относительно возрастной нормы.
-2. {snb_status_uppercase} нижней челюсти. {mp_sn_status} нижней челюсти.
+2. {snb_status_uppercase} нижней челюсти. {mp_sn_status_uppercase} нижней челюсти.
 3. Длина тела нижней челюсти справа {go_me_r_status}. Длина тела нижней челюсти слева
     {go_me_l_status}.
 4. Длина ветви нижней челюсти справа {go_go_r_status}. Длина ветви нижней челюсти 
     слева {go_go_l_status}.
 5. Смещение подбородка {chin_displacement_status}.
-6. Ротация нижней челюсти в Roll \Yaw плоскости вправо (по часовой стрелке) \влево 
-    (против часовой стрелки).
+6. Ротация нижней челюсти в Roll \Yaw плоскости вправо (по часовой стрелке) 
+    \влево (против часовой стрелки).
 """
 
 slide20_text4 = f"""
@@ -1176,8 +1162,8 @@ slide20_text4 = f"""
     на 1,2 мм влево.
 2. Сужение верхнего зубного ряда в области клыков, премоляров, моляров.
     Сужение нижнего зубного ряда в области клыков, моляров, премоляров.
-3. Длина фронтального участка верхнего зубного ряда в норме , нижнего зубного ряда
-    в норме.
+3. Длина фронтального участка верхнего зубного ряда в норме , нижнего зубного 
+    ряда в норме.
 4. {incisor_tilt_r1_1}. {incisor_tilt_l2_1}. {incisor_tilt_l3_1}.
     {incisor_tilt_r4_1}
 5. {overbite_value_status}
@@ -1189,7 +1175,7 @@ slide20_text4 = f"""
 text_frame = prs.slides[19].shapes.add_textbox(Inches(0.6), Inches(0.6), Inches(7), Inches(5)).text_frame
 text_frame.word_wrap = True
 paragraph = text_frame.add_paragraph()
-paragraph.font.size = Pt(10.5)
+paragraph.font.size = Pt(11)
 paragraph.font.bold = False
 paragraph.font.name = "Montserrat"
 paragraph.text = slide20_text1
@@ -1198,7 +1184,7 @@ paragraph.text = slide20_text1
 text_frame = prs.slides[19].shapes.add_textbox(Inches(0.6), Inches(3.6), Inches(7), Inches(5)).text_frame
 text_frame.word_wrap = True
 paragraph = text_frame.add_paragraph()
-paragraph.font.size = Pt(10.5)
+paragraph.font.size = Pt(11)
 paragraph.font.bold = False
 paragraph.font.name = "Montserrat"
 paragraph.text = slide20_text2
@@ -1207,7 +1193,7 @@ paragraph.text = slide20_text2
 text_frame = prs.slides[19].shapes.add_textbox(Inches(0.6), Inches(5), Inches(7), Inches(5)).text_frame
 text_frame.word_wrap = True
 paragraph = text_frame.add_paragraph()
-paragraph.font.size = Pt(10.5)
+paragraph.font.size = Pt(11)
 paragraph.font.bold = False
 paragraph.font.name = "Montserrat"
 paragraph.text = slide20_text3
@@ -1216,7 +1202,7 @@ paragraph.text = slide20_text3
 text_frame = prs.slides[19].shapes.add_textbox(Inches(0.6), Inches(7.35), Inches(7), Inches(5)).text_frame
 text_frame.word_wrap = True
 paragraph = text_frame.add_paragraph()
-paragraph.font.size = Pt(10.5)
+paragraph.font.size = Pt(11)
 paragraph.font.bold = False
 paragraph.font.name = "Montserrat"
 paragraph.text = slide20_text4
@@ -1246,6 +1232,7 @@ def extract_text_from_slides(prs, slide_indices):
                 text += shape.text + "\n"
     return text
 
+
 # Индексы слайдов, с которых нужно извлечь текст
 slide_indices_to_extract = [17, 18, 19]  # Пример: извлечение текста с первых трех слайдов
 
@@ -1254,6 +1241,7 @@ extracted_text = extract_text_from_slides(prs, slide_indices_to_extract)
 
 # Путь к файлу, в который будет сохранен текст
 output_file_path = os.path.join(os.path.join(work_folder, folder_name), f"{folder_name}.txt")
+
 
 def save_text_to_file(text, file_path):
     """
@@ -1264,7 +1252,6 @@ def save_text_to_file(text, file_path):
     """
     with open(file_path, "w", encoding="utf-8") as file:
         file.write(text)
-
 
 
 # Сохранение текста в файл
