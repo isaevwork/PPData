@@ -67,6 +67,10 @@ folder_name = None
 # Глобальная переменная для хранения Excel файла
 wb = None
 
+passed = "\033[92m✓\033[0m"
+notpassed = "\033[91m✗\033[0m"
+well = "\033[93m◆\033[0m"
+
 # Путь к файлу Excel с таблицей
 # Рекурсивно обходим все подпапки внутри папки work
 for root, dirs, files in os.walk(work_folder):
@@ -84,12 +88,12 @@ if excel_files:
     with warnings.catch_warnings():
         warnings.simplefilter("ignore")
         wb = load_workbook(filename=excel_file_path, data_only=True)
-        print(f"Excel файл {os.path.basename(excel_file_path)} найден в папке {os.path.dirname(excel_file_path)}.")
+        print(f"{well} Excel файл {os.path.basename(excel_file_path)} найден в папке {os.path.dirname(excel_file_path)}.")
 
         # Извлекаем имя папки из пути
         folder_name = os.path.basename(os.path.dirname(excel_file_path))
 else:
-    print("Файл Excel не найден в подпапках папки work.")
+    print(f"{notpassed} Файл Excel не найден в подпапках папки work.")
 
 # Загружаем презентацию
 prs = Presentation(os.path.join(os.getenv('USERPROFILE'), 'Downloads', 'work', 'FDTemp.pptx'))
@@ -136,7 +140,7 @@ def insert_images(names, positions, idx):
                 slide.shapes.add_picture(image_path, img_left, img_top, img_width, img_height)
                 break
         else:
-            print(f"Изображение {name} не найдено на слайде {idx}.")
+            print(f" {notpassed} Изображение {name} не найдено на слайде {idx}.")
 
 
 def format_with_comma(number):
@@ -163,7 +167,7 @@ def get_text_color(last_value):
                 elif last_value < 0:
                     return RGBColor(0, 0, 255)  # Синий цвет
                 else:
-                    return RGBColor(0, 255, 0)  # Зеленый цвет
+                    return RGBColor(6, 102, 6)  # Зеленый цвет
     return RGBColor(0, 0, 0)  # Черный цвет по умолчанию
 
 
@@ -215,7 +219,79 @@ def add_text_to_slide(presentation, slide_index, slide_data, current_left, curre
             q.font.color.rgb = color  # Устанавливаем цвет текста
 
 
-# -----------------------------------------------------------------------------------------
+def crop_image(img_path, out_path, new_width, new_height):
+    """
+    Обрезает и изменяет размеры изображения и сохраняет его.
+    Args:
+        img_path (str): Путь к исходному изображению.
+        out_path (str): Путь для сохранения обрезанного изображения.
+        new_width (int): Новая ширина изображения.
+        new_height (int): Новая высота изображения.
+    """
+    image = Image.open(img_path)
+    width_i, height_i = image.size
+
+    # Определяем координаты области обрезки относительно центра изображения
+    left_i = (width_i - new_width) // 2
+    top_i = (height_i - new_height) // 2
+    right_i = (width_i + new_width) // 2
+    bottom_i = (height_i + new_height) // 2
+
+    cropped_image = image.crop((left_i, top_i, right_i, bottom_i))
+    cropped_image.save(out_path)
+
+
+def apply_crop_to_images(images_list, new_w, new_h, suffix=""):
+    for img_name in images_list:
+        # Формируем полный путь к файлу изображения
+        for extension in ['.jpg', '.png']:  # Проверяем два наиболее распространенных формата
+            img_path = os.path.join(image_folder, f"{img_name}{extension}")
+            if os.path.exists(img_path):  # Проверяем существует ли файл
+                break
+        else:
+            continue  # Пропускаем это изображение, если оно не найдено
+
+        # Формируем путь для сохранения обрезанного изображения
+        out_path = os.path.join(image_folder, f"{img_name}{suffix}{extension}")
+
+        # Обрезаем изображение и сохраняем его
+        crop_image(img_path, out_path, new_w, new_h)
+
+
+def rename_image(old_name, new_name):
+    temp_folder = os.path.join(image_folder, "temp")
+
+    # Проверяем существование папки temp, если ее нет, создаем
+    if not os.path.exists(temp_folder):
+        try:
+            os.makedirs(temp_folder)
+        except Exception as e:
+            print(f"{notpassed}Ошибка при создании папки temp: {str(e)}")
+            return
+
+    for extension in ['.jpg', '.png']:
+        img_path = os.path.join(image_folder, f"{old_name}{extension}")
+        if os.path.exists(img_path):
+            break
+    else:
+        print(f"{notpassed} Изображение {old_name} не найдено.")
+        return
+
+    try:
+        # Открываем изображение
+        image = Image.open(img_path)
+        # Формируем новый путь для сохранения в папку temp
+        new_img_path = os.path.join(temp_folder, f"{new_name}{extension}")
+        # Создаем копию изображения с новым именем
+        image_copy = image.copy()
+        # Сохраняем копию в новом пути
+        image_copy.save(new_img_path)
+        print(f"""{passed} Изображение "{old_name}" успешно скопировано с новым именем "{new_name}" и сохранено в папку temp.""")
+    except Exception as e:
+        print(f"{notpassed} Ошибка при копировании и сохранении изображения: {str(e)}")
+
+
+print("<------------------------------------------------------------------------------------------->")
 
 # Задаем имя пациента, врача и дату
 left = Inches(2.9)  # Расстояние от правого края слайда
@@ -238,26 +314,28 @@ tf_date = name_textbox.text_frame
 tf_date.word_wrap = True
 p_date = tf_date.add_paragraph()
 p_date.text = f"{datetime.today().strftime('%d.%m.%Y')}"
-# -------------------------------------------------------
 
 # Слайд № 1
-print("Слайд №1 сформирован")
-# -------------------------------------------------------
+print(f"{passed} Слайд №1 сформирован 🎉")
 
+print("<------------------------------------------------------------------------------------------->")
 # Слайд № 2
 # Массив имен изображений с префиксом папки
-# images_name_2 = ["2q", "2w", "2e", "2r"]
 images_name_2 = [f"{folder_name}_{image}" for image in ["2q", "2w", "2e", "2r"]]
+
 images_position_2 = [
     (Inches(0.4), Inches(1.5), Inches(2.6), Inches(3.6)),
     (Inches(5.4), Inches(1.5), Inches(2.6), Inches(3.6)),
     (Inches(0.7), Inches(7.8), Inches(3), Inches(3.6)),
     (Inches(4.6), Inches(7.7), Inches(3), Inches(3.7))
 ]
-slide_index_2 = 2
-insert_images(images_name_2, images_position_2, slide_index_2)
-print("Слайд №2 сформирован")
-# -------------------------------------------------------
+
+# Применяем функцию к каждому изображению
+apply_crop_to_images([f"{folder_name}_{image}" for image in ["2q", "2w"]], 1700, 2200)
+apply_crop_to_images([f"{folder_name}_{image}" for image in ["2e", "2r"]], 2300, 2600)
+
+insert_images(images_name_2, images_position_2, 2)
+print(f"{passed} Слайд №2 сформирован 🎉")
 
 # Слайд № 3
 ws2 = wb["Лист2"]
@@ -361,13 +439,13 @@ column_offsets_lower = {
 fill_table(prs, 3, up_data3, Inches(0.9), Inches(2.45), Inches(0.55), Inches(0.27), Pt(14), column_offsets_up)
 fill_table(prs, 3, lower_data3, Inches(1.3), Inches(3.65), Inches(0.45), Inches(0.27), Pt(14), column_offsets_lower)
 
-print("Слайд №3 сформирован")
-# -------------------------------------------------------
+print("<------------------------------------------------------------------------------------------->")
+print(f"{passed} Слайд №3 сформирован 🎉")
 
+print("<------------------------------------------------------------------------------------------->")
 # Слайд № 4
 # Массив имен изображений с префиксом папки
-# images_name_4 = ["4q", "4w", "4e", "4r", "4t", "4y"]
-images_name_4 = [f"{folder_name}_{image}" for image in ["4q", "4w", "4e", "4r", "4t", "4y"]]
+images_name_4 = [f"{folder_name}_{image}" for image in ["4q", "4w", "4e", "4r", "00", "4t"]]
 images_position_4 = [
     (Inches(0.9), Inches(1.2), Inches(2.9), Inches(2.75)),
     (Inches(4.4), Inches(1.2), Inches(2.9), Inches(2.75)),
@@ -376,10 +454,11 @@ images_position_4 = [
     (Inches(0.8), Inches(9.1), Inches(2.4), Inches(2.2)),
     (Inches(4.3), Inches(9.3), Inches(3.2), Inches(2))
 ]
-slide_index_4 = 4
-insert_images(images_name_4, images_position_4, slide_index_4)
-print("Слайд №4 сформирован")
-# -------------------------------------------------------
+
+insert_images(images_name_4, images_position_4, 4)
+rename_image(images_name_4[4], "размеры апикальных базисов вч и нч")
+print(f"{passed} Слайд №4 сформирован 🎉")
+print("<------------------------------------------------------------------------------------------->")
 
 # Слайд № 5
 # Массив имен изображений с префиксом папки
@@ -396,8 +475,8 @@ images_position_5 = [
 ]
 slide_index_5 = 5
 insert_images(images_name_5, images_position_5, slide_index_5)
-print("Слайд №5 сформирован")
-# -------------------------------------------------------
+print(f"{passed} Слайд №5 сформирован 🎉")
+print("<------------------------------------------------------------------------------------------->")
 
 
 # Слайд № 6
@@ -410,14 +489,14 @@ images_position_6 = [
 
     (Inches(0.8), Inches(5), Inches(3.5), Inches(1.8)),
 
-    (Inches(0.8), Inches(7.1), Inches(2.6), Inches(2.2)),
-    (Inches(2.9), Inches(9.4), Inches(2.6), Inches(2.2)),
-    (Inches(5), Inches(7.1), Inches(2.6), Inches(2.2))
+    (Inches(0.8), Inches(7.1), Inches(3), Inches(2.2)),
+    (Inches(2.9), Inches(9.4), Inches(3.4), Inches(2.2)),
+    (Inches(5), Inches(7.1), Inches(3), Inches(2.2))
 ]
 slide_index_6 = 6
 insert_images(images_name_6, images_position_6, slide_index_6)
-print("Слайд №6 сформирован")
-# -------------------------------------------------------
+print(f"{passed} Слайд №6 сформирован 🎉")
+print("<------------------------------------------------------------------------------------------->")
 
 # Слайд № 7
 # Массив имен изображений с префиксом папки
@@ -426,10 +505,12 @@ images_position_7 = [
     (Inches(0.6), Inches(1.5), Inches(7), Inches(4)),
     (Inches(0.6), Inches(6.3), Inches(7), Inches(4.6)),
 ]
-slide_index_7 = 7
-insert_images(images_name_7, images_position_7, slide_index_7)
-print("Слайд №7 сформирован")
-# -------------------------------------------------------
+
+insert_images(images_name_7, images_position_7, 7)
+rename_image(images_name_7[0], "мягкие ткани")
+rename_image(images_name_7[1], "костная ткань")
+print(f"{passed} Слайд №7 сформирован 🎉")
+print("<------------------------------------------------------------------------------------------->")
 
 # Слайд № 8
 images_name_8 = [f"{folder_name}_{image}" for image in ["11", "вч", "нч"]]
@@ -438,10 +519,11 @@ images_position_8 = [
     (Inches(0.5), Inches(5.1), Inches(7.2), Inches(2.9)),
     (Inches(0.5), Inches(8.5), Inches(7.2), Inches(2.9)),
 ]
-slide_index_8 = 8
-insert_images(images_name_8, images_position_8, slide_index_8)
-print("Слайд №8 сформирован")
-# -------------------------------------------------------
+
+insert_images(images_name_8, images_position_8, 8)
+rename_image(images_name_8[0], "ОПТГ")
+print(f"{passed} Слайд №8 сформирован 🎉")
+print("<------------------------------------------------------------------------------------------->")
 
 # Слайд № 9
 # Массив имен изображений с префиксом папки
@@ -451,10 +533,12 @@ images_position_9 = [
     (Inches(1.5), Inches(5.8), Inches(5.9), Inches(2.6)),
     (Inches(1.5), Inches(8.7), Inches(5.9), Inches(2.6)),
 ]
-slide_index_9 = 9
-insert_images(images_name_9, images_position_9, slide_index_9)
-print("Слайд №9 сформирован")
-# -------------------------------------------------------
+insert_images(images_name_9, images_position_9, 9)
+rename_image(images_name_9[0], "ВНЧС")
+rename_image(images_name_9[1], "ВНЧС прав")
+rename_image(images_name_9[2], "ВНЧС лев")
+print(f"{passed} Слайд №9 сформирован 🎉")
+print("<------------------------------------------------------------------------------------------->")
 
 # Слайд № 10
 # Размеры и положения областей для изображений
@@ -462,58 +546,40 @@ images_name_10_444 = [f"{folder_name}_{image}" for image in ["444"]]
 images_name_10 = [f"{folder_name}_{image}" for image in ["33", "44"]]
 img_name10_1 = os.path.join(images_name_10_444[0] + ".jpg")
 
-
-def crop_image(img_path, out_path, new_width, new_height):
-    """
-    Обрезает и изменяет размеры изображения и сохраняет его.
-    Args:
-        img_path (str): Путь к исходному изображению.
-        out_path (str): Путь для сохранения обрезанного изображения.
-        new_width (int): Новая ширина изображения.
-        new_height (int): Новая высота изображения.
-    """
-    image = Image.open(img_path)
-    width_i, height_i = image.size
-
-    # Определяем координаты области обрезки относительно центра изображения
-    left_i = (width_i - new_width) // 2
-    top_i = (height_i - new_height) // 2
-    right_i = (width_i + new_width) // 2
-    bottom_i = (height_i + new_height) // 2
-
-    cropped_image = image.crop((left_i, top_i, right_i, bottom_i))
-    cropped_image.save(out_path)
-
-
-# C:\Users\guzal\Downloads\work\Чеков Андрей Татекович
 # Пример использования
-img_path = os.path.join(image_folder, images_name_10_444[0] + ".jpg")  # Путь к исходному изображению
-out_path = os.path.join(image_folder, images_name_10_444[0] + ".jpg")  # Путь для сохранения обрезанного изображения
-
-crop_image(img_path, out_path, 1200, 1068)
+crop_image(os.path.join(image_folder, images_name_10_444[0] + ".jpg"),
+           os.path.join(image_folder, images_name_10_444[0] + ".jpg"), 1200, 1068)
 
 images_position_10 = [
     (Inches(0.5), Inches(7.5), Inches(3.5), Inches(3.5)),
     (Inches(4.1), Inches(7.5), Inches(3.5), Inches(3.5)),
 ]
 
-prs.slides[10].shapes.add_picture(out_path, Inches(1.2), Inches(1.4), Inches(6), Inches(5.5))
+prs.slides[10].shapes.add_picture(os.path.join(image_folder, images_name_10_444[0] + ".jpg"), Inches(1.2), Inches(1.4),
+                                  Inches(6), Inches(5.5))
 insert_images(images_name_10, images_position_10, 10)
-print("Слайд №10 сформирован")
-# -------------------------------------------------------
+rename_image(images_name_10[0], "ТРГ фронт")
+rename_image(images_name_10[1], "SMV")
+rename_image(images_name_10_444[0], "симметрия")
+print(f"{passed} Слайд №10 сформирован 🎉")
+print("<------------------------------------------------------------------------------------------->")
+
 # Слайд № 11
 # Размеры и положения областей для изображений
 images_name_11 = [f"{folder_name}_{image}" for image in ["4", "5", "55"]]
 images_position_11 = [
-    (Inches(0.6), Inches(1.4), Inches(3.5), Inches(3.8)),
-    (Inches(4.2), Inches(1.4), Inches(3.5), Inches(3.8)),
+    (Inches(0.4), Inches(1.4), Inches(3.6), Inches(3.6)),
+    (Inches(4.2), Inches(1.4), Inches(3.6), Inches(3.6)),
 
-    (Inches(1.4), Inches(5.8), Inches(5.4), Inches(5.6)),
+    (Inches(1), Inches(5.8), Inches(6.2), Inches(5.6)),
 ]
-slide_index_11 = 11
-insert_images(images_name_11, images_position_11, slide_index_11)
-print("Слайд №11 сформирован")
-# -------------------------------------------------------
+
+insert_images(images_name_11, images_position_11, 11)
+rename_image(images_name_11[0], "ТРГ прав")
+rename_image(images_name_11[1], "ТРГ лев")
+rename_image(images_name_11[2], "трассированная трг")
+print(f"{passed} Слайд №11 сформирован 🎉")
+print("<------------------------------------------------------------------------------------------->")
 
 # Слайд № 12
 images_name_12 = [f"{folder_name}_{image}" for image in ["12q"]]
@@ -522,8 +588,8 @@ images_position_12 = [
 ]
 slide_index_12 = 12
 insert_images(images_name_12, images_position_12, slide_index_12)
-print("Слайд №12 сформирован")
-# -------------------------------------------------------
+print(f"{passed} Слайд №12 сформирован 🎉")
+print("<------------------------------------------------------------------------------------------->")
 
 # Слайд № 13
 images_name_13 = [f"{folder_name}_{image}" for image in ["13q"]]
@@ -550,19 +616,22 @@ font_size = Pt(11)  # Размер шрифта
 
 add_text_to_slide(prs, 13, params13_data, params13_left, params13_top, params13_width, params13_height, font_size)
 
-print("Слайд №13 сформирован")
-# -------------------------------------------------------
+print(f"{passed} Слайд №13 сформирован 🎉")
+print("<------------------------------------------------------------------------------------------->")
 
 
 # Слайд № 14
-images_name_14 = [f"{folder_name}_{image}" for image in ["3", "000"]]
+images_name_14 = [f"{folder_name}_{image}" for image in ["3_crop", "000"]]
 images_position_14 = [
     (Inches(0.6), Inches(8.1), Inches(3.4), Inches(3.3)),
     (Inches(4.2), Inches(8.1), Inches(3.4), Inches(3.3)),
 ]
-slide_index_14 = 14
-insert_images(images_name_14, images_position_14, slide_index_14)
 
+apply_crop_to_images([f"{folder_name}_{image}" for image in ["3"]], 880, 900, "_crop")
+
+insert_images(images_name_14, images_position_14, 14)
+rename_image([f"{folder_name}_{image}" for image in ["3"]][0], "фронтальный расчет")
+rename_image(images_name_14[1], "Yaw ротация нижней челюсти")
 up_params14_data = []
 lower_params14_data = []
 
@@ -589,8 +658,8 @@ add_text_to_slide(prs, 14, up_params14_data, up_params14_left, up_params14_top, 
                   font_size)
 add_text_to_slide(prs, 14, lower_params14_data, lower_params14_left, lower_params14_top, lower_params14_width,
                   lower_params14_height, font_size)
-print("Слайд №14 сформирован")
-# -------------------------------------------------------
+print(f"{passed} Слайд №14 сформирован 🎉")
+print("<------------------------------------------------------------------------------------------->")
 
 # Слайд №15
 # Массив имен изображений с префиксом папки
@@ -599,22 +668,27 @@ images_position_15 = [
     (Inches(0.6), Inches(1.5), Inches(7), Inches(4.7)),
     (Inches(0.6), Inches(7), Inches(7), Inches(4.4)),
 ]
-slide_index_15 = 15
-insert_images(images_name_15, images_position_15, slide_index_15)
-print("Слайд №15 сформирован")
-# -------------------------------------------------------
+
+insert_images(images_name_15, images_position_15, 15)
+rename_image(images_name_15[0], "аксиальные срезы")
+
+print(f"{passed} Слайд №15 сформирован 🎉")
+print("<------------------------------------------------------------------------------------------->")
 
 # Слайд №16
 # Массив имен изображений с префиксом папки
 images_name_16 = [f"{folder_name}_{image}" for image in ["222", "0"]]
 images_position_16 = [
-    (Inches(0.8), Inches(1.2), Inches(6.5), Inches(4)),
+    (Inches(0.6), Inches(1.2), Inches(7), Inches(4)),
     (Inches(2), Inches(7.65), Inches(4.3), Inches(3.9)),
 ]
-slide_index_16 = 16
-insert_images(images_name_16, images_position_16, slide_index_16)
-print("Слайд №16 сформирован")
-# -------------------------------------------------------
+
+insert_images(images_name_16, images_position_16, 16)
+rename_image(images_name_16[0], "корональные срезы")
+rename_image(images_name_16[1], "воздухоносные пути")
+
+print(f"{passed} Слайд №16 сформирован 🎉")
+print("<------------------------------------------------------------------------------------------->")
 
 
 # Слайд №17
@@ -805,10 +879,9 @@ paragraph.font.bold = False
 paragraph.font.name = "Montserrat"
 paragraph.text = resume_text1_1
 
-print("Слайд №17 сформирован")
-# -------------------------------------------------------
+print(f"{passed} Слайд №17 сформирован 🎉")
+print("<------------------------------------------------------------------------------------------->")
 
-# -------------------------------------------------------
 # Слайд №16
 # Переменные с тенденциями к классу
 go_me_r_value = ws1['C17'].value
@@ -932,6 +1005,7 @@ def get_tooth_status(slant_value, difference, upper_threshold, lower_threshold, 
     else:
         return f"Нормальное положение зуба  {tooth_num}"
 
+
 slant_r1_1 = ws1['C33'].value
 slant_l2_1 = ws1['C34'].value
 slant_l3_1 = ws1['C36'].value
@@ -1037,11 +1111,10 @@ paragraph.font.bold = False
 paragraph.font.name = "Montserrat"
 paragraph.text = resume_text5
 
-print("Слайд №18 сформирован")
+print(f"{passed} Слайд №18 сформирован 🎉")
+print("<------------------------------------------------------------------------------------------->")
 
-# -------------------------------------------------------
 # Слайд №19
-
 # Верхняя челюсть: пункт 1
 if jaw_dif == 0:
     width_basis_lower_jaw = "норме"
@@ -1207,9 +1280,9 @@ paragraph.font.bold = False
 paragraph.font.name = "Montserrat"
 paragraph.text = slide20_text4
 
-print("Слайд №19 сформирован")
+print(f"{passed} Слайд №19 сформирован 🎉")
+print("<------------------------------------------------------------------------------------------->")
 
-# -------------------------------------------------------
 if folder_name:
     save_folder = os.path.join(work_folder, folder_name)
     prs.save(os.path.join(save_folder, f"{folder_name}.pptx"))
@@ -1253,8 +1326,7 @@ def save_text_to_file(text, file_path):
     with open(file_path, "w", encoding="utf-8") as file:
         file.write(text)
 
-
 # Сохранение текста в файл
 save_text_to_file(extracted_text, output_file_path)
 
-print(f"Текст успешно извлечен с выбранных слайдов и сохранен в файл {output_file_path}.")
+print(f"😊 Текст успешно извлечен с выбранных слайдов и сохранен в файл {output_file_path}.")
