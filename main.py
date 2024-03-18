@@ -1,3 +1,4 @@
+import math
 import os
 import warnings
 from PIL import Image
@@ -147,23 +148,39 @@ def format_with_comma(number):
     return formatted_number.replace(".", ",")
 
 
+def format_float_with_zeros(num):
+    """
+    Форматирует число с плавающей точкой с нулями в конце.
+    """
+    # Проверяем, является ли число целым
+    if num == int(num):
+        str_num = str(num)
+        if '.' not in str_num:
+            return f"{num}.0"  # Добавляем точку и ноль в конце, если нет десятичной части
+        else:
+            return str_num  # Возвращаем число без изменений, если десятичная часть уже присутствует
+    else:
+        return str(num)  # Возвращаем число без изменений
+
+
+
 def get_text_color(last_value):
     """
-    Возвращает цвет текста в зависимости от значения last_value.
+    Возвращает цвет текста в зависимости от значения value.
     """
-    if isinstance(last_value, (int, float)):
-        last_value = float(last_value)
-
-        if last_value is not None:
-            if last_value > 3 or last_value < -3:
-                return RGBColor(255, 0, 0)  # Красный цвет
-            elif -2 <= last_value <= 2:
-                if -0.9 <= last_value <= 0.9:
-                    return RGBColor(0, 0, 0)  # Черный цвет
-                elif last_value < 0:
-                    return RGBColor(0, 0, 255)  # Синий цвет
-                else:
-                    return RGBColor(6, 102, 6)  # Зеленый цвет
+    if isinstance(last_value, (int, float)) and last_value is not None:
+        if -3.1 <= last_value >= 3.1:
+            return RGBColor(255, 0, 0)  # Красный
+        elif 2.1 <= last_value <= 3:
+            return RGBColor(0, 0, 255)  # Синий
+        elif 1.1 <= last_value <= 2:
+            return RGBColor(6, 102, 6)  # Зеленый
+        elif -1 <= last_value <= 1:
+            return RGBColor(0, 0, 0)  # Черный
+        elif -2 <= last_value < -1.1:
+            return RGBColor(6, 102, 6)  # Зеленый
+        elif -3 <= last_value < -2.1:
+            return RGBColor(0, 0, 255)  # Синий
     return RGBColor(0, 0, 0)  # Черный цвет по умолчанию
 
 
@@ -184,7 +201,7 @@ def add_text_to_slide(presentation, slide_index, slide_data, current_left, curre
             # Преобразуем значение в строку, если оно не None
             if value is not None:
                 if isinstance(value, (int, float)):
-                    text_value = str(round(value, 2))
+                    text_value = format_float_with_zeros(round(value, 1))
                 else:
                     text_value = str(value)
             else:
@@ -282,7 +299,8 @@ def rename_image(old_name, new_name):
         image_copy = image.copy()
         # Сохраняем копию в новом пути
         image_copy.save(new_img_path)
-        print(f""" Изображение "{old_name}" успешно скопировано с новым именем "{new_name}" и сохранено в папку temp.""")
+        print(
+            f""" Изображение "{old_name}" успешно скопировано с новым именем "{new_name}" и сохранено в папку temp.""")
     except Exception as e:
         print(f" Ошибка при копировании и сохранении изображения: {str(e)}")
 
@@ -459,7 +477,6 @@ rename_image(images_name_4[4], "размеры апикальных базисо
 print(f" Слайд №4 сформирован")
 print("<-------------------------------------------------------------------------------------------------------->")
 
-
 # Слайд № 5
 # Массив имен изображений с префиксом папки
 images_name_5 = [f"{folder_name}_{image}" for image in ["5q", "5w", "5e", "5r", "5t", "5y"]]
@@ -477,8 +494,6 @@ slide_index_5 = 5
 insert_images(images_name_5, images_position_5, slide_index_5)
 print(f" Слайд №5 сформирован")
 print("<-------------------------------------------------------------------------------------------------------->")
-
-
 
 # Слайд № 6
 # Массив имен изображений с префиксом папки
@@ -499,7 +514,6 @@ insert_images(images_name_6, images_position_6, slide_index_6)
 print(f" Слайд №6 сформирован")
 print("<-------------------------------------------------------------------------------------------------------->")
 
-
 # Слайд № 7
 # Массив имен изображений с префиксом папки
 images_name_7 = [f"{folder_name}_{image}" for image in ["9", "6"]]
@@ -514,7 +528,6 @@ rename_image(images_name_7[1], "костная ткань")
 print(f" Слайд №7 сформирован")
 print("<-------------------------------------------------------------------------------------------------------->")
 
-
 # Слайд № 8
 images_name_8 = [f"{folder_name}_{image}" for image in ["11", "вч", "нч"]]
 images_position_8 = [
@@ -527,7 +540,6 @@ insert_images(images_name_8, images_position_8, 8)
 rename_image(images_name_8[0], "ОПТГ")
 print(f" Слайд №8 сформирован")
 print("<-------------------------------------------------------------------------------------------------------->")
-
 
 # Слайд № 9
 # Массив имен изображений с префиксом папки
@@ -543,7 +555,6 @@ rename_image(images_name_9[1], "ВНЧС прав")
 rename_image(images_name_9[2], "ВНЧС лев")
 print(f" Слайд №9 сформирован")
 print("<-------------------------------------------------------------------------------------------------------->")
-
 
 # Слайд № 10
 # Размеры и положения областей для изображений
@@ -569,7 +580,6 @@ rename_image(images_name_10_444[0], "симметрия")
 print(f" Слайд №10 сформирован")
 print("<-------------------------------------------------------------------------------------------------------->")
 
-
 # Слайд № 11
 # Размеры и положения областей для изображений
 images_name_11 = [f"{folder_name}_{image}" for image in ["4", "5", "55"]]
@@ -587,7 +597,6 @@ rename_image(images_name_11[2], "трассированная трг")
 print(f" Слайд №11 сформирован")
 print("<-------------------------------------------------------------------------------------------------------->")
 
-
 # Слайд № 12
 images_name_12 = [f"{folder_name}_{image}" for image in ["12q"]]
 images_position_12 = [
@@ -597,7 +606,6 @@ slide_index_12 = 12
 insert_images(images_name_12, images_position_12, slide_index_12)
 print(f" Слайд №12 сформирован")
 print("<-------------------------------------------------------------------------------------------------------->")
-
 
 # Слайд № 13
 images_name_13 = [f"{folder_name}_{image}" for image in ["13q"]]
@@ -626,8 +634,6 @@ add_text_to_slide(prs, 13, params13_data, params13_left, params13_top, params13_
 
 print(f" Слайд №13 сформирован")
 print("<-------------------------------------------------------------------------------------------------------->")
-
-
 
 # Слайд № 14
 images_name_14 = [f"{folder_name}_{image}" for image in ["3_crop", "000"]]
@@ -670,7 +676,6 @@ add_text_to_slide(prs, 14, lower_params14_data, lower_params14_left, lower_param
 print(f" Слайд №14 сформирован")
 print("<-------------------------------------------------------------------------------------------------------->")
 
-
 # Слайд №15
 # Массив имен изображений с префиксом папки
 images_name_15 = [f"{folder_name}_{image}" for image in ["333", "temp15"]]
@@ -684,7 +689,6 @@ rename_image(images_name_15[0], "аксиальные срезы")
 
 print(f" Слайд №15 сформирован")
 print("<-------------------------------------------------------------------------------------------------------->")
-
 
 # Слайд №16
 # Массив имен изображений с префиксом папки
@@ -700,8 +704,6 @@ rename_image(images_name_16[1], "воздухоносные пути")
 
 print(f" Слайд №16 сформирован")
 print("<-------------------------------------------------------------------------------------------------------->")
-
-
 
 # Слайд №17
 # Определяем тенденцию к классу
@@ -893,7 +895,6 @@ paragraph.text = resume_text1_1
 
 print(f" Слайд №17 сформирован")
 print("<-------------------------------------------------------------------------------------------------------->")
-
 
 # Слайд №16
 # Переменные с тенденциями к классу
@@ -1127,7 +1128,6 @@ paragraph.text = resume_text5
 print(f" Слайд №18 сформирован")
 print("<-------------------------------------------------------------------------------------------------------->")
 
-
 # Слайд №19
 # Верхняя челюсть: пункт 1
 if jaw_dif == 0:
@@ -1140,7 +1140,7 @@ else:
 # Нижняя челюсть: пункт 3
 if go_me_r_value > ws1['D17'].value + ws1['E17'].value:
     go_me_r_status = "увеличена"
-elif go_me_r_value < ws1['D17'].value + ws1['E17'].value:
+elif go_me_r_value < ws1['D17'].value - ws1['E17'].value:
     go_me_r_status = "уменьшена"
 else:
     go_me_r_status = "в норме"
@@ -1148,7 +1148,7 @@ else:
 # Нижняя челюсть: пункт 3
 if go_me_l_value > ws1['D18'].value + ws1['E18'].value:
     go_me_l_status = "увеличена"
-elif go_me_l_value < ws1['D18'].value + ws1['E18'].value:
+elif go_me_l_value < ws1['D18'].value - ws1['E18'].value:
     go_me_l_status = "уменьшена"
 else:
     go_me_l_status = "в норме"
@@ -1156,7 +1156,7 @@ else:
 # Нижняя челюсть: пункт 4
 if go_go_r_value > ws1['D19'].value + ws1['E19'].value:
     go_go_r_status = "увеличена"
-elif go_go_r_value < ws1['D19'].value + ws1['E19'].value:
+elif go_go_r_value < ws1['D19'].value - ws1['E19'].value:
     go_go_r_status = "уменьшена"
 else:
     go_go_r_status = "в норме"
@@ -1297,7 +1297,6 @@ paragraph.text = slide20_text4
 print(f" Слайд №19 сформирован")
 print("<-------------------------------------------------------------------------------------------------------->")
 
-
 if folder_name:
     save_folder = os.path.join(work_folder, folder_name)
     prs.save(os.path.join(save_folder, f"{folder_name}.pptx"))
@@ -1340,6 +1339,7 @@ def save_text_to_file(text, file_path):
     """
     with open(file_path, "w", encoding="utf-8") as file:
         file.write(text)
+
 
 # Сохранение текста в файл
 save_text_to_file(extracted_text, output_file_path)
