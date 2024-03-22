@@ -163,24 +163,25 @@ def format_float_with_zeros(num):
         return str(num)  # Возвращаем число без изменений
 
 
-
 def get_text_color(last_value):
     """
     Возвращает цвет текста в зависимости от значения value.
     """
     if isinstance(last_value, (int, float)) and last_value is not None:
-        if -3.1 <= last_value >= 3.1:
+        if last_value <= -3.1:
             return RGBColor(255, 0, 0)  # Красный
-        elif 2.1 <= last_value <= 3:
+        elif -3 <= last_value <= -2.1:
             return RGBColor(0, 0, 255)  # Синий
-        elif 1.1 <= last_value <= 2:
+        elif -2 <= last_value <= -1.1:
             return RGBColor(6, 102, 6)  # Зеленый
         elif -1 <= last_value <= 1:
             return RGBColor(0, 0, 0)  # Черный
-        elif -2 <= last_value < -1.1:
+        elif 1.1 <= last_value <= 2:
             return RGBColor(6, 102, 6)  # Зеленый
-        elif -3 <= last_value < -2.1:
+        elif 2.1 <= last_value <= 3:
             return RGBColor(0, 0, 255)  # Синий
+        elif last_value >= 3.1:
+            return RGBColor(255, 0, 0)  # Красный
     return RGBColor(0, 0, 0)  # Черный цвет по умолчанию
 
 
