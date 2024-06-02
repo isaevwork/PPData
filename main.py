@@ -710,8 +710,7 @@ print("<------------------------------------------------------------------------
 anb_value = ws1['L42'].value
 beta_angle = ws1['L44'].value
 wits_appraisal = ws1['L46'].value
-# sassouni = ws1['L125'].value
-sassouni = 3.1
+sassouni = ws1['L125'].value
 apdi_value = ws1['L43'].value
 pnsa_value = ws1['C9'].value
 jj_value = ws1['C10'].value
