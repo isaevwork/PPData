@@ -1,4 +1,3 @@
-import math
 import os
 import warnings
 from PIL import Image
@@ -711,7 +710,8 @@ print("<------------------------------------------------------------------------
 anb_value = ws1['L42'].value
 beta_angle = ws1['L44'].value
 wits_appraisal = ws1['L46'].value
-sassouni = ws1['L125'].value
+# sassouni = ws1['L125'].value
+sassouni = 3.1
 apdi_value = ws1['L43'].value
 pnsa_value = ws1['C9'].value
 jj_value = ws1['C10'].value
@@ -767,23 +767,23 @@ else:
 # Определяем класс в зависимости от значения Wits Appraisal
 sassouni_text = ""
 sassouni_trend_class = ""
-has_direction = ""
 if sassouni > 3:
     sassouni_skeletal_class = "III"
-    has_direction = "кзади"
-elif sassouni < 0:
+elif sassouni < -3:
     sassouni_skeletal_class = "II"
-    has_direction = "кпереди"
 else:
     sassouni_skeletal_class = "I"
-    # Если класс "I", проверяем дополнительные условия
-    has_direction = "кпереди"
     if 2.6 <= sassouni <= 3:
         sassouni_trend_class = "с тенденцией к III классу"
-    elif 0.1 <= sassouni <= 0.4:
+    elif -3 <= sassouni <= -2.6:
         sassouni_trend_class = "с тенденцией к II классу"
 
-sassouni_text_not_null = f"""Соотношение челюстей по методике Sassouni говорит за {sassouni_skeletal_class} скелетный класс {sassouni_trend_class} — базальная дуга проходит на {format_with_comma(sassouni)} мм {has_direction} от точки В (N = 0,0 мм ± 3,0 мм)."""
+if sassouni > 0:
+    has_direction = "кзади"
+elif sassouni < 0:
+    has_direction = "кпереди"
+
+sassouni_text_not_null = f"""Соотношение челюстей по методике Sassouni говорит за {sassouni_skeletal_class} скелетный класс {sassouni_trend_class} — базальная дуга проходит на {format_with_comma(abs(sassouni))} мм {has_direction} от точки В (N = 0,0 мм ± 3,0 мм)."""
 sassouni_text_null = f"""Соотношение челюстей по методике Sassouni говорит за I скелетный класс — базальная дуга проходит через точку B (N = 0,0 мм ± 3,0 мм)."""
 
 if sassouni == 0:
