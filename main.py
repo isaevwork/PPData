@@ -147,6 +147,35 @@ def format_with_comma(number):
     return formatted_number.replace(".", ",")
 
 
+def process_string(input_string):
+    # Преобразует строку с плавающей запятой в формате "12,8" в число
+    # заменяет запятую на точку, при необходимости округляет до двух знаков после запятой
+    # возвращает строку с плавающей запятой в формате "12,80"
+    if isinstance(input_string, (int, float)):
+        # Если входная строка уже является числом, преобразуем ее к типу float
+        number = float(input_string)
+    else:
+        if ',' in input_string:
+            # Заменяем запятую на точку
+            input_string = input_string.replace(',', '.')
+
+        try:
+            number = float(input_string)
+        except ValueError:
+            return "Некорректный формат числа"  # Возвращаем ошибку, если не удается преобразовать в число
+
+    # Убираем знак минус посредством abs(), если он есть
+    number = abs(number)
+
+    # Округляем число до двух знаков после запятой
+    number = round(number, 2)
+
+    # Заменяем точку на запятую и добавляем 0 до двух знаков после запятой
+    result_string = f"{number:.2f}".replace('.', ',')
+
+    return result_string
+
+
 def format_float_with_zeros(num):
     """
     Форматирует число с плавающей точкой с нулями в конце.
@@ -782,7 +811,7 @@ if sassouni > 0:
 elif sassouni < 0:
     has_direction = "кпереди"
 
-sassouni_text_not_null = f"""Соотношение челюстей по методике Sassouni говорит за {sassouni_skeletal_class} скелетный класс {sassouni_trend_class} — базальная дуга проходит на {format_with_comma(abs(sassouni))} мм {has_direction} от точки В (N = 0,0 мм ± 3,0 мм)."""
+sassouni_text_not_null = f"""Соотношение челюстей по методике Sassouni говорит за {sassouni_skeletal_class} скелетный класс {sassouni_trend_class} — базальная дуга проходит на {process_string(sassouni)} мм {has_direction} от точки В (N = 0,0 мм ± 3,0 мм)."""
 sassouni_text_null = f"""Соотношение челюстей по методике Sassouni говорит за I скелетный класс — базальная дуга проходит через точку B (N = 0,0 мм ± 3,0 мм)."""
 
 if sassouni == 0:
@@ -974,9 +1003,9 @@ mp_sn_status_uppercase = mp_sn_status.capitalize()
 
 # Определение смещения подбородка
 if chin_displacement > 0:
-    chin_displacement_status = f"влево на {format_with_comma(round(chin_displacement, 2))} мм"
+    chin_displacement_status = f"влево на {process_string(chin_displacement)} мм"
 elif chin_displacement < 0:
-    chin_displacement_status = f"вправо на {format_with_comma(round(chin_displacement, 2))} мм"
+    chin_displacement_status = f"вправо на {process_string(chin_displacement)} мм"
 else:
     chin_displacement_status = "не выявлено"
 
@@ -1013,9 +1042,9 @@ def get_tooth_status(slant_value, difference, upper_threshold, lower_threshold, 
     if slant_value is None:
         return f"Нормальное положение зуба {tooth_num}"
     elif slant_value > upper_threshold:
-        return f"Протрузия зуба  {tooth_num} на {difference}˚"
+        return f"Протрузия зуба  {tooth_num} на {process_string(difference)}˚"
     elif slant_value < lower_threshold:
-        return f"Ретрузия зуба  {tooth_num} на {difference}˚"
+        return f"Ретрузия зуба  {tooth_num} на {process_string(difference)}˚"
     else:
         return f"Нормальное положение зуба  {tooth_num}"
 
@@ -1050,12 +1079,12 @@ resume_text2 = f"""
 Ширина базиса нижней челюсти (Md-Md) – {format_with_comma(md_md_value)} мм, что соответствует {md_status} (N = {format_with_comma(round(ws1['D23'].value, 1))} мм ± 3,0 мм).
 Положение нижней челюсти по сагиттали  (<SNB) – {format_with_comma(snb_value)}˚, что соответствует {snb_status} (N = 80,0˚ ± 3,0˚).
 Положение нижней челюсти по вертикали (<MP-SN) – {format_with_comma(mp_sn_value)}˚, что соответствует {mp_sn_status} (N = 32,0˚ ± 4,0˚).
-Смещение подбородка {chin_displacement_status}, \ за счет скелетной ассиметрии.
+Смещение подбородка {chin_displacement_status}, \ за счет скелетной асиметрии.
 Roll ротация отсутствует \  вправо (по часовой стрелке) \ влево (против часовой стрелки).
 Yaw ротация отсутствует \ вправо  (по часовой стрелке) \ влево (против часовой стрелки).
 """
 resume_text3 = f"""
-Вертикальное лицевое соотношение (N-ANS/ANS-Gn) {ans_quotient_status} – {format_with_comma(round(ans_quotient, 2))} (N = 0,8 ± 0,09).
+Вертикальное лицевое соотношение (N-ANS/ANS-Gn) {ans_quotient_status} – {round(ans_quotient, 2)} (N = 0,8 ± 0,09).
 Отношение задней высоты лица к передней (S-Go/N-Gn) – {format_with_comma(assessment_growth_type)}% (N = 63,0% ± 2,0%).
 Высота нижней трети лица по Ricketts (<ANS-Xi-Pm) – {format_with_comma(ans_xi_pm)}˚, что соответствует {ans_xi_pm_status} (N = {format_with_comma(round(ws1['N8'].value, 1))}˚ ± 5,5˚).
 Параметр ODI – {format_with_comma(odi_value)}˚, что соответствует {odi_value_status} (N = 74,5˚ ±  5,0˚).
@@ -1207,9 +1236,10 @@ else:
     overjet_value_status = f"Сагиттальное резцовое перекрытие в норме – {format_with_comma(round(overjet_value, 1))} мм (N = 2,5 мм ± 2,5 мм)."
 
 slide20_text1 = f"""
-1. Скелетный III класс обусловленный диспропорцией расположения апикальных 
-    базисов челюстей в сагиттальном направлении. Зубоальвеолярная форма 
-    дистальной \ мезиальной окклюзии.
+1. Скелетный III класс с тенденцией к III, обусловленный 
+    макро \ микрогнатией, про \ ретрогнатией верхней \ нижней челюсти \ 
+    диспропорцией расположения апикальных базисов челюстей в сагиттальном направлении. 
+    Зубоальвеолярная форма дистальной \ мезиальной окклюзии.
 2. Мезофациальный тип строения лицевого отдела черепа. 
 3. Нейтральный тип роста с тенденцией к вертикальному\ горизонтальному росту.
 4. Высота нижней трети лица по Ricketts  в {ans_xi_pm_status}.
@@ -1251,8 +1281,8 @@ slide20_text4 = f"""
     Сужение нижнего зубного ряда в области клыков, моляров, премоляров.
 3. Длина фронтального участка верхнего зубного ряда в норме , нижнего зубного 
     ряда в норме.
-4. {incisor_tilt_r1_1}. {incisor_tilt_l2_1}. {incisor_tilt_l3_1}.
-    {incisor_tilt_r4_1}
+4. {incisor_tilt_r1_1}. {incisor_tilt_l2_1}.
+    {incisor_tilt_l3_1}. {incisor_tilt_r4_1}
 5. {overbite_value_status}
 6. {overjet_value_status}
 7. Глубина кривой Шпее в увеличена справа \ слева.
@@ -1268,7 +1298,7 @@ paragraph.font.name = "Montserrat"
 paragraph.text = slide20_text1
 
 # Добавляем текст на слайд
-text_frame = prs.slides[19].shapes.add_textbox(Inches(0.6), Inches(3.6), Inches(7), Inches(5)).text_frame
+text_frame = prs.slides[19].shapes.add_textbox(Inches(0.6), Inches(3.85), Inches(7), Inches(5)).text_frame
 text_frame.word_wrap = True
 paragraph = text_frame.add_paragraph()
 paragraph.font.size = Pt(11)
@@ -1277,7 +1307,7 @@ paragraph.font.name = "Montserrat"
 paragraph.text = slide20_text2
 
 # Добавляем текст на слайд
-text_frame = prs.slides[19].shapes.add_textbox(Inches(0.6), Inches(5), Inches(7), Inches(5)).text_frame
+text_frame = prs.slides[19].shapes.add_textbox(Inches(0.6), Inches(5.1), Inches(7), Inches(5)).text_frame
 text_frame.word_wrap = True
 paragraph = text_frame.add_paragraph()
 paragraph.font.size = Pt(11)
