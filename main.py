@@ -96,9 +96,9 @@ prs = Presentation(os.path.join(os.getenv('USERPROFILE'), 'Downloads', 'work', '
 image_folder = os.path.join(work_folder, folder_name)
 # -----------------------------------------------------------------------------------------
 # Определение параметров текстового блока
-left = Inches(6.9)
-top = Inches(7.9)
-width = Inches(3)
+left = Inches(6.8)
+top = Inches(7.8)
+width = Inches(3.3)
 height = Inches(2)
 
 # Список индексов слайдов, для которых нужно создать текстовые блоки
@@ -863,21 +863,21 @@ else:
 
 # Определяем класс в зависимости от значения SNA
 if sna_value > 85:
-    sna_status = "прогнатии"
+    sna_status = "прогнати"
 elif sna_value < 79:
-    sna_status = "ретрогнатии"
+    sna_status = "ретрогнати"
 else:
-    sna_status = "нормогнатии"
+    sna_status = "нормогнати"
 
 sna_status_uppercase = sna_status.capitalize()
 
 # Определяем класс в зависимости от значения PP/SN
 if ppsn_value > 12:
-    ppsn_status = "ретроинклинации"
+    ppsn_status = "ретроинклинаци"
 elif ppsn_value < 5:
-    ppsn_status = "антеинклинации"
+    ppsn_status = "антеинклинаци"
 else:
-    ppsn_status = "нормоинклинации"
+    ppsn_status = "нормоинклинаци"
 
 ppsn_status_uppercase = ppsn_status.capitalize()
 
@@ -892,8 +892,8 @@ resume_text1 = f"""
 resume_text1_1 = f"""
 Длина основания верхней челюсти (PNS-A) – {format_with_comma(pnsa_value)} мм, что соответствует {pnsa_status} (N = {format_with_comma(round(ws1['D9'].value, 1))} мм ± 3,5 мм).
 Ширина основания верхней (J-J) челюсти –  {format_with_comma(jj_value)} мм, что соответствует {jj_status} (N = {format_with_comma(round(ws1['D10'].value, 1))} мм ± 3,0 мм):  справа – {format_with_comma(ws1['C11'].value)} мм, слева – {format_with_comma(ws1['C12'].value)} мм (N = {format_with_comma(ws1['D10'].value / 2)} мм ± 1,5 мм).
-Положение верхней челюсти по сагиттали  (<SNA) – {format_with_comma(sna_value)}˚, что соответствует {sna_status} (N = 82,0˚ ±  3,0˚).
-Положение верхней челюсти по вертикали  (<SN-Palatal Plane) – {format_with_comma(ppsn_value)}˚, что соответствует {ppsn_status} (N = 8,0˚ ± 3,0˚).
+Положение верхней челюсти по сагиттали  (<SNA) – {format_with_comma(sna_value)}˚, что соответствует {sna_status}и (N = 82,0˚ ±  3,0˚).
+Положение верхней челюсти по вертикали  (<SN-Palatal Plane) – {format_with_comma(ppsn_value)}˚, что соответствует {ppsn_status}и (N = 8,0˚ ± 3,0˚).
 Roll ротация отсутствует\  вправо (по часовой стрелке) \ влево (против часовой стрелки).
 Yaw ротация отсутствует \ вправо  (по часовой стрелке) \ влево (против часовой стрелки).
 """
@@ -987,17 +987,17 @@ else:
 if snb_value > 83:
     snb_status = "прогнатии"
 elif snb_value < 77:
-    snb_status = "ретрогнатии"
+    snb_status = "ретрогнати"
 else:
-    snb_status = "нормогнатии"
+    snb_status = "нормогнати"
 
 # Определяем класс в зависимости от значения <MP\SN
 if mp_sn_value > 36:
-    mp_sn_status = "ретроинклинации"
+    mp_sn_status = "ретроинклинаци"
 elif mp_sn_value < 28:
-    mp_sn_status = "антеинклинации"
+    mp_sn_status = "антеинклинаци"
 else:
-    mp_sn_status = "нормоинклинации"
+    mp_sn_status = "нормоинклинаци"
 
 mp_sn_status_uppercase = mp_sn_status.capitalize()
 
@@ -1040,13 +1040,13 @@ else:
 
 def get_tooth_status(slant_value, difference, upper_threshold, lower_threshold, tooth_num):
     if slant_value is None:
-        return f"Нормальное положение зуба {tooth_num}"
+        return ''
     elif slant_value > upper_threshold:
         return f"Протрузия зуба  {tooth_num} на {process_string(difference)}˚"
     elif slant_value < lower_threshold:
         return f"Ретрузия зуба  {tooth_num} на {process_string(difference)}˚"
     else:
-        return f"Нормальное положение зуба  {tooth_num}"
+        return ''
 
 
 slant_r1_1 = ws1['C33'].value
@@ -1064,6 +1064,27 @@ l2_1_value_status = get_tooth_status(slant_l2_1, slant_l2_1_dif, 115, 105, 2.1)
 l3_1_value_status = get_tooth_status(slant_l3_1, slant_l3_1_dif, 100, 90, 3.1)
 r4_1_value_status = get_tooth_status(slant_r4_1, slant_r4_1_dif, 100, 90, 4.1)
 
+result_string = ""
+
+if r1_1_value_status is not None:
+    result_string += f"{r1_1_value_status}"
+    if r1_1_value_status:
+        result_string += f". "
+
+if l2_1_value_status is not None:
+    result_string += f"{l2_1_value_status}"
+    if l2_1_value_status:
+        result_string += f". "
+
+if l3_1_value_status is not None:
+    result_string += f"{l3_1_value_status}"
+    if l3_1_value_status:
+        result_string += f". "
+
+if r4_1_value_status is not None:
+    result_string += f"{r4_1_value_status}"
+
+
 # Формирование строки с динамическими данными
 u1_pp = f"{r1_1_value_status}. {l2_1_value_status}"
 l1_pp = f"{l3_1_value_status}. {r4_1_value_status}"
@@ -1077,8 +1098,8 @@ resume_text2 = f"""
 Гониальный угол (<Ar-Go-Me): справа –  {format_with_comma(ar_go_r_value)}˚,  слева – {format_with_comma(ar_go_l_value)}˚ (N = {format_with_comma(round(ws1['D21'].value, 1))}˚ ± 5,0˚).
 Гониальный угол справа {ar_go_status}, чем слева на {format_with_comma(round(abs(ar_go_r_value - ar_go_l_value), 2))}˚.
 Ширина базиса нижней челюсти (Md-Md) – {format_with_comma(md_md_value)} мм, что соответствует {md_status} (N = {format_with_comma(round(ws1['D23'].value, 1))} мм ± 3,0 мм).
-Положение нижней челюсти по сагиттали  (<SNB) – {format_with_comma(snb_value)}˚, что соответствует {snb_status} (N = 80,0˚ ± 3,0˚).
-Положение нижней челюсти по вертикали (<MP-SN) – {format_with_comma(mp_sn_value)}˚, что соответствует {mp_sn_status} (N = 32,0˚ ± 4,0˚).
+Положение нижней челюсти по сагиттали  (<SNB) – {format_with_comma(snb_value)}˚, что соответствует {snb_status}и (N = 80,0˚ ± 3,0˚).
+Положение нижней челюсти по вертикали (<MP-SN) – {format_with_comma(mp_sn_value)}˚, что соответствует {mp_sn_status}и (N = 32,0˚ ± 4,0˚).
 Смещение подбородка {chin_displacement_status}, \ за счет скелетной асиметрии.
 Roll ротация отсутствует \  вправо (по часовой стрелке) \ влево (против часовой стрелки).
 Yaw ротация отсутствует \ вправо  (по часовой стрелке) \ влево (против часовой стрелки).
@@ -1162,9 +1183,9 @@ print("<------------------------------------------------------------------------
 if jaw_dif == 0:
     width_basis_lower_jaw = "норме"
 elif width_upper_jaw > width_dif_jaw:
-    width_basis_lower_jaw = f"расширении базиса верхней челюсти на {format_with_comma(round(jaw_dif, 2))} мм"
+    width_basis_lower_jaw = f"Расширение базиса верхней челюсти на {format_with_comma(round(jaw_dif, 2))} мм"
 else:
-    width_basis_lower_jaw = f"сужении базиса верхней челюсти на {format_with_comma(round(jaw_dif, 2))} мм"
+    width_basis_lower_jaw = f"Сужение базиса верхней челюсти на {format_with_comma(round(jaw_dif, 2))} мм"
 
 # Нижняя челюсть: пункт 3
 if go_me_r_value > ws1['D17'].value + ws1['E17'].value:
@@ -1211,21 +1232,16 @@ else:
 
 snb_status_uppercase = snb_status.capitalize()
 
-incisor_tilt_r1_1 = r1_1_value_status.split("на")[0].strip()
-incisor_tilt_l2_1 = l2_1_value_status.split("на")[0].strip()
-incisor_tilt_l3_1 = l3_1_value_status.split("на")[0].strip()
-incisor_tilt_r4_1 = r4_1_value_status.split("на")[0].strip()
-
 overbite_value = ws1['C29'].value
 overjet_value = ws1['C30'].value
 
 # Определяем класс в зависимости от значения Overbite
 if overbite_value > 4.4:
-    overbite_value_status = f"Глубокая резцовая окклюзия. Вертикальное резцовое перекрытие увеличено до {overbite_value} мм (N = 2,5 мм ± 2,0 мм)."
+    overbite_value_status = f"Глубокая резцовая окклюзия. Вертикальное резцовое перекрытие увеличено до {process_string(overbite_value)} мм (N = 2,5 мм ± 2,0 мм)."
 elif overbite_value < 0.5:
-    overbite_value_status = f"Вертикальная резцовая дизокклюзия – {format_with_comma(overbite_value)} мм (N = 2,5 мм ± 2,0 мм)."
+    overbite_value_status = f"Вертикальная резцовая дизокклюзия – {process_string(overbite_value)} мм (N = 2,5 мм ± 2,0 мм)."
 else:
-    overbite_value_status = f"Вертикальное резцовое перекрытие в норме – {format_with_comma(overbite_value)} мм (N = 2,5 мм ± 2,0 мм)."
+    overbite_value_status = f"Вертикальное резцовое перекрытие в норме – {process_string(overbite_value)} мм (N = 2,5 мм ± 2,0 мм)."
 
 # Определяем класс в зависимости от значения Overjet
 if overjet_value > 5:
@@ -1254,35 +1270,32 @@ slide20_text1 = f"""
 """
 
 slide20_text2 = f"""
-1. Ширина базиса верхней челюсти в {width_basis_lower_jaw} 
-    (Penn анализ).
-2. {sna_status_uppercase} верхней челюсти. {ppsn_status_uppercase} верхней челюсти.
+1. {width_basis_lower_jaw} (Penn анализ).
+2. {sna_status_uppercase}я верхней челюсти. {ppsn_status_uppercase}я верхней челюсти.
 3. Ротация верхней челюсти в Roll \Yaw плоскости вправо (по часовой стрелке)
     \влево (против часовой стрелки).
 """
 slide20_text3 = f"""
-1. Ширина базиса нижней челюсти в {md_status} базиса нижней челюсти
-    относительно возрастной нормы.
-2. {snb_status_uppercase} нижней челюсти. {mp_sn_status_uppercase} нижней челюсти.
+1. Ширина базиса нижней челюсти в {md_status} относительно возрастной нормы.
+2. {snb_status_uppercase}я нижней челюсти. {mp_sn_status_uppercase}я нижней челюсти.
 3. Длина тела нижней челюсти справа {go_me_r_status}. Длина тела нижней челюсти слева
     {go_me_l_status}.
 4. Длина ветви нижней челюсти справа {go_go_r_status}. Длина ветви нижней челюсти 
     слева {go_go_l_status}.
-5. Смещение подбородка {chin_displacement_status}.
+5. Смещение подбородка {chin_displacement_status}, \ за счет скелетной асимметрии. 
 6. Ротация нижней челюсти в Roll \Yaw плоскости вправо (по часовой стрелке) 
     \влево (против часовой стрелки).
 """
 
 slide20_text4 = f"""
-1. Межрезцовая линия на верхней челюсти смещена относительно
-    срединно сагиттальной линии на 1,2 мм вправо, на нижней челюсти смещена 
-    на 1,2 мм влево.
+1. Межрезцовая линия на верхней челюсти не смещена относительно
+    срединно сагиттальной линии на 1,2 мм вправо \ влево, на нижней челюсти не смещена 
+    на 1,2 мм влево / вправо.
 2. Сужение верхнего зубного ряда в области клыков, премоляров, моляров.
     Сужение нижнего зубного ряда в области клыков, моляров, премоляров.
 3. Длина фронтального участка верхнего зубного ряда в норме , нижнего зубного 
     ряда в норме.
-4. {incisor_tilt_r1_1}. {incisor_tilt_l2_1}.
-    {incisor_tilt_l3_1}. {incisor_tilt_r4_1}
+4. {result_string}.
 5. {overbite_value_status}
 6. {overjet_value_status}
 7. Глубина кривой Шпее в увеличена справа \ слева.
