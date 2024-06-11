@@ -147,7 +147,7 @@ def format_with_comma(number):
     return formatted_number.replace(".", ",")
 
 
-def process_string(input_string):
+def process_string(input_string, round_num):
     # Преобразует строку с плавающей запятой в формате "12,8" в число
     # заменяет запятую на точку, при необходимости округляет до двух знаков после запятой
     # возвращает строку с плавающей запятой в формате "12,80"
@@ -168,10 +168,10 @@ def process_string(input_string):
     number = abs(number)
 
     # Округляем число до двух знаков после запятой
-    number = round(number, 2)
+    number = round(number, round_num)
 
     # Заменяем точку на запятую и добавляем 0 до двух знаков после запятой
-    result_string = f"{number:.2f}".replace('.', ',')
+    result_string = f"{number:.{round_num}f}".replace('.', ',')
 
     return result_string
 
@@ -256,7 +256,7 @@ def add_text_to_slide(presentation, slide_index, slide_data, current_left, curre
             q = table_frame.add_paragraph()
             q.text = text_value
             q.font.size = font_s
-            q.font.name = "Montserrat Medium"
+            q.font.name = "Montserrat"
             q.alignment = PP_PARAGRAPH_ALIGNMENT.CENTER
             q.font.color.rgb = color  # Устанавливаем цвет текста
 
@@ -364,6 +364,40 @@ print(f" Слайд №1 сформирован")
 print("<-------------------------------------------------------------------------------------------------------->")
 
 # Слайд № 2
+ws2 = wb["Лист2"]
+face_width = ws2['B10'].value           #Ширина
+face_height = ws2['B11'].value          #Высота
+facial_index = ws2['B12'].value         #Лицевой индекс
+nosocomial_angle = ws2['B13'].value     #Носолицевой угол
+nasal_angle = ws2['B14'].value          #Носоподбородочный угол
+labial_angle = ws2['B15'].value         #Носогубный угол
+chin_facial_angle = ws2['B16'].value    #Подбородочно-лицевой угол
+soft_tissues_angle = ws2['B17'].value   #Угол выпуклости мягких тканей лица
+upper_lip_position = ws2['B18'].value   #Положение верхней губы
+lower_lip_position = ws2['B19'].value   #Положение нижней губы
+
+def add_num_to_slide(prs, slide_index, left, top, text, font_size=12, font_name="Montserrat", bold=False):
+    slide = prs.slides[slide_index]
+    textbox = slide.shapes.add_textbox(left, top, Inches(1), Inches(0))
+    tf = textbox.text_frame
+    tf.word_wrap = True
+    p = tf.add_paragraph()
+    p.text = text
+    p.font.bold = bold
+    p.font.size = Pt(font_size)
+    p.font.name = font_name
+    p.font.color.rgb = RGBColor(255, 0, 0)
+
+
+add_num_to_slide(prs, 2, Inches(4.5), Inches(1.81), f"{format_with_comma(face_width)}")
+add_num_to_slide(prs, 2, Inches(4.65), Inches(2.08), f"{format_with_comma(face_height)}")
+add_num_to_slide(prs, 2, Inches(4.36), Inches(2.315), f"{format_with_comma(facial_index)}")
+add_num_to_slide(prs, 2, Inches(1.9), Inches(5.39), f"{format_with_comma(nosocomial_angle)}°")
+add_num_to_slide(prs, 2, Inches(2.55), Inches(5.65), f"{format_with_comma(nasal_angle)}°")
+add_num_to_slide(prs, 2, Inches(1.87), Inches(6.15), f"{format_with_comma(labial_angle)}°")
+add_num_to_slide(prs, 2, Inches(2.8), Inches(6.4), f"{format_with_comma(chin_facial_angle)}°")
+add_num_to_slide(prs, 2, Inches(1.2), Inches(7.15), f"{format_with_comma(soft_tissues_angle)}°")
+
 # Массив имен изображений с префиксом папки
 images_name_2 = [f"{folder_name}_{image}" for image in ["2q", "2w", "2e", "2r"]]
 
@@ -382,7 +416,7 @@ insert_images(images_name_2, images_position_2, 2)
 print(f" Слайд №2 сформирован")
 
 # Слайд № 3
-ws2 = wb["Лист2"]
+
 
 # Создаем пустой DataFrame
 slideThree_MT = list(ws2.iter_rows(min_row=2, max_row=9, min_col=16, max_col=17, values_only=True))
@@ -391,7 +425,7 @@ slideThree_MT = list(ws2.iter_rows(min_row=2, max_row=9, min_col=16, max_col=17,
 c_left = Inches(2.8)  # Левая граница
 c_top = Inches(5.53)  # Верхняя граница
 c_width = Inches(2.5)  # Ширина ячейки
-c_height = Inches(0.27)  # Высота ячейки
+c_height = Inches(0.275)  # Высота ячейки
 f_size = Pt(12)  # Размер шрифта
 
 
@@ -426,7 +460,7 @@ for i, row_data in enumerate(transformed_dataframe):
         p = text_frame.add_paragraph()
         p.text = str(value)
         p.font.size = f_size
-        p.font.name = "Montserrat Medium"
+        p.font.name = "Montserrat"
         p.alignment = PP_PARAGRAPH_ALIGNMENT.CENTER
 
 
@@ -453,7 +487,7 @@ def fill_table(present, slide_index, slide_data, cl, ct, cw, ch, fs, column_offs
             p = table_frame.add_paragraph()
             p.text = text_value
             p.font.size = fs
-            p.font.name = "Montserrat Medium"
+            p.font.name = "Montserrat"
             p.alignment = PP_PARAGRAPH_ALIGNMENT.CENTER
 
 
@@ -503,6 +537,53 @@ images_position_4 = [
 
 insert_images(images_name_4, images_position_4, 4)
 rename_image(images_name_4[4], "размеры апикальных базисов вч и нч")
+
+upper_dentition_rows = list(ws2.iter_rows(min_row=23, max_row=26, min_col=2, max_col=4, values_only=True))
+lower_dentition_rows = list(ws2.iter_rows(min_row=23, max_row=26, min_col=5, max_col=7, values_only=True))
+
+
+def convert_list(data):
+    transformed_data = []
+    for sublist in data:
+        transformed_sublist = []
+        for item in sublist:
+            transformed_sublist.append(item)
+        transformed_data.append(transformed_sublist)
+    return transformed_data
+
+
+# Преобразование данных и размещение на слайде
+transformed_upper_rows = convert_list(upper_dentition_rows)
+transformed_lower_rows = convert_list(lower_dentition_rows)
+
+
+def place_data_on_slide(data_rows, left_mar, top_mar, cell_width, cell_height, size_f, slide_index):
+    for i, row_data in enumerate(data_rows):
+        for j, value in enumerate(row_data):
+            cell_left = left_mar + j * cell_width
+            cell_top = top_mar + i * cell_height
+
+            new_text_frame = prs.slides[slide_index].shapes.add_textbox(cell_left, cell_top, cell_width,
+                                                                        cell_height).text_frame
+            p = new_text_frame.add_paragraph()
+            p.text = str(value)
+            p.font.size = Pt(size_f)
+            p.font.name = "Montserrat"
+            p.alignment = PP_PARAGRAPH_ALIGNMENT.CENTER
+
+
+# Задание параметров для верхних и нижних данных
+upper_left_mar = Inches(2.85)
+lower_left_mar = Inches(5.3)
+top_mar = Inches(7.15)
+
+width = Inches(0.74)
+height = Inches(0.34)
+font_size = 13
+
+# Размещение данных на слайде для верхних и нижних строк
+place_data_on_slide(transformed_upper_rows, upper_left_mar, top_mar, width, height, font_size, 4)
+place_data_on_slide(transformed_lower_rows, lower_left_mar, top_mar, width, height, font_size, 4)
 print(f" Слайд №4 сформирован")
 print("<-------------------------------------------------------------------------------------------------------->")
 
@@ -745,6 +826,15 @@ pnsa_value = ws1['C9'].value
 jj_value = ws1['C10'].value
 sna_value = ws1['C13'].value
 ppsn_value = ws1['C14'].value
+ton_index = ws2['P6'].value
+general_Bolton_Index = ws2['P8'].value * 100
+forward_Bolton_Index = ws2['P9'].value * 100
+
+mesiodystal_size = ""
+if ton_index == 1.33:
+    mesiodystal_size = 'пропорциональных'
+else:
+    mesiodystal_size = 'непропорциональных'
 
 # Определяем класс в зависимости от значения ANB
 anb_trend_class = ""
@@ -811,7 +901,7 @@ if sassouni > 0:
 elif sassouni < 0:
     has_direction = "кпереди"
 
-sassouni_text_not_null = f"""Соотношение челюстей по методике Sassouni говорит за {sassouni_skeletal_class} скелетный класс {sassouni_trend_class} — базальная дуга проходит на {process_string(sassouni)} мм {has_direction} от точки В (N = 0,0 мм ± 3,0 мм)."""
+sassouni_text_not_null = f"""Соотношение челюстей по методике Sassouni говорит за {sassouni_skeletal_class} скелетный класс {sassouni_trend_class} — базальная дуга проходит на {process_string(sassouni, 2)} мм {has_direction} от точки В (N = 0,0 мм ± 3,0 мм)."""
 sassouni_text_null = f"""Соотношение челюстей по методике Sassouni говорит за I скелетный класс — базальная дуга проходит через точку B (N = 0,0 мм ± 3,0 мм)."""
 
 if sassouni == 0:
@@ -882,6 +972,24 @@ else:
 ppsn_status_uppercase = ppsn_status.capitalize()
 
 # Формируем текст, вставляя значения переменных
+resume_text01 = f"""
+Окклюзия моляров по Энглю: справа III класс, слева III класс.
+Окклюзия клыков по Энглю: справа III класс, слева III класс.
+Индекс Тона = {process_string(ton_index, 2)}, что говорит о {mesiodystal_size} мезиодистальных размерах резцов на верхней и нижней челюсти (N = 1,33).
+Общий Индекс Болтона = {process_string(general_Bolton_Index, 1)}%, (N = 91,3%). Передний Индекс Болтона = {process_string(forward_Bolton_Index, 1)}% (N = 77,2%).
+
+"""
+
+print()
+#
+# Расстояние между клыками на верхней \ и нижней челюсти увеличено \ уменьшено. Расстояние между  премолярами на верхней \ и нижней челюсти увеличено \ уменьшено.
+# Расстояние между молярами на верхней \ и нижней челюсти увеличено \ уменьшено.
+# Укорочение фронтального участка верхней челюсти на 1,2 мм. Укорочение фронтального участка нижней челюсти на 1,2 мм.
+# Глубина кривой Шпее справа – 1,2 мм, слева – 1,2 мм (N = 1,5 мм). Глубокая кривая Шпее справа \ и слева.
+# WALA Ridge анализ.
+# Ширина верхнего зубного ряда – 58,0 мм, ширина нижнего зубного ряда – 55,0 мм. Требуемая ширина верхнего зубного ряда – 60,0 мм. Требуемая ширина нижнего зубного ряда – 55,0 мм. Недостаток ширины зубного ряда на верхней челюсти составляет 2,0 мм\ отсутствует.
+#
+
 resume_text1 = f"""
 Межапикальный угол (<ANB) – {format_with_comma(anb_value)}˚, что соответствует соотношению челюстей по {anb_skeletal_class} скелетному классу {anb_trend_class} (N = 2,0˚ ± 2,0˚).
 Угол Бета (< Beta Angle) – {format_with_comma(beta_angle)}˚, что cоответствует соотношению челюстей по {beta_skeletal_class} скелетному классу {beta_trend_class} (N = 31,0˚ ± 4,0˚).
@@ -913,7 +1021,8 @@ paragraph.font.name = "Montserrat"
 paragraph.text = resume_text1
 
 # Добавляем текст на слайд
-name_textbox_17 = prs.slides[17].shapes.add_textbox(Inches(0.4), Inches(8.85), Inches(7.21), Inches(5.1))
+name_textbox_17 = prs.slides[17].shapes.add_textbox(Inches(0.4), Inches(3.15), Inches(7.21), Inches(5.1))
+name_textbox_17 = prs.slides[17].shapes.add_textbox(Inches(0.4), Inches(3.15), Inches(7.21), Inches(5.1))
 text_frame = name_textbox_17.text_frame
 text_frame.word_wrap = True
 paragraph = text_frame.add_paragraph()
@@ -921,6 +1030,16 @@ paragraph.font.size = Pt(10.5)
 paragraph.font.bold = False
 paragraph.font.name = "Montserrat"
 paragraph.text = resume_text1_1
+
+# Добавляем текст на слайд
+name_textbox_17 = prs.slides[17].shapes.add_textbox(Inches(0.4), Inches(8.85), Inches(7.21), Inches(5.1))
+text_frame = name_textbox_17.text_frame
+text_frame.word_wrap = True
+paragraph = text_frame.add_paragraph()
+paragraph.font.size = Pt(10.5)
+paragraph.font.bold = False
+paragraph.font.name = "Montserrat"
+paragraph.text = resume_text01
 
 print(f" Слайд №17 сформирован")
 print("<-------------------------------------------------------------------------------------------------------->")
@@ -1003,9 +1122,9 @@ mp_sn_status_uppercase = mp_sn_status.capitalize()
 
 # Определение смещения подбородка
 if chin_displacement > 0:
-    chin_displacement_status = f"влево на {process_string(chin_displacement)} мм"
+    chin_displacement_status = f"влево на {process_string(chin_displacement, 1)} мм"
 elif chin_displacement < 0:
-    chin_displacement_status = f"вправо на {process_string(chin_displacement)} мм"
+    chin_displacement_status = f"вправо на {process_string(chin_displacement, 1)} мм"
 else:
     chin_displacement_status = "не выявлено"
 
@@ -1042,9 +1161,9 @@ def get_tooth_status(slant_value, difference, upper_threshold, lower_threshold, 
     if slant_value is None:
         return ''
     elif slant_value > upper_threshold:
-        return f"Протрузия зуба  {tooth_num} на {process_string(difference)}˚"
+        return f"Протрузия зуба  {tooth_num} на {process_string(difference, 1)}˚"
     elif slant_value < lower_threshold:
-        return f"Ретрузия зуба  {tooth_num} на {process_string(difference)}˚"
+        return f"Ретрузия зуба  {tooth_num} на {process_string(difference, 1)}˚"
     else:
         return ''
 
@@ -1083,7 +1202,6 @@ if l3_1_value_status is not None:
 
 if r4_1_value_status is not None:
     result_string += f"{r4_1_value_status}"
-
 
 # Формирование строки с динамическими данными
 u1_pp = f"{r1_1_value_status}. {l2_1_value_status}"
@@ -1237,19 +1355,19 @@ overjet_value = ws1['C30'].value
 
 # Определяем класс в зависимости от значения Overbite
 if overbite_value > 4.4:
-    overbite_value_status = f"Глубокая резцовая окклюзия. Вертикальное резцовое перекрытие увеличено до {process_string(overbite_value)} мм (N = 2,5 мм ± 2,0 мм)."
+    overbite_value_status = f"Глубокая резцовая окклюзия. Вертикальное резцовое перекрытие увеличено до {process_string(overbite_value, 1)} мм (N = 2,5 мм ± 2,0 мм)."
 elif overbite_value < 0.5:
-    overbite_value_status = f"Вертикальная резцовая дизокклюзия – {process_string(overbite_value)} мм (N = 2,5 мм ± 2,0 мм)."
+    overbite_value_status = f"Вертикальная резцовая дизокклюзия – {process_string(overbite_value, 1)} мм (N = 2,5 мм ± 2,0 мм)."
 else:
-    overbite_value_status = f"Вертикальное резцовое перекрытие в норме – {process_string(overbite_value)} мм (N = 2,5 мм ± 2,0 мм)."
+    overbite_value_status = f"Вертикальное резцовое перекрытие в норме – {process_string(overbite_value, 1)} мм (N = 2,5 мм ± 2,0 мм)."
 
 # Определяем класс в зависимости от значения Overjet
 if overjet_value > 5:
-    overjet_value_status = f"Сагиттальная щель – {format_with_comma(round(overjet_value, 1))} мм (N = 2,5 мм ± 2,5 мм)."
+    overjet_value_status = f"Сагиттальная щель – {process_string(overjet_value, 1)} мм (N = 2,5 мм ± 2,5 мм)."
 elif overjet_value < 0:
-    overjet_value_status = f"Обратная сагиттальная щель {format_with_comma(round(overjet_value, 1))} мм (от -0,1 и выше) (N = 2,5 мм ± 2,5 мм)."
+    overjet_value_status = f"Обратная сагиттальная щель {process_string(overjet_value, 1)} мм (от -0,1 и выше) (N = 2,5 мм ± 2,5 мм)."
 else:
-    overjet_value_status = f"Сагиттальное резцовое перекрытие в норме – {format_with_comma(round(overjet_value, 1))} мм (N = 2,5 мм ± 2,5 мм)."
+    overjet_value_status = f"Сагиттальное резцовое перекрытие в норме – {process_string(overjet_value, 1)} мм (N = 2,5 мм ± 2,5 мм)."
 
 slide20_text1 = f"""
 1. Скелетный III класс с тенденцией к III, обусловленный 
