@@ -365,16 +365,17 @@ print("<------------------------------------------------------------------------
 
 # Слайд № 2
 ws2 = wb["Лист2"]
-face_width = ws2['B10'].value           #Ширина
-face_height = ws2['B11'].value          #Высота
-facial_index = ws2['B12'].value         #Лицевой индекс
-nosocomial_angle = ws2['B13'].value     #Носолицевой угол
-nasal_angle = ws2['B14'].value          #Носоподбородочный угол
-labial_angle = ws2['B15'].value         #Носогубный угол
-chin_facial_angle = ws2['B16'].value    #Подбородочно-лицевой угол
-soft_tissues_angle = ws2['B17'].value   #Угол выпуклости мягких тканей лица
-upper_lip_position = ws2['B18'].value   #Положение верхней губы
-lower_lip_position = ws2['B19'].value   #Положение нижней губы
+face_width = ws2['B10'].value  #Ширина
+face_height = ws2['B11'].value  #Высота
+facial_index = ws2['B12'].value  #Лицевой индекс
+nosocomial_angle = ws2['B13'].value  #Носолицевой угол
+nasal_angle = ws2['B14'].value  #Носоподбородочный угол
+labial_angle = ws2['B15'].value  #Носогубный угол
+chin_facial_angle = ws2['B16'].value  #Подбородочно-лицевой угол
+soft_tissues_angle = ws2['B17'].value  #Угол выпуклости мягких тканей лица
+upper_lip_position = ws2['B18'].value  #Положение верхней губы
+lower_lip_position = ws2['B19'].value  #Положение нижней губы
+
 
 def add_num_to_slide(prs, slide_index, left, top, text, font_size=12, font_name="Montserrat", bold=False):
     slide = prs.slides[slide_index]
@@ -830,6 +831,27 @@ ton_index = ws2['P6'].value
 general_Bolton_Index = ws2['P8'].value * 100
 forward_Bolton_Index = ws2['P9'].value * 100
 
+deviation_upper_canine_width = ws2['D23'].value
+deviation_upper_canine_premolars = ws2['D24'].value
+deviation_upper_canine_molars = ws2['D25'].value
+length_upper_frontal_section = ws2['D26'].value
+
+deviation_lower_canine_width = ws2['G23'].value
+deviation_lower_canine_premolars = ws2['G24'].value
+deviation_lower_canine_molars = ws2['G25'].value
+length_lower_frontal_section = ws2['G26'].value
+
+
+increased = 'увеличено'
+decreased = 'уменьшено'
+result_str = ''
+if deviation_upper_canine_width > 1 and deviation_lower_canine_width > 1:
+    result_str = 'Расстояние между клыками на верхней и нижней челюстях увеличено'
+if deviation_upper_canine_width < -1 and deviation_lower_canine_width < -1:
+    result_str = 'Расстояние между клыками на верхней и нижней челюстях уменьшено'
+if deviation_upper_canine_width > 1 and deviation_lower_canine_width < -1 or deviation_upper_canine_width < -1 and deviation_lower_canine_width > 1:
+    result_str = 'Расстояние между клыками на верхней и нижней челюстях уменьшено'
+
 mesiodystal_size = ""
 if ton_index == 1.33:
     mesiodystal_size = 'пропорциональных'
@@ -971,13 +993,14 @@ else:
 
 ppsn_status_uppercase = ppsn_status.capitalize()
 
+
 # Формируем текст, вставляя значения переменных
-resume_text01 = f"""
+biometrics_text = f"""
 Окклюзия моляров по Энглю: справа III класс, слева III класс.
 Окклюзия клыков по Энглю: справа III класс, слева III класс.
 Индекс Тона = {process_string(ton_index, 2)}, что говорит о {mesiodystal_size} мезиодистальных размерах резцов на верхней и нижней челюсти (N = 1,33).
-Общий Индекс Болтона = {process_string(general_Bolton_Index, 1)}%, (N = 91,3%). Передний Индекс Болтона = {process_string(forward_Bolton_Index, 1)}% (N = 77,2%).
-
+Общий Индекс Болтона = {process_string(general_Bolton_Index, 1)}% (N = 91,3%). Передний Индекс Болтона = {process_string(forward_Bolton_Index, 1)}% (N = 77,2%).
+Расстояние между клыками на верхней \ и нижней челюсти увеличено \ уменьшено. Расстояние между  премолярами на верхней \ и нижней челюсти увеличено \ уменьшено.
 """
 
 print()
@@ -990,14 +1013,14 @@ print()
 # Ширина верхнего зубного ряда – 58,0 мм, ширина нижнего зубного ряда – 55,0 мм. Требуемая ширина верхнего зубного ряда – 60,0 мм. Требуемая ширина нижнего зубного ряда – 55,0 мм. Недостаток ширины зубного ряда на верхней челюсти составляет 2,0 мм\ отсутствует.
 #
 
-resume_text1 = f"""
+cephalometry_text = f"""
 Межапикальный угол (<ANB) – {format_with_comma(anb_value)}˚, что соответствует соотношению челюстей по {anb_skeletal_class} скелетному классу {anb_trend_class} (N = 2,0˚ ± 2,0˚).
 Угол Бета (< Beta Angle) – {format_with_comma(beta_angle)}˚, что cоответствует соотношению челюстей по {beta_skeletal_class} скелетному классу {beta_trend_class} (N = 31,0˚ ± 4,0˚).
 Параметр Wits (Wits Appraisal.) –  {format_with_comma(wits_appraisal)} мм что указывает на {has_value} диспропорции в расположении апикальных базисов верхней и нижней челюстей в сагиттальной плоскости и говорит за {wits_skeletal_class} скелетный класс {wits_trend_class} (N = -1,0 мм ± 2,0 мм).
 {sassouni_text}
 Параметр APDI, указывающий на дисплазию развития челюстей в сагиттальной плоскости, равен {format_with_comma(apdi_value)}˚ и говорит за {apdi_skeletal_class} скелетный класс {apdi_trend_class} (N = 81,4˚ ± 5,0˚).
 """
-resume_text1_1 = f"""
+resume_upper_jaw_text = f"""
 Длина основания верхней челюсти (PNS-A) – {format_with_comma(pnsa_value)} мм, что соответствует {pnsa_status} (N = {format_with_comma(round(ws1['D9'].value, 1))} мм ± 3,5 мм).
 Ширина основания верхней (J-J) челюсти –  {format_with_comma(jj_value)} мм, что соответствует {jj_status} (N = {format_with_comma(round(ws1['D10'].value, 1))} мм ± 3,0 мм):  справа – {format_with_comma(ws1['C11'].value)} мм, слева – {format_with_comma(ws1['C12'].value)} мм (N = {format_with_comma(ws1['D10'].value / 2)} мм ± 1,5 мм).
 Положение верхней челюсти по сагиттали  (<SNA) – {format_with_comma(sna_value)}˚, что соответствует {sna_status}и (N = 82,0˚ ±  3,0˚).
@@ -1006,40 +1029,23 @@ Roll ротация отсутствует\  вправо (по часовой �
 Yaw ротация отсутствует \ вправо  (по часовой стрелке) \ влево (против часовой стрелки).
 """
 
-# Добавляем текст на слайд
-text_left_17 = Inches(0.4)
-text_top_17 = Inches(6.7)
-text_width_17 = Inches(7.2)
-text_height_17 = Inches(5)
-name_textbox_17 = prs.slides[17].shapes.add_textbox(text_left_17, text_top_17, text_width_17, text_height_17)
-text_frame = name_textbox_17.text_frame
-text_frame.word_wrap = True
-paragraph = text_frame.add_paragraph()
-paragraph.font.size = Pt(10.5)
-paragraph.font.bold = False
-paragraph.font.name = "Montserrat"
-paragraph.text = resume_text1
 
-# Добавляем текст на слайд
-name_textbox_17 = prs.slides[17].shapes.add_textbox(Inches(0.4), Inches(3.15), Inches(7.21), Inches(5.1))
-name_textbox_17 = prs.slides[17].shapes.add_textbox(Inches(0.4), Inches(3.15), Inches(7.21), Inches(5.1))
-text_frame = name_textbox_17.text_frame
-text_frame.word_wrap = True
-paragraph = text_frame.add_paragraph()
-paragraph.font.size = Pt(10.5)
-paragraph.font.bold = False
-paragraph.font.name = "Montserrat"
-paragraph.text = resume_text1_1
+def add_text_to_custom(prs_17, slide_index, left_17, top_17, width_17, height_17, text_17):
+    slide = prs_17.slides[slide_index]
+    textbox = slide.shapes.add_textbox(left_17, top_17, width_17, height_17).text_frame
+    textbox.word_wrap = True
+    paragraph_17 = textbox.add_paragraph()
+    paragraph_17.font.size = Pt(10.5)
+    paragraph_17.font.bold = False
+    paragraph_17.font.name = "Montserrat"
+    paragraph_17.text = text_17
 
-# Добавляем текст на слайд
-name_textbox_17 = prs.slides[17].shapes.add_textbox(Inches(0.4), Inches(8.85), Inches(7.21), Inches(5.1))
-text_frame = name_textbox_17.text_frame
-text_frame.word_wrap = True
-paragraph = text_frame.add_paragraph()
-paragraph.font.size = Pt(10.5)
-paragraph.font.bold = False
-paragraph.font.name = "Montserrat"
-paragraph.text = resume_text01
+
+# Использование функции с альтернативным названием
+add_text_to_custom(prs, 17, Inches(0.4), Inches(3.15), Inches(7.21), Inches(3), biometrics_text)
+add_text_to_custom(prs, 17, Inches(0.4), Inches(6.7), Inches(7.21), Inches(2.7), cephalometry_text)
+add_text_to_custom(prs, 17, Inches(0.4), Inches(8.85), Inches(7.21), Inches(2.2), resume_upper_jaw_text)
+
 
 print(f" Слайд №17 сформирован")
 print("<-------------------------------------------------------------------------------------------------------->")
@@ -1247,10 +1253,13 @@ resume_text5 = f"""
 Дефицит ширины скелетного базиса верхней челюсти {jaw_status}
 """
 
+
 # Добавляем текст на слайд
+text_width_18_1 = Inches(7.2)
+text_height_18_1 = Inches(5)
 text_left_18_1 = Inches(0.5)
 text_top_18_1 = Inches(0.9)
-name_textbox_18_1 = prs.slides[18].shapes.add_textbox(text_left_18_1, text_top_18_1, text_width_17, text_height_17)
+name_textbox_18_1 = prs.slides[18].shapes.add_textbox(text_left_18_1, text_top_18_1, text_width_18_1, text_height_18_1)
 text_frame = name_textbox_18_1.text_frame
 text_frame.word_wrap = True
 paragraph = text_frame.add_paragraph()
@@ -1262,7 +1271,7 @@ paragraph.text = resume_text2
 # Добавляем текст на слайд
 text_left_18_2 = Inches(0.5)
 text_top_18_2 = Inches(4.4)
-name_textbox_18_2 = prs.slides[18].shapes.add_textbox(text_left_18_2, text_top_18_2, text_width_17, text_height_17)
+name_textbox_18_2 = prs.slides[18].shapes.add_textbox(text_left_18_2, text_top_18_2, text_width_18_1, text_height_18_1)
 text_frame = name_textbox_18_2.text_frame
 text_frame.word_wrap = True
 paragraph = text_frame.add_paragraph()
@@ -1274,7 +1283,7 @@ paragraph.text = resume_text3
 # Добавляем текст на слайд
 text_left_18_3 = Inches(0.5)
 text_top_18_3 = Inches(5.73)
-name_textbox_18_3 = prs.slides[18].shapes.add_textbox(text_left_18_3, text_top_18_3, text_width_17, text_height_17)
+name_textbox_18_3 = prs.slides[18].shapes.add_textbox(text_left_18_3, text_top_18_3, text_width_18_1, text_height_18_1)
 text_frame = name_textbox_18_3.text_frame
 text_frame.word_wrap = True
 paragraph = text_frame.add_paragraph()
@@ -1284,7 +1293,7 @@ paragraph.font.name = "Montserrat"
 paragraph.text = resume_text4
 
 # Добавляем текст на слайд
-name_textbox_18_4 = prs.slides[18].shapes.add_textbox(Inches(0.5), Inches(6.9), text_width_17, text_height_17)
+name_textbox_18_4 = prs.slides[18].shapes.add_textbox(Inches(0.5), Inches(6.9), text_width_18_1, text_height_18_1)
 text_frame = name_textbox_18_4.text_frame
 text_frame.word_wrap = True
 paragraph = text_frame.add_paragraph()
