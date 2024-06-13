@@ -832,25 +832,38 @@ general_Bolton_Index = ws2['P8'].value * 100
 forward_Bolton_Index = ws2['P9'].value * 100
 
 deviation_upper_canine_width = ws2['D23'].value
-deviation_upper_canine_premolars = ws2['D24'].value
-deviation_upper_canine_molars = ws2['D25'].value
+deviation_upper_premolars = ws2['D24'].value
+deviation_upper_molars = ws2['D25'].value
 length_upper_frontal_section = ws2['D26'].value
 
 deviation_lower_canine_width = ws2['G23'].value
-deviation_lower_canine_premolars = ws2['G24'].value
-deviation_lower_canine_molars = ws2['G25'].value
+deviation_lower_premolars = ws2['G24'].value
+deviation_lower_molars = ws2['G25'].value
 length_lower_frontal_section = ws2['G26'].value
 
 
 increased = 'увеличено'
 decreased = 'уменьшено'
-result_str = ''
+
+canine_result_str = ''
 if deviation_upper_canine_width > 1 and deviation_lower_canine_width > 1:
-    result_str = 'Расстояние между клыками на верхней и нижней челюстях увеличено'
-if deviation_upper_canine_width < -1 and deviation_lower_canine_width < -1:
-    result_str = 'Расстояние между клыками на верхней и нижней челюстях уменьшено'
-if deviation_upper_canine_width > 1 and deviation_lower_canine_width < -1 or deviation_upper_canine_width < -1 and deviation_lower_canine_width > 1:
-    result_str = 'Расстояние между клыками на верхней и нижней челюстях уменьшено'
+    canine_result_str = 'Расстояние между клыками на верхней и нижней челюстях увеличено'
+elif deviation_upper_canine_width < -1 and deviation_lower_canine_width < -1:
+    canine_result_str = 'Расстояние между клыками на верхней и нижней челюстях уменьшено'
+elif deviation_upper_canine_width > 1 and deviation_lower_canine_width < -1:
+    canine_result_str = 'Расстояние между клыками на верхней челюсти увеличено, а на нижней челюсти уменьшено'
+elif deviation_upper_canine_width < -1 and deviation_lower_canine_width > 1:
+    canine_result_str = 'Расстояние между клыками на верхней челюсти уменьшено, а на нижней челюсти увеличено'
+elif -1 <= deviation_upper_canine_width <= 1 and deviation_lower_canine_width < -1:
+    canine_result_str = 'Расстояние между клыками на верхней челюсти в норме, а на нижней челюсти уменьшено'
+elif -1 <= deviation_upper_canine_width <= 1 and deviation_lower_canine_width > 1:
+    canine_result_str = 'Расстояние между клыками на верхней челюсти в норме, а на нижней челюсти увеличено'
+elif deviation_upper_canine_width > 1 and -1 <= deviation_lower_canine_width <= 1:
+    canine_result_str = 'Расстояние между клыками на верхней челюсти увеличено, а на нижней челюсти в норме'
+elif deviation_upper_canine_width < -1 and -1 <= deviation_lower_canine_width <= 1:
+    canine_result_str = 'Расстояние между клыками на верхней челюсти уменьшено, а на нижней челюсти в норме'
+elif -1 <= deviation_upper_canine_width <= 1 and -1 <= deviation_lower_canine_width <= 1:
+    canine_result_str = 'Расстояние между клыками на верхней и нижней челюстях в норме'
 
 mesiodystal_size = ""
 if ton_index == 1.33:
@@ -1000,7 +1013,7 @@ biometrics_text = f"""
 Окклюзия клыков по Энглю: справа III класс, слева III класс.
 Индекс Тона = {process_string(ton_index, 2)}, что говорит о {mesiodystal_size} мезиодистальных размерах резцов на верхней и нижней челюсти (N = 1,33).
 Общий Индекс Болтона = {process_string(general_Bolton_Index, 1)}% (N = 91,3%). Передний Индекс Болтона = {process_string(forward_Bolton_Index, 1)}% (N = 77,2%).
-Расстояние между клыками на верхней \ и нижней челюсти увеличено \ уменьшено. Расстояние между  премолярами на верхней \ и нижней челюсти увеличено \ уменьшено.
+{canine_result_str}
 """
 
 print()
