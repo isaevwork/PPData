@@ -841,29 +841,37 @@ deviation_lower_premolars = ws2['G24'].value
 deviation_lower_molars = ws2['G25'].value
 length_lower_frontal_section = ws2['G26'].value
 
+canine = 'клыками'
+premolars = 'премолярами'
+molars = 'молярами'
 
 increased = 'увеличено'
 decreased = 'уменьшено'
 
-canine_result_str = ''
-if deviation_upper_canine_width > 1 and deviation_lower_canine_width > 1:
-    canine_result_str = 'Расстояние между клыками на верхней и нижней челюстях увеличено'
-elif deviation_upper_canine_width < -1 and deviation_lower_canine_width < -1:
-    canine_result_str = 'Расстояние между клыками на верхней и нижней челюстях уменьшено'
-elif deviation_upper_canine_width > 1 and deviation_lower_canine_width < -1:
-    canine_result_str = 'Расстояние между клыками на верхней челюсти увеличено, а на нижней челюсти уменьшено'
-elif deviation_upper_canine_width < -1 and deviation_lower_canine_width > 1:
-    canine_result_str = 'Расстояние между клыками на верхней челюсти уменьшено, а на нижней челюсти увеличено'
-elif -1 <= deviation_upper_canine_width <= 1 and deviation_lower_canine_width < -1:
-    canine_result_str = 'Расстояние между клыками на верхней челюсти в норме, а на нижней челюсти уменьшено'
-elif -1 <= deviation_upper_canine_width <= 1 and deviation_lower_canine_width > 1:
-    canine_result_str = 'Расстояние между клыками на верхней челюсти в норме, а на нижней челюсти увеличено'
-elif deviation_upper_canine_width > 1 and -1 <= deviation_lower_canine_width <= 1:
-    canine_result_str = 'Расстояние между клыками на верхней челюсти увеличено, а на нижней челюсти в норме'
-elif deviation_upper_canine_width < -1 and -1 <= deviation_lower_canine_width <= 1:
-    canine_result_str = 'Расстояние между клыками на верхней челюсти уменьшено, а на нижней челюсти в норме'
-elif -1 <= deviation_upper_canine_width <= 1 and -1 <= deviation_lower_canine_width <= 1:
-    canine_result_str = 'Расстояние между клыками на верхней и нижней челюстях в норме'
+
+def analyze_tooth_type(deviation_upper_tooth_type_width, deviation_lower_tooth_type_width, tooth_type):
+    tooth_type_result_str = ''
+    if deviation_upper_tooth_type_width > 1 and deviation_lower_tooth_type_width > 1:
+        tooth_type_result_str = f'Расстояние между {tooth_type} на верхней и нижней челюстях увеличено'
+    elif deviation_upper_tooth_type_width < -1 and deviation_lower_tooth_type_width < -1:
+        tooth_type_result_str = f'Расстояние между {tooth_type} на верхней и нижней челюстях уменьшено'
+    elif deviation_upper_tooth_type_width > 1 and deviation_lower_tooth_type_width < -1:
+        tooth_type_result_str = f'Расстояние между {tooth_type} на верхней челюсти увеличено, а на нижней челюсти уменьшено'
+    elif deviation_upper_tooth_type_width < -1 and deviation_lower_tooth_type_width > 1:
+        tooth_type_result_str = f'Расстояние между {tooth_type} на верхней челюсти уменьшено, а на нижней челюсти увеличено'
+    elif 1 >= deviation_upper_tooth_type_width >= -1 > deviation_lower_tooth_type_width:
+        tooth_type_result_str = f'Расстояние между {tooth_type} на верхней челюсти в норме, а на нижней челюсти уменьшено'
+    elif -1 <= deviation_upper_tooth_type_width <= 1 < deviation_lower_tooth_type_width:
+        tooth_type_result_str = f'Расстояние между {tooth_type} на верхней челюсти в норме, а на нижней челюсти увеличено'
+    elif deviation_upper_tooth_type_width > 1 >= deviation_lower_tooth_type_width >= -1:
+        tooth_type_result_str = f'Расстояние между {tooth_type} на верхней челюсти увеличено, а на нижней челюсти в норме'
+    elif deviation_upper_tooth_type_width < -1 <= deviation_lower_tooth_type_width <= 1:
+        tooth_type_result_str = f'Расстояние между {tooth_type} на верхней челюсти уменьшено, а на нижней челюсти в норме'
+    elif -1 <= deviation_upper_tooth_type_width <= 1 and -1 <= deviation_lower_tooth_type_width <= 1:
+        tooth_type_result_str = f'Расстояние между {tooth_type} на верхней и нижней челюстях в норме'
+
+    return tooth_type_result_str
+
 
 mesiodystal_size = ""
 if ton_index == 1.33:
@@ -1006,14 +1014,15 @@ else:
 
 ppsn_status_uppercase = ppsn_status.capitalize()
 
-
 # Формируем текст, вставляя значения переменных
 biometrics_text = f"""
 Окклюзия моляров по Энглю: справа III класс, слева III класс.
 Окклюзия клыков по Энглю: справа III класс, слева III класс.
 Индекс Тона = {process_string(ton_index, 2)}, что говорит о {mesiodystal_size} мезиодистальных размерах резцов на верхней и нижней челюсти (N = 1,33).
 Общий Индекс Болтона = {process_string(general_Bolton_Index, 1)}% (N = 91,3%). Передний Индекс Болтона = {process_string(forward_Bolton_Index, 1)}% (N = 77,2%).
-{canine_result_str}
+{analyze_tooth_type(deviation_upper_canine_width, deviation_lower_canine_width, canine)}
+{analyze_tooth_type(deviation_upper_premolars, deviation_lower_premolars, premolars)}
+{analyze_tooth_type(deviation_upper_molars, deviation_lower_molars, molars)}
 """
 
 print()
@@ -1058,7 +1067,6 @@ def add_text_to_custom(prs_17, slide_index, left_17, top_17, width_17, height_17
 add_text_to_custom(prs, 17, Inches(0.4), Inches(3.15), Inches(7.21), Inches(3), biometrics_text)
 add_text_to_custom(prs, 17, Inches(0.4), Inches(6.7), Inches(7.21), Inches(2.7), cephalometry_text)
 add_text_to_custom(prs, 17, Inches(0.4), Inches(8.85), Inches(7.21), Inches(2.2), resume_upper_jaw_text)
-
 
 print(f" Слайд №17 сформирован")
 print("<-------------------------------------------------------------------------------------------------------->")
@@ -1265,7 +1273,6 @@ resume_text5 = f"""
 Требуемая ширина базиса верхней челюсти = {format_with_comma(width_dif_jaw)} мм. 
 Дефицит ширины скелетного базиса верхней челюсти {jaw_status}
 """
-
 
 # Добавляем текст на слайд
 text_width_18_1 = Inches(7.2)
