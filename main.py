@@ -1014,6 +1014,20 @@ else:
 
 ppsn_status_uppercase = ppsn_status.capitalize()
 
+width_upper_dentition = ws2['C6'].value
+width_lower_dentition = ws2['B7'].value
+required_width_upper_dentition = ws2['E6'].value
+required_width_lower_dentition = ws2['D7'].value
+diff_width_upper_dentition = required_width_upper_dentition - width_upper_dentition
+
+
+def check_disadvantage_width_upper_dentition(value):
+    if value == 0:
+        return "отсутствует"
+    else:
+        return value
+
+
 # Формируем текст, вставляя значения переменных
 biometrics_text = f"""
 Окклюзия моляров по Энглю: справа III класс, слева III класс.
@@ -1025,16 +1039,13 @@ biometrics_text = f"""
 {analyze_tooth_type(deviation_upper_molars, deviation_lower_molars, molars)}
 Укорочение фронтального участка верхней челюсти на {length_upper_frontal_section} мм. Укорочение фронтального участка нижней челюсти на {length_lower_frontal_section} мм.
 Глубина кривой Шпее справа – 1,2 мм, слева – 1,2 мм (N = 1,5 мм). Глубокая кривая Шпее справа \ и слева.
-
 WALA Ridge анализ.
-Ширина верхнего зубного ряда – 58,0 мм, ширина нижнего зубного ряда – 55,0 мм.
+Ширина верхнего зубного ряда – {process_string(width_upper_dentition, 1)} мм, ширина нижнего зубного ряда – {process_string(width_lower_dentition, 1)} мм.
+Требуемая ширина верхнего зубного ряда – {process_string(required_width_upper_dentition, 1)} мм. Требуемая ширина нижнего зубного ряда – {process_string(required_width_lower_dentition, 1)} мм.
+Недостаток ширины зубного ряда на верхней челюсти составляет {process_string(check_disadvantage_width_upper_dentition(diff_width_upper_dentition), 1)} мм.
 """
 
-print()
-
-# Ширина верхнего зубного ряда – 58,0 мм, ширина нижнего зубного ряда – 55,0 мм. Требуемая ширина верхнего зубного ряда – 60,0 мм. Требуемая ширина нижнего зубного ряда – 55,0 мм. Недостаток ширины зубного ряда на верхней челюсти составляет 2,0 мм\ отсутствует.
-#
-
+print(process_string(check_disadvantage_width_upper_dentition(diff_width_upper_dentition), 1))
 cephalometry_text = f"""
 Межапикальный угол (<ANB) – {format_with_comma(anb_value)}˚, что соответствует соотношению челюстей по {anb_skeletal_class} скелетному классу {anb_trend_class} (N = 2,0˚ ± 2,0˚).
 Угол Бета (< Beta Angle) – {format_with_comma(beta_angle)}˚, что cоответствует соотношению челюстей по {beta_skeletal_class} скелетному классу {beta_trend_class} (N = 31,0˚ ± 4,0˚).
