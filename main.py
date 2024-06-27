@@ -300,8 +300,10 @@ def apply_crop_to_images(images_list, new_w, new_h, suffix=""):
         crop_image(img_path, out_path, new_w, new_h)
 
 
+print(image_folder)
 def rename_image(old_name, new_name):
     temp_folder = os.path.join(image_folder, "temp")
+    name_folder_element = os.path.basename(image_folder)
 
     # Проверяем существование папки temp, если ее нет, создаем
     if not os.path.exists(temp_folder):
@@ -323,13 +325,13 @@ def rename_image(old_name, new_name):
         # Открываем изображение
         image = Image.open(img_path)
         # Формируем новый путь для сохранения в папку temp
-        new_img_path = os.path.join(temp_folder, f"{new_name}{extension}")
+        new_img_path = os.path.join(temp_folder, f"{name_folder_element}_{new_name}{extension}")
         # Создаем копию изображения с новым именем
         image_copy = image.copy()
         # Сохраняем копию в новом пути
         image_copy.save(new_img_path)
         print(
-            f""" Изображение "{old_name}" успешно скопировано с новым именем "{new_name}" и сохранено в папку temp.""")
+            f""" Изображение "{old_name}" успешно скопировано с новым именем "{name_folder_element}_{new_name}" и сохранено в папку temp.""")
     except Exception as e:
         print(f" Ошибка при копировании и сохранении изображения: {str(e)}")
 
@@ -410,8 +412,8 @@ images_position_2 = [
 ]
 
 # Применяем функцию к каждому изображению
-apply_crop_to_images([f"{folder_name}_{image}" for image in ["2q", "2w"]], 1700, 2200)
-apply_crop_to_images([f"{folder_name}_{image}" for image in ["2e", "2r"]], 2300, 2600)
+# apply_crop_to_images([f"{folder_name}_{image}" for image in ["2q", "2w"]], 1700, 2200)
+# apply_crop_to_images([f"{folder_name}_{image}" for image in ["2e", "2r"]], 2300, 2600)
 
 insert_images(images_name_2, images_position_2, 2)
 print(f" Слайд №2 сформирован")
@@ -673,9 +675,8 @@ images_name_10_444 = [f"{folder_name}_{image}" for image in ["444"]]
 images_name_10 = [f"{folder_name}_{image}" for image in ["33", "44"]]
 img_name10_1 = os.path.join(images_name_10_444[0] + ".jpg")
 
-# Пример использования
-crop_image(os.path.join(image_folder, images_name_10_444[0] + ".jpg"),
-           os.path.join(image_folder, images_name_10_444[0] + ".jpg"), 1200, 1068)
+# crop_image(os.path.join(image_folder, images_name_10_444[0] + ".jpg"),
+#            os.path.join(image_folder, images_name_10_444[0] + ".jpg"), 1200, 1068)
 
 images_position_10 = [
     (Inches(0.5), Inches(7.5), Inches(3.5), Inches(3.5)),
@@ -1021,11 +1022,12 @@ required_width_lower_dentition = ws2['D7'].value
 diff_width_upper_dentition = required_width_upper_dentition - width_upper_dentition
 
 
-def check_disadvantage_width_upper_dentition(value):
-    if value == 0:
-        return "отсутствует"
+def check_disadvantage_width_upper_dentition(dentition_value):
+    if dentition_value == 0:
+        return "Недостаток ширины зубного ряда на верхней челюсти отсутствует."
     else:
-        return value
+        return f"""Недостаток ширины зубного ряда на верхней челюсти составляет {process_string(dentition_value, 1)} мм."""
+
 
 
 # Формируем текст, вставляя значения переменных
@@ -1042,10 +1044,9 @@ biometrics_text = f"""
 WALA Ridge анализ.
 Ширина верхнего зубного ряда – {process_string(width_upper_dentition, 1)} мм, ширина нижнего зубного ряда – {process_string(width_lower_dentition, 1)} мм.
 Требуемая ширина верхнего зубного ряда – {process_string(required_width_upper_dentition, 1)} мм. Требуемая ширина нижнего зубного ряда – {process_string(required_width_lower_dentition, 1)} мм.
-Недостаток ширины зубного ряда на верхней челюсти составляет {process_string(check_disadvantage_width_upper_dentition(diff_width_upper_dentition), 1)} мм.
+{check_disadvantage_width_upper_dentition(diff_width_upper_dentition)}
 """
 
-print(process_string(check_disadvantage_width_upper_dentition(diff_width_upper_dentition), 1))
 cephalometry_text = f"""
 Межапикальный угол (<ANB) – {format_with_comma(anb_value)}˚, что соответствует соотношению челюстей по {anb_skeletal_class} скелетному классу {anb_trend_class} (N = 2,0˚ ± 2,0˚).
 Угол Бета (< Beta Angle) – {format_with_comma(beta_angle)}˚, что cоответствует соотношению челюстей по {beta_skeletal_class} скелетному классу {beta_trend_class} (N = 31,0˚ ± 4,0˚).
