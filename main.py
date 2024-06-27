@@ -301,6 +301,8 @@ def apply_crop_to_images(images_list, new_w, new_h, suffix=""):
 
 
 print(image_folder)
+
+
 def rename_image(old_name, new_name):
     temp_folder = os.path.join(image_folder, "temp")
     name_folder_element = os.path.basename(image_folder)
@@ -379,17 +381,18 @@ upper_lip_position = ws2['B18'].value  #Положение верхней губ
 lower_lip_position = ws2['B19'].value  #Положение нижней губы
 
 
-def add_num_to_slide(prs, slide_index, left, top, text, font_size=12, font_name="Montserrat", bold=False):
-    slide = prs.slides[slide_index]
-    textbox = slide.shapes.add_textbox(left, top, Inches(1), Inches(0))
+def add_num_to_slide(prs_n, slide_index, left_n, top_n, text_n, width_n = Inches(1), f_color=RGBColor(255, 0, 0), font_size_n=12,
+                     font_name="Montserrat", bold=False):
+    slide = prs_n.slides[slide_index]
+    textbox = slide.shapes.add_textbox(left_n, top_n, width_n, Inches(0))
     tf = textbox.text_frame
     tf.word_wrap = True
     p = tf.add_paragraph()
-    p.text = text
+    p.text = text_n
     p.font.bold = bold
-    p.font.size = Pt(font_size)
+    p.font.size = Pt(font_size_n)
     p.font.name = font_name
-    p.font.color.rgb = RGBColor(255, 0, 0)
+    p.font.color.rgb = f_color
 
 
 add_num_to_slide(prs, 2, Inches(4.5), Inches(1.81), f"{format_with_comma(face_width)}")
@@ -593,6 +596,9 @@ print("<------------------------------------------------------------------------
 # Слайд № 5
 # Массив имен изображений с префиксом папки
 images_name_5 = [f"{folder_name}_{image}" for image in ["5q", "5w", "5e", "5r", "5t", "5y"]]
+depth_shpee_right_curve = ws2['B29'].value
+depth_shpee_left_curve = ws2['C29'].value
+
 images_position_5 = [
     (Inches(0.6), Inches(1.2), Inches(3.3), Inches(3)),
     (Inches(4.4), Inches(1.2), Inches(3.3), Inches(3)),
@@ -605,6 +611,11 @@ images_position_5 = [
 ]
 slide_index_5 = 5
 insert_images(images_name_5, images_position_5, slide_index_5)
+
+add_num_to_slide(prs, slide_index_5, Inches(1.4), Inches(11),
+                 f"R = {process_string(depth_shpee_right_curve, 1)} мм (N = 1,5 мм)", Inches(3), RGBColor(0, 0, 0), 14)
+add_num_to_slide(prs, slide_index_5, Inches(5.1), Inches(11),
+                 f"L = {process_string(depth_shpee_left_curve, 1)} мм (N = 1,5 мм)", Inches(3), RGBColor(0, 0, 0), 14)
 print(f" Слайд №5 сформирован")
 print("<-------------------------------------------------------------------------------------------------------->")
 
@@ -842,6 +853,12 @@ deviation_lower_premolars = ws2['G24'].value
 deviation_lower_molars = ws2['G25'].value
 length_lower_frontal_section = ws2['G26'].value
 
+width_upper_dentition = ws2['C6'].value
+width_lower_dentition = ws2['B7'].value
+required_width_upper_dentition = ws2['E6'].value
+required_width_lower_dentition = ws2['D7'].value
+diff_width_upper_dentition = required_width_upper_dentition - width_upper_dentition
+
 canine = 'клыками'
 premolars = 'премолярами'
 molars = 'молярами'
@@ -1015,19 +1032,12 @@ else:
 
 ppsn_status_uppercase = ppsn_status.capitalize()
 
-width_upper_dentition = ws2['C6'].value
-width_lower_dentition = ws2['B7'].value
-required_width_upper_dentition = ws2['E6'].value
-required_width_lower_dentition = ws2['D7'].value
-diff_width_upper_dentition = required_width_upper_dentition - width_upper_dentition
-
 
 def check_disadvantage_width_upper_dentition(dentition_value):
     if dentition_value == 0:
         return "Недостаток ширины зубного ряда на верхней челюсти отсутствует."
     else:
         return f"""Недостаток ширины зубного ряда на верхней челюсти составляет {process_string(dentition_value, 1)} мм."""
-
 
 
 # Формируем текст, вставляя значения переменных
@@ -1040,7 +1050,7 @@ biometrics_text = f"""
 {analyze_tooth_type(deviation_upper_premolars, deviation_lower_premolars, premolars)}
 {analyze_tooth_type(deviation_upper_molars, deviation_lower_molars, molars)}
 Укорочение фронтального участка верхней челюсти на {length_upper_frontal_section} мм. Укорочение фронтального участка нижней челюсти на {length_lower_frontal_section} мм.
-Глубина кривой Шпее справа – 1,2 мм, слева – 1,2 мм (N = 1,5 мм). Глубокая кривая Шпее справа \ и слева.
+Глубина кривой Шпее справа – {process_string(depth_shpee_right_curve, 1)} мм, слева – {process_string(depth_shpee_left_curve, 1)} мм (N = 1,5 мм). Глубокая кривая Шпее справа \ и слева.
 WALA Ridge анализ.
 Ширина верхнего зубного ряда – {process_string(width_upper_dentition, 1)} мм, ширина нижнего зубного ряда – {process_string(width_lower_dentition, 1)} мм.
 Требуемая ширина верхнего зубного ряда – {process_string(required_width_upper_dentition, 1)} мм. Требуемая ширина нижнего зубного ряда – {process_string(required_width_lower_dentition, 1)} мм.
@@ -1287,12 +1297,12 @@ resume_text5 = f"""
 """
 
 # Добавляем текст на слайд
-text_width_18_1 = Inches(7.2)
-text_height_18_1 = Inches(5)
-text_left_18_1 = Inches(0.5)
-text_top_18_1 = Inches(0.9)
-name_textbox_18_1 = prs.slides[18].shapes.add_textbox(text_left_18_1, text_top_18_1, text_width_18_1, text_height_18_1)
-text_frame = name_textbox_18_1.text_frame
+text_width_5 = Inches(7.2)
+text_height_5 = Inches(5)
+text_left_5 = Inches(0.5)
+text_top_5 = Inches(0.9)
+name_textbox_5 = prs.slides[18].shapes.add_textbox(text_left_5, text_top_5, text_width_5, text_height_5)
+text_frame = name_textbox_5.text_frame
 text_frame.word_wrap = True
 paragraph = text_frame.add_paragraph()
 paragraph.font.size = Pt(10.5)
@@ -1303,7 +1313,7 @@ paragraph.text = resume_text2
 # Добавляем текст на слайд
 text_left_18_2 = Inches(0.5)
 text_top_18_2 = Inches(4.4)
-name_textbox_18_2 = prs.slides[18].shapes.add_textbox(text_left_18_2, text_top_18_2, text_width_18_1, text_height_18_1)
+name_textbox_18_2 = prs.slides[18].shapes.add_textbox(text_left_18_2, text_top_18_2, text_width_5, text_height_5)
 text_frame = name_textbox_18_2.text_frame
 text_frame.word_wrap = True
 paragraph = text_frame.add_paragraph()
@@ -1315,7 +1325,7 @@ paragraph.text = resume_text3
 # Добавляем текст на слайд
 text_left_18_3 = Inches(0.5)
 text_top_18_3 = Inches(5.73)
-name_textbox_18_3 = prs.slides[18].shapes.add_textbox(text_left_18_3, text_top_18_3, text_width_18_1, text_height_18_1)
+name_textbox_18_3 = prs.slides[18].shapes.add_textbox(text_left_18_3, text_top_18_3, text_width_5, text_height_5)
 text_frame = name_textbox_18_3.text_frame
 text_frame.word_wrap = True
 paragraph = text_frame.add_paragraph()
@@ -1325,7 +1335,7 @@ paragraph.font.name = "Montserrat"
 paragraph.text = resume_text4
 
 # Добавляем текст на слайд
-name_textbox_18_4 = prs.slides[18].shapes.add_textbox(Inches(0.5), Inches(6.9), text_width_18_1, text_height_18_1)
+name_textbox_18_4 = prs.slides[18].shapes.add_textbox(Inches(0.5), Inches(6.9), text_width_5, text_height_5)
 text_frame = name_textbox_18_4.text_frame
 text_frame.word_wrap = True
 paragraph = text_frame.add_paragraph()
