@@ -300,9 +300,6 @@ def apply_crop_to_images(images_list, new_w, new_h, suffix=""):
         crop_image(img_path, out_path, new_w, new_h)
 
 
-print(image_folder)
-
-
 def rename_image(old_name, new_name):
     temp_folder = os.path.join(image_folder, "temp")
     name_folder_element = os.path.basename(image_folder)
@@ -381,7 +378,8 @@ upper_lip_position = ws2['B18'].value  #Положение верхней губ
 lower_lip_position = ws2['B19'].value  #Положение нижней губы
 
 
-def add_num_to_slide(prs_n, slide_index, left_n, top_n, text_n, width_n = Inches(1), f_color=RGBColor(255, 0, 0), font_size_n=12,
+def add_num_to_slide(prs_n, slide_index, left_n, top_n, text_n, width_n=Inches(1), f_color=RGBColor(0, 0, 0),
+                     font_size_n=12,
                      font_name="Montserrat", bold=False):
     slide = prs_n.slides[slide_index]
     textbox = slide.shapes.add_textbox(left_n, top_n, width_n, Inches(0))
@@ -414,15 +412,10 @@ images_position_2 = [
     (Inches(4.6), Inches(7.7), Inches(3), Inches(3.7))
 ]
 
-# Применяем функцию к каждому изображению
-# apply_crop_to_images([f"{folder_name}_{image}" for image in ["2q", "2w"]], 1700, 2200)
-# apply_crop_to_images([f"{folder_name}_{image}" for image in ["2e", "2r"]], 2300, 2600)
-
 insert_images(images_name_2, images_position_2, 2)
 print(f" Слайд №2 сформирован")
 
 # Слайд № 3
-
 
 # Создаем пустой DataFrame
 slideThree_MT = list(ws2.iter_rows(min_row=2, max_row=9, min_col=16, max_col=17, values_only=True))
@@ -759,13 +752,11 @@ print(f" Слайд №13 сформирован")
 print("<-------------------------------------------------------------------------------------------------------->")
 
 # Слайд № 14
-images_name_14 = [f"{folder_name}_{image}" for image in ["3_crop", "000"]]
+images_name_14 = [f"{folder_name}_{image}" for image in ["77", "88"]]
 images_position_14 = [
     (Inches(0.6), Inches(8.1), Inches(3.4), Inches(3.3)),
     (Inches(4.2), Inches(8.1), Inches(3.4), Inches(3.3)),
 ]
-
-apply_crop_to_images([f"{folder_name}_{image}" for image in ["3"]], 880, 900, "_crop")
 
 insert_images(images_name_14, images_position_14, 14)
 rename_image([f"{folder_name}_{image}" for image in ["3"]][0], "фронтальный расчет")
@@ -801,7 +792,7 @@ print("<------------------------------------------------------------------------
 
 # Слайд №15
 # Массив имен изображений с префиксом папки
-images_name_15 = [f"{folder_name}_{image}" for image in ["333", "temp15"]]
+images_name_15 = [f"{folder_name}_{image}" for image in ["333", "99"]]
 images_position_15 = [
     (Inches(0.6), Inches(1.5), Inches(7), Inches(4.7)),
     (Inches(0.6), Inches(7), Inches(7), Inches(4.4)),
@@ -1087,8 +1078,8 @@ def add_text_to_custom(prs_17, slide_index, left_17, top_17, width_17, height_17
 
 # Использование функции с альтернативным названием
 add_text_to_custom(prs, 17, Inches(0.4), Inches(3.15), Inches(7.21), Inches(3), biometrics_text)
-add_text_to_custom(prs, 17, Inches(0.4), Inches(6.7), Inches(7.21), Inches(2.7), cephalometry_text)
-add_text_to_custom(prs, 17, Inches(0.4), Inches(8.85), Inches(7.21), Inches(2.2), resume_upper_jaw_text)
+add_text_to_custom(prs, 17, Inches(0.4), Inches(6.9), Inches(7.21), Inches(2.7), cephalometry_text)
+add_text_to_custom(prs, 17, Inches(0.4), Inches(9.08), Inches(7.21), Inches(2.2), resume_upper_jaw_text)
 
 print(f" Слайд №17 сформирован")
 print("<-------------------------------------------------------------------------------------------------------->")
@@ -1208,13 +1199,24 @@ else:
 
 def get_tooth_status(slant_value, difference, upper_threshold, lower_threshold, tooth_num):
     if slant_value is None:
-        return ''
+        return f"Нормальное положение зуба {tooth_num}"
     elif slant_value > upper_threshold:
         return f"Протрузия зуба  {tooth_num} на {process_string(difference, 1)}˚"
     elif slant_value < lower_threshold:
         return f"Ретрузия зуба  {tooth_num} на {process_string(difference, 1)}˚"
     else:
-        return ''
+        return f"Нормальное положение зуба {tooth_num}"
+
+
+def get_tooth_empty_status(slant_value, difference, upper_threshold, lower_threshold, tooth_num):
+    if slant_value is None:
+        return ""
+    elif slant_value > upper_threshold:
+        return f"Протрузия зуба  {tooth_num} на {process_string(difference, 1)}˚"
+    elif slant_value < lower_threshold:
+        return f"Ретрузия зуба  {tooth_num} на {process_string(difference, 1)}˚"
+    else:
+        return ""
 
 
 slant_r1_1 = ws1['C33'].value
@@ -1232,29 +1234,35 @@ l2_1_value_status = get_tooth_status(slant_l2_1, slant_l2_1_dif, 115, 105, 2.1)
 l3_1_value_status = get_tooth_status(slant_l3_1, slant_l3_1_dif, 100, 90, 3.1)
 r4_1_value_status = get_tooth_status(slant_r4_1, slant_r4_1_dif, 100, 90, 4.1)
 
+r1_1_value_empty_status = get_tooth_empty_status(slant_r1_1, slant_r1_1_dif, 115, 105, 1.1)
+l2_1_value_empty_status = get_tooth_empty_status(slant_l2_1, slant_l2_1_dif, 115, 105, 2.1)
+l3_1_value_empty_status = get_tooth_empty_status(slant_l3_1, slant_l3_1_dif, 100, 90, 3.1)
+r4_1_value_empty_status = get_tooth_empty_status(slant_r4_1, slant_r4_1_dif, 100, 90, 4.1)
+
 result_string = ""
 
-if r1_1_value_status is not None:
-    result_string += f"{r1_1_value_status}"
-    if r1_1_value_status:
+if r1_1_value_empty_status is not None:
+    result_string += f"{r1_1_value_empty_status}"
+    if r1_1_value_empty_status:
         result_string += f". "
 
-if l2_1_value_status is not None:
-    result_string += f"{l2_1_value_status}"
-    if l2_1_value_status:
+if l2_1_value_empty_status is not None:
+    result_string += f"{l2_1_value_empty_status}"
+    if l2_1_value_empty_status:
         result_string += f". "
 
-if l3_1_value_status is not None:
-    result_string += f"{l3_1_value_status}"
-    if l3_1_value_status:
+if l3_1_value_empty_status is not None:
+    result_string += f"{l3_1_value_empty_status}"
+    if l3_1_value_empty_status:
         result_string += f". "
 
-if r4_1_value_status is not None:
-    result_string += f"{r4_1_value_status}"
+if r4_1_value_empty_status is not None:
+    result_string += f"{r4_1_value_empty_status}"
 
 # Формирование строки с динамическими данными
 u1_pp = f"{r1_1_value_status}. {l2_1_value_status}"
 l1_pp = f"{l3_1_value_status}. {r4_1_value_status}"
+
 
 # Формируем текст, вставляя значения переменных
 resume_text2 = f"""
@@ -1298,7 +1306,7 @@ resume_text5 = f"""
 
 # Добавляем текст на слайд
 text_width_5 = Inches(7.2)
-text_height_5 = Inches(5)
+text_height_5 = Inches(3.5)
 text_left_5 = Inches(0.5)
 text_top_5 = Inches(0.9)
 name_textbox_5 = prs.slides[18].shapes.add_textbox(text_left_5, text_top_5, text_width_5, text_height_5)
@@ -1313,7 +1321,7 @@ paragraph.text = resume_text2
 # Добавляем текст на слайд
 text_left_18_2 = Inches(0.5)
 text_top_18_2 = Inches(4.4)
-name_textbox_18_2 = prs.slides[18].shapes.add_textbox(text_left_18_2, text_top_18_2, text_width_5, text_height_5)
+name_textbox_18_2 = prs.slides[18].shapes.add_textbox(text_left_18_2, text_top_18_2, text_width_5, Inches(1))
 text_frame = name_textbox_18_2.text_frame
 text_frame.word_wrap = True
 paragraph = text_frame.add_paragraph()
@@ -1325,7 +1333,7 @@ paragraph.text = resume_text3
 # Добавляем текст на слайд
 text_left_18_3 = Inches(0.5)
 text_top_18_3 = Inches(5.73)
-name_textbox_18_3 = prs.slides[18].shapes.add_textbox(text_left_18_3, text_top_18_3, text_width_5, text_height_5)
+name_textbox_18_3 = prs.slides[18].shapes.add_textbox(text_left_18_3, text_top_18_3, text_width_5, Inches(1))
 text_frame = name_textbox_18_3.text_frame
 text_frame.word_wrap = True
 paragraph = text_frame.add_paragraph()
@@ -1335,7 +1343,7 @@ paragraph.font.name = "Montserrat"
 paragraph.text = resume_text4
 
 # Добавляем текст на слайд
-name_textbox_18_4 = prs.slides[18].shapes.add_textbox(Inches(0.5), Inches(6.9), text_width_5, text_height_5)
+name_textbox_18_4 = prs.slides[18].shapes.add_textbox(Inches(0.5), Inches(6.9), text_width_5,  Inches(1))
 text_frame = name_textbox_18_4.text_frame
 text_frame.word_wrap = True
 paragraph = text_frame.add_paragraph()
@@ -1465,14 +1473,14 @@ slide20_text4 = f"""
     Сужение нижнего зубного ряда в области клыков, моляров, премоляров.
 3. Длина фронтального участка верхнего зубного ряда в норме , нижнего зубного 
     ряда в норме.
-4. {result_string}.
+4. {result_string}
 5. {overbite_value_status}
 6. {overjet_value_status}
 7. Глубина кривой Шпее в увеличена справа \ слева.
 """
 
 # Добавляем текст на слайд
-text_frame = prs.slides[19].shapes.add_textbox(Inches(0.6), Inches(0.6), Inches(7), Inches(5)).text_frame
+text_frame = prs.slides[19].shapes.add_textbox(Inches(0.6), Inches(0.6), Inches(7), Inches(3.8)).text_frame
 text_frame.word_wrap = True
 paragraph = text_frame.add_paragraph()
 paragraph.font.size = Pt(11)
@@ -1481,7 +1489,7 @@ paragraph.font.name = "Montserrat"
 paragraph.text = slide20_text1
 
 # Добавляем текст на слайд
-text_frame = prs.slides[19].shapes.add_textbox(Inches(0.6), Inches(3.85), Inches(7), Inches(5)).text_frame
+text_frame = prs.slides[19].shapes.add_textbox(Inches(0.6), Inches(3.9), Inches(7), Inches(1.5)).text_frame
 text_frame.word_wrap = True
 paragraph = text_frame.add_paragraph()
 paragraph.font.size = Pt(11)
@@ -1490,7 +1498,7 @@ paragraph.font.name = "Montserrat"
 paragraph.text = slide20_text2
 
 # Добавляем текст на слайд
-text_frame = prs.slides[19].shapes.add_textbox(Inches(0.6), Inches(5.1), Inches(7), Inches(5)).text_frame
+text_frame = prs.slides[19].shapes.add_textbox(Inches(0.6), Inches(5.1), Inches(7), Inches(2.5)).text_frame
 text_frame.word_wrap = True
 paragraph = text_frame.add_paragraph()
 paragraph.font.size = Pt(11)
@@ -1499,7 +1507,7 @@ paragraph.font.name = "Montserrat"
 paragraph.text = slide20_text3
 
 # Добавляем текст на слайд
-text_frame = prs.slides[19].shapes.add_textbox(Inches(0.6), Inches(7.35), Inches(7), Inches(5)).text_frame
+text_frame = prs.slides[19].shapes.add_textbox(Inches(0.6), Inches(7.35), Inches(7), Inches(2.5)).text_frame
 text_frame.word_wrap = True
 paragraph = text_frame.add_paragraph()
 paragraph.font.size = Pt(11)
