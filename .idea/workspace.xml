@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bf6c7617-7d1d-4c28-8fb7-0f4019ec218e" name="Changes" comment="[parsing-data] - добавил вывод новой таблицы">
+    <list default="true" id="bf6c7617-7d1d-4c28-8fb7-0f4019ec218e" name="Changes" comment="[parsing-data] - изменил значения ячеек в переменных">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
@@ -123,95 +123,9 @@
       <workItem from="1710451269700" duration="998000" />
       <workItem from="1710615225628" duration="47133000" />
       <workItem from="1717528224868" duration="7703000" />
-      <workItem from="1718053188161" duration="35919000" />
-    </task>
-    <task id="LOCAL-00004" summary="[parsing-data] - пофиксил логи.">
-      <option name="closed" value="true" />
-      <created>1708342901292</created>
-      <option name="number" value="00004" />
-      <option name="presentableId" value="LOCAL-00004" />
-      <option name="project" value="LOCAL" />
-      <updated>1708342901292</updated>
-    </task>
-    <task id="LOCAL-00005" summary="[parsing-data] - слайды с 1 по 3 добавил.">
-      <option name="closed" value="true" />
-      <created>1708394223262</created>
-      <option name="number" value="00005" />
-      <option name="presentableId" value="LOCAL-00005" />
-      <option name="project" value="LOCAL" />
-      <updated>1708394223262</updated>
-    </task>
-    <task id="LOCAL-00006" summary="[parsing-data] - добавил слайд 4.">
-      <option name="closed" value="true" />
-      <created>1708473618632</created>
-      <option name="number" value="00006" />
-      <option name="presentableId" value="LOCAL-00006" />
-      <option name="project" value="LOCAL" />
-      <updated>1708473618632</updated>
-    </task>
-    <task id="LOCAL-00007" summary="[parsing-data] - фикс верстки таблицы в сладе 4.">
-      <option name="closed" value="true" />
-      <created>1708529678713</created>
-      <option name="number" value="00007" />
-      <option name="presentableId" value="LOCAL-00007" />
-      <option name="project" value="LOCAL" />
-      <updated>1708529678713</updated>
-    </task>
-    <task id="LOCAL-00008" summary="[parsing-data] - индексы слайдов уменьшены на 1 и добавлен 4 слайд.">
-      <option name="closed" value="true" />
-      <created>1708631555957</created>
-      <option name="number" value="00008" />
-      <option name="presentableId" value="LOCAL-00008" />
-      <option name="project" value="LOCAL" />
-      <updated>1708631555957</updated>
-    </task>
-    <task id="LOCAL-00009" summary="[parsing-data] - добавлен 5 слайд.">
-      <option name="closed" value="true" />
-      <created>1708642228018</created>
-      <option name="number" value="00009" />
-      <option name="presentableId" value="LOCAL-00009" />
-      <option name="project" value="LOCAL" />
-      <updated>1708642228018</updated>
-    </task>
-    <task id="LOCAL-00010" summary="[parsing-data] - добавлен 6 слайд.">
-      <option name="closed" value="true" />
-      <created>1708691886542</created>
-      <option name="number" value="00010" />
-      <option name="presentableId" value="LOCAL-00010" />
-      <option name="project" value="LOCAL" />
-      <updated>1708691886542</updated>
-    </task>
-    <task id="LOCAL-00011" summary="[parsing-data] - добавлен 7 слайд.">
-      <option name="closed" value="true" />
-      <created>1708692811404</created>
-      <option name="number" value="00011" />
-      <option name="presentableId" value="LOCAL-00011" />
-      <option name="project" value="LOCAL" />
-      <updated>1708692811404</updated>
-    </task>
-    <task id="LOCAL-00012" summary="[parsing-data] - добавлены 8, 9 слайды.">
-      <option name="closed" value="true" />
-      <created>1708701332636</created>
-      <option name="number" value="00012" />
-      <option name="presentableId" value="LOCAL-00012" />
-      <option name="project" value="LOCAL" />
-      <updated>1708701332636</updated>
-    </task>
-    <task id="LOCAL-00013" summary="[parsing-data] - добавлен 10 слайд.">
-      <option name="closed" value="true" />
-      <created>1708711511622</created>
-      <option name="number" value="00013" />
-      <option name="presentableId" value="LOCAL-00013" />
-      <option name="project" value="LOCAL" />
-      <updated>1708711511622</updated>
-    </task>
-    <task id="LOCAL-00014" summary="[parsing-data] - добавлен 11 слайд.">
-      <option name="closed" value="true" />
-      <created>1708712235262</created>
-      <option name="number" value="00014" />
-      <option name="presentableId" value="LOCAL-00014" />
-      <option name="project" value="LOCAL" />
-      <updated>1708712235262</updated>
+      <workItem from="1718053188161" duration="36161000" />
+      <workItem from="1718308561630" duration="34388000" />
+      <workItem from="1720984902608" duration="7345000" />
     </task>
     <task id="LOCAL-00015" summary="[parsing-data] - добавлен 12 слайд.">
       <option name="closed" value="true" />
@@ -517,7 +431,95 @@
       <option name="project" value="LOCAL" />
       <updated>1718150112782</updated>
     </task>
-    <option name="localTasksCounter" value="53" />
+    <task id="LOCAL-00053" summary="[parsing-data] - поправил расположение отчета в слайдах">
+      <option name="closed" value="true" />
+      <created>1718234724035</created>
+      <option name="number" value="00053" />
+      <option name="presentableId" value="LOCAL-00053" />
+      <option name="project" value="LOCAL" />
+      <updated>1718234724035</updated>
+    </task>
+    <task id="LOCAL-00054" summary="[parsing-data] - поправил расположение отчета в слайдах">
+      <option name="closed" value="true" />
+      <created>1718234734984</created>
+      <option name="number" value="00054" />
+      <option name="presentableId" value="LOCAL-00054" />
+      <option name="project" value="LOCAL" />
+      <updated>1718234734984</updated>
+    </task>
+    <task id="LOCAL-00055" summary="[parsing-data] -  разработан и улучшен код, который анализирует расстояние">
+      <option name="closed" value="true" />
+      <created>1718320398082</created>
+      <option name="number" value="00055" />
+      <option name="presentableId" value="LOCAL-00055" />
+      <option name="project" value="LOCAL" />
+      <updated>1718320398082</updated>
+    </task>
+    <task id="LOCAL-00056" summary="[parsing-data] -  добавил функцию для анализа расстояния в биометрии">
+      <option name="closed" value="true" />
+      <created>1718914430948</created>
+      <option name="number" value="00056" />
+      <option name="presentableId" value="LOCAL-00056" />
+      <option name="project" value="LOCAL" />
+      <updated>1718914430948</updated>
+    </task>
+    <task id="LOCAL-00057" summary="[parsing-data] -  добавил данные в генерацию отчета">
+      <option name="closed" value="true" />
+      <created>1719044227316</created>
+      <option name="number" value="00057" />
+      <option name="presentableId" value="LOCAL-00057" />
+      <option name="project" value="LOCAL" />
+      <updated>1719044227316</updated>
+    </task>
+    <task id="LOCAL-00058" summary="[parsing-data] -  дополнил вывод отчета">
+      <option name="closed" value="true" />
+      <created>1719434338061</created>
+      <option name="number" value="00058" />
+      <option name="presentableId" value="LOCAL-00058" />
+      <option name="project" value="LOCAL" />
+      <updated>1719434338061</updated>
+    </task>
+    <task id="LOCAL-00059" summary="[parsing-data] - поменял логику форматирования изображений">
+      <option name="closed" value="true" />
+      <created>1719524399924</created>
+      <option name="number" value="00059" />
+      <option name="presentableId" value="LOCAL-00059" />
+      <option name="project" value="LOCAL" />
+      <updated>1719524399924</updated>
+    </task>
+    <task id="LOCAL-00060" summary="[parsing-data] - поправил данные в отчете и поправил расположение значений на слайдах">
+      <option name="closed" value="true" />
+      <created>1719527451615</created>
+      <option name="number" value="00060" />
+      <option name="presentableId" value="LOCAL-00060" />
+      <option name="project" value="LOCAL" />
+      <updated>1719527451615</updated>
+    </task>
+    <task id="LOCAL-00061" summary="[parsing-data] - поправил данные в отчете и поправил расположение значений на слайдах">
+      <option name="closed" value="true" />
+      <created>1719527798524</created>
+      <option name="number" value="00061" />
+      <option name="presentableId" value="LOCAL-00061" />
+      <option name="project" value="LOCAL" />
+      <updated>1719527798524</updated>
+    </task>
+    <task id="LOCAL-00062" summary="[parsing-data] - скорректировал генерацию отчета">
+      <option name="closed" value="true" />
+      <created>1719604849291</created>
+      <option name="number" value="00062" />
+      <option name="presentableId" value="LOCAL-00062" />
+      <option name="project" value="LOCAL" />
+      <updated>1719604849291</updated>
+    </task>
+    <task id="LOCAL-00063" summary="[parsing-data] - изменил значения ячеек в переменных">
+      <option name="closed" value="true" />
+      <created>1719606134974</created>
+      <option name="number" value="00063" />
+      <option name="presentableId" value="LOCAL-00063" />
+      <option name="project" value="LOCAL" />
+      <updated>1719606134974</updated>
+    </task>
+    <option name="localTasksCounter" value="64" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -535,15 +537,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="[parsing-data] - добавил первичную логику формирования текста, вставляя значения переменных." />
-    <MESSAGE value="[parsing-data] - добавил логику формирования текстового описания для разных классов." />
-    <MESSAGE value="[parsing-data] - добавил новый слайс логики с заключением." />
-    <MESSAGE value="[parsing-data] - добавил часть заключения по размеру нч." />
-    <MESSAGE value="[parsing-data] - добавил логику генерации второй части заключения." />
-    <MESSAGE value="[parsing-data] - добавил логику генерации третьей части заключения." />
-    <MESSAGE value="[parsing-data] - добавил логику расчета значения наклона объекта." />
-    <MESSAGE value="[parsing-data] - пофиксил баг в неккоректной логике расчета значения наклона объекта." />
-    <MESSAGE value="[parsing-data] - порефакторил и удалил pandas lib." />
     <MESSAGE value="[parsing-data] - добавил заключительную логику для формирования результата." />
     <MESSAGE value="[parsing-data] - добавил логику обрезки больших картинок." />
     <MESSAGE value="[parsing-data] - фикс." />
@@ -560,9 +553,18 @@
     <MESSAGE value="[parsing-data] - вернул динамическое значение для переменной" />
     <MESSAGE value="[parsing-data] - пофиксил недочеты в генерации вывода" />
     <MESSAGE value="[parsing-data] - добавил вывод новой таблицы" />
-    <option name="LAST_COMMIT_MESSAGE" value="[parsing-data] - добавил вывод новой таблицы" />
+    <MESSAGE value="[parsing-data] - поправил расположение отчета в слайдах" />
+    <MESSAGE value="[parsing-data] -  разработан и улучшен код, который анализирует расстояние" />
+    <MESSAGE value="[parsing-data] -  добавил функцию для анализа расстояния в биометрии" />
+    <MESSAGE value="[parsing-data] -  добавил данные в генерацию отчета" />
+    <MESSAGE value="[parsing-data] -  дополнил вывод отчета" />
+    <MESSAGE value="[parsing-data] - поменял логику форматирования изображений" />
+    <MESSAGE value="[parsing-data] - поправил данные в отчете и поправил расположение значений на слайдах" />
+    <MESSAGE value="[parsing-data] - скорректировал генерацию отчета" />
+    <MESSAGE value="[parsing-data] - изменил значения ячеек в переменных" />
+    <option name="LAST_COMMIT_MESSAGE" value="[parsing-data] - изменил значения ячеек в переменных" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/PPData$main.coverage" NAME="main Coverage Results" MODIFIED="1718233375462" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/PPData$main.coverage" NAME="main Coverage Results" MODIFIED="1720991875950" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

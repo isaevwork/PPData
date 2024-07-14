@@ -378,9 +378,7 @@ upper_lip_position = ws2['B18'].value  #Положение верхней губ
 lower_lip_position = ws2['B19'].value  #Положение нижней губы
 
 
-def add_num_to_slide(prs_n, slide_index, left_n, top_n, text_n, width_n=Inches(1), f_color=RGBColor(0, 0, 0),
-                     font_size_n=12,
-                     font_name="Montserrat", bold=False):
+def add_num_to_slide(prs_n, slide_index, left_n, top_n, text_n, width_n=Inches(2.5), f_color=RGBColor(0, 0, 0), font_size_n=10, font_name="Montserrat", bold=False):
     slide = prs_n.slides[slide_index]
     textbox = slide.shapes.add_textbox(left_n, top_n, width_n, Inches(0))
     tf = textbox.text_frame
@@ -389,8 +387,8 @@ def add_num_to_slide(prs_n, slide_index, left_n, top_n, text_n, width_n=Inches(1
     p.text = text_n
     p.font.bold = bold
     p.font.size = Pt(font_size_n)
-    p.font.name = font_name
     p.font.color.rgb = f_color
+    p.font.name = font_name
 
 
 add_num_to_slide(prs, 2, Inches(4.5), Inches(1.81), f"{format_with_comma(face_width)}")
@@ -401,6 +399,10 @@ add_num_to_slide(prs, 2, Inches(2.55), Inches(5.65), f"{format_with_comma(nasal_
 add_num_to_slide(prs, 2, Inches(1.87), Inches(6.15), f"{format_with_comma(labial_angle)}°")
 add_num_to_slide(prs, 2, Inches(2.8), Inches(6.4), f"{format_with_comma(chin_facial_angle)}°")
 add_num_to_slide(prs, 2, Inches(1.2), Inches(7.15), f"{format_with_comma(soft_tissues_angle)}°")
+
+add_num_to_slide(prs, 2, Inches(5.1), Inches(6.15), f"{format_with_comma(upper_lip_position)} мм (N = -4,0 мм ±2,0 мм)")
+add_num_to_slide(prs, 2, Inches(5.1), Inches(6.65), f"{format_with_comma(lower_lip_position)} мм (N = -2,0 мм ±2,0 мм)")
+
 
 # Массив имен изображений с префиксом папки
 images_name_2 = [f"{folder_name}_{image}" for image in ["2q", "2w", "2e", "2r"]]
@@ -459,8 +461,8 @@ for i, row_data in enumerate(transformed_dataframe):
         p = text_frame.add_paragraph()
         p.text = str(value)
         p.font.size = f_size
-        p.font.name = "Montserrat"
         p.alignment = PP_PARAGRAPH_ALIGNMENT.CENTER
+        p.font.name = "Montserrat"
 
 
 def fill_table(present, slide_index, slide_data, cl, ct, cw, ch, fs, column_offsets):
@@ -562,10 +564,9 @@ def place_data_on_slide(data_rows, left_mar, top_mar, cell_width, cell_height, s
             cell_left = left_mar + j * cell_width
             cell_top = top_mar + i * cell_height
 
-            new_text_frame = prs.slides[slide_index].shapes.add_textbox(cell_left, cell_top, cell_width,
-                                                                        cell_height).text_frame
+            new_text_frame = prs.slides[slide_index].shapes.add_textbox(cell_left, cell_top, cell_width, cell_height).text_frame
             p = new_text_frame.add_paragraph()
-            p.text = str(value)
+            p.text = format_with_comma(value)
             p.font.size = Pt(size_f)
             p.font.name = "Montserrat"
             p.alignment = PP_PARAGRAPH_ALIGNMENT.CENTER
@@ -1282,7 +1283,7 @@ Yaw ротация отсутствует \ вправо  (по часовой �
 resume_text3 = f"""
 Вертикальное лицевое соотношение (N-ANS/ANS-Gn) {ans_quotient_status} – {round(ans_quotient, 2)} (N = 0,8 ± 0,09).
 Отношение задней высоты лица к передней (S-Go/N-Gn) – {format_with_comma(assessment_growth_type)}% (N = 63,0% ± 2,0%).
-Высота нижней трети лица по Ricketts (<ANS-Xi-Pm) – {format_with_comma(ans_xi_pm)}˚, что соответствует {ans_xi_pm_status} (N = {format_with_comma(round(ws1['N8'].value, 1))}˚ ± 5,5˚).
+Высота нижней трети лица по Ricketts (<ANS-Xi-Pm) – {format_with_comma(ans_xi_pm)}˚, что соответствует {ans_xi_pm_status} (N = IVP {format_with_comma(round(ws1['N8'].value, 1))}˚ ± 5,5˚).
 Параметр ODI – {format_with_comma(odi_value)}˚, что соответствует {odi_value_status} (N = 74,5˚ ±  5,0˚).
 """
 
@@ -1428,6 +1429,17 @@ elif overjet_value < 0:
 else:
     overjet_value_status = f"Сагиттальное резцовое перекрытие в норме – {process_string(overjet_value, 1)} мм (N = 2,5 мм ± 2,5 мм)."
 
+# Определяем класс в зависимости от значения Md-Md
+mdk_upper_limit = ws1['D23'].value + 3
+mdk_lower_limit = ws1['D23'].value - 3
+mdk_status = ""
+if md_md_value > mdk_upper_limit:
+    md_status = "Расширение базиса нижней челюсти относительно возрастной нормы."
+elif md_md_value < mdk_lower_limit:
+    md_status = "Сужение базиса нижней челюсти относительно возрастной нормы."
+else:
+    md_status = "Ширина базиса нижней челюсти в норме."
+
 slide20_text1 = f"""
 1. Скелетный III класс с тенденцией к III, обусловленный 
     макро \ микрогнатией, про \ ретрогнатией верхней \ нижней челюсти \ 
@@ -1438,8 +1450,8 @@ slide20_text1 = f"""
 3. Нейтральный тип роста с тенденцией к вертикальному\ горизонтальному росту.
 4. Высота нижней трети лица по Ricketts  в {ans_xi_pm_status}.
 5. Профиль лица  выпуклый. 
-6. Ретроположение верхней и нижней губы относительно 
-    эстетической плоскости Ricketts. 
+6. Ретроположение верхней и нижней губы относительно эстетической 
+    плоскости Ricketts. 
 7. Сужение и уменьшение объема воздухоносных путей. Сужения и уменьшения 
     объема воздухоносных путей не выявлено. 
 8. Нормальное \ Переднее \ Заднее положение правой \ левой суставной головки
@@ -1454,12 +1466,10 @@ slide20_text2 = f"""
     \влево (против часовой стрелки).
 """
 slide20_text3 = f"""
-1. Ширина базиса нижней челюсти в {md_status} относительно возрастной нормы.
+1. {md_status}
 2. {snb_status_uppercase}я нижней челюсти. {mp_sn_status_uppercase}я нижней челюсти.
-3. Длина тела нижней челюсти справа {go_me_r_status}. Длина тела нижней челюсти слева
-    {go_me_l_status}.
-4. Длина ветви нижней челюсти справа {go_go_r_status}. Длина ветви нижней челюсти 
-    слева {go_go_l_status}.
+3. Длина тела нижней челюсти справа {go_me_r_status}. Длина тела нижней челюсти слева {go_me_l_status}.
+4. Длина ветви нижней челюсти справа {go_go_r_status}. Длина ветви нижней челюсти слева {go_go_l_status}.
 5. Смещение подбородка {chin_displacement_status}, \ за счет скелетной асимметрии. 
 6. Ротация нижней челюсти в Roll \Yaw плоскости вправо (по часовой стрелке) 
     \влево (против часовой стрелки).
