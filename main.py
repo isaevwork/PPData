@@ -417,7 +417,18 @@ images_position_2 = [
 insert_images(images_name_2, images_position_2, 2)
 print(f" Слайд №2 сформирован")
 
-# Слайд № 3
+# Слайд 3 новый
+# Массив имен изображений с префиксом папки
+images_name_3 = [f"{folder_name}_{image}" for image in ["aa"]]
+images_position_3 = [
+    (Inches(0.6), Inches(1.4), Inches(7.1), Inches(8.2)),
+]
+
+insert_images(images_name_3, images_position_3, 3)
+print("<-------------------------------------------------------------------------------------------------------->")
+
+print(f" Слайд 3 new сформирован")
+# Слайд 6 новый
 
 # Создаем пустой DataFrame
 slideThree_MT = list(ws2.iter_rows(min_row=2, max_row=9, min_col=16, max_col=17, values_only=True))
@@ -457,7 +468,7 @@ for i, row_data in enumerate(transformed_dataframe):
         cell_top = c_top + i * c_height
 
         # Добавление текстового блока на слайд с текущими координатами
-        text_frame = prs.slides[3].shapes.add_textbox(cell_left, cell_top, c_width, c_height).text_frame
+        text_frame = prs.slides[6].shapes.add_textbox(cell_left, cell_top, c_width, c_height).text_frame
         p = text_frame.add_paragraph()
         p.text = str(value)
         p.font.size = f_size
@@ -515,12 +526,9 @@ column_offsets_lower = {
     11: (False, Inches(6.5))
 }
 
-fill_table(prs, 3, up_data3, Inches(0.9), Inches(2.45), Inches(0.55), Inches(0.27), Pt(14), column_offsets_up)
-fill_table(prs, 3, lower_data3, Inches(1.3), Inches(3.65), Inches(0.45), Inches(0.27), Pt(14), column_offsets_lower)
+fill_table(prs, 6, up_data3, Inches(0.9), Inches(2.45), Inches(0.55), Inches(0.27), Pt(14), column_offsets_up)
+fill_table(prs, 6, lower_data3, Inches(1.3), Inches(3.65), Inches(0.45), Inches(0.27), Pt(14), column_offsets_lower)
 
-print("<-------------------------------------------------------------------------------------------------------->")
-
-print(f" Слайд №3 сформирован")
 
 print("<-------------------------------------------------------------------------------------------------------->")
 
