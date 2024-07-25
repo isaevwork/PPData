@@ -27,7 +27,7 @@ def draw_table(text):
 # Текст для помещения внутрь таблицы
 text = """Предупреждение: использование этого скрипта полностью лежит на ответственности конечного пользователя.
 Автор скрипта не несет никакой ответственности!
-Мы просим всех пользователей внимательно изучить результаты этого скрипта перед его использованием."""
+Мы просим всех пользователей внимательно изучить результаты этого скрипта перед использованием."""
 
 
 def main():
@@ -358,13 +358,11 @@ tf_date = name_textbox.text_frame
 tf_date.word_wrap = True
 p_date = tf_date.add_paragraph()
 p_date.text = f"{datetime.today().strftime('%d.%m.%Y')}"
+print(f"Слайд 1 сформирован")
 
-# Слайд № 1
-print(f" Слайд №1 сформирован")
 
 print("<-------------------------------------------------------------------------------------------------------->")
-
-# Слайд № 2
+# Слайд 2
 ws2 = wb["Лист2"]
 face_width = ws2['B10'].value  #Ширина
 face_height = ws2['B11'].value  #Высота
@@ -405,7 +403,7 @@ add_num_to_slide(prs, 2, Inches(5.1), Inches(6.65), f"{format_with_comma(lower_l
 
 
 # Массив имен изображений с префиксом папки
-images_name_2 = [f"{folder_name}_{image}" for image in ["2q", "2w", "2e", "2r"]]
+images_name_2 = [f"{folder_name}_{image}" for image in ["a", "s", "d", "f"]]
 
 images_position_2 = [
     (Inches(0.4), Inches(1.5), Inches(2.6), Inches(3.6)),
@@ -415,22 +413,42 @@ images_position_2 = [
 ]
 
 insert_images(images_name_2, images_position_2, 2)
-print(f" Слайд №2 сформирован")
+print(f"Слайд 2 сформирован")
 
+print("<-------------------------------------------------------------------------------------------------------->")
 # Слайд 3 новый
-# Массив имен изображений с префиксом папки
 images_name_3 = [f"{folder_name}_{image}" for image in ["aa"]]
 images_position_3 = [
     (Inches(0.6), Inches(1.4), Inches(7.1), Inches(8.2)),
 ]
 
 insert_images(images_name_3, images_position_3, 3)
+print(f"Слайд 3 сформирован")
+
+
 print("<-------------------------------------------------------------------------------------------------------->")
+# Слайд 4 новый
+images_name_4 = [f"{folder_name}_{image}" for image in ["ss"]]
+images_position_4 = [
+    (Inches(0.6), Inches(1.4), Inches(7.1), Inches(8.2)),
+]
 
-print(f" Слайд 3 new сформирован")
+insert_images(images_name_4, images_position_4, 4)
+print(f"Слайд 4 сформирован")
+
+print("<-------------------------------------------------------------------------------------------------------->")
+# Слайд 5 новый
+images_name_5 = [f"{folder_name}_{image}" for image in ["dd"]]
+images_position_5 = [
+    (Inches(0.6), Inches(1.4), Inches(7.1), Inches(8.2)),
+]
+
+insert_images(images_name_5, images_position_5, 5)
+print(f"Слайд 5 сформирован")
+
+
+print("<-------------------------------------------------------------------------------------------------------->")
 # Слайд 6 новый
-
-# Создаем пустой DataFrame
 slideThree_MT = list(ws2.iter_rows(min_row=2, max_row=9, min_col=16, max_col=17, values_only=True))
 
 # Размер и положение данных на слайде
@@ -528,14 +546,13 @@ column_offsets_lower = {
 
 fill_table(prs, 6, up_data3, Inches(0.9), Inches(2.45), Inches(0.55), Inches(0.27), Pt(14), column_offsets_up)
 fill_table(prs, 6, lower_data3, Inches(1.3), Inches(3.65), Inches(0.45), Inches(0.27), Pt(14), column_offsets_lower)
+print(f"Слайд 6 сформирован")
 
 
 print("<-------------------------------------------------------------------------------------------------------->")
-
-# Слайд № 4
-# Массив имен изображений с префиксом папки
-images_name_4 = [f"{folder_name}_{image}" for image in ["4q", "4w", "4e", "4r", "00", "4t"]]
-images_position_4 = [
+# Слайд 7
+images_name_7 = [f"{folder_name}_{image}" for image in ["a", "3q", "s", "3w", "00", "1r"]]
+images_position_7 = [
     (Inches(0.9), Inches(1.2), Inches(2.9), Inches(2.75)),
     (Inches(4.4), Inches(1.2), Inches(2.9), Inches(2.75)),
     (Inches(0.9), Inches(4), Inches(2.9), Inches(2.75)),
@@ -544,8 +561,8 @@ images_position_4 = [
     (Inches(4.3), Inches(9.3), Inches(3.2), Inches(2))
 ]
 
-insert_images(images_name_4, images_position_4, 4)
-rename_image(images_name_4[4], "размеры апикальных базисов вч и нч")
+insert_images(images_name_7, images_position_7, 7)
+rename_image(images_name_7[4], "размеры апикальных базисов вч и нч")
 
 upper_dentition_rows = list(ws2.iter_rows(min_row=23, max_row=26, min_col=2, max_col=4, values_only=True))
 lower_dentition_rows = list(ws2.iter_rows(min_row=23, max_row=26, min_col=5, max_col=7, values_only=True))
@@ -590,18 +607,18 @@ height = Inches(0.34)
 font_size = 13
 
 # Размещение данных на слайде для верхних и нижних строк
-place_data_on_slide(transformed_upper_rows, upper_left_mar, top_mar, width, height, font_size, 4)
-place_data_on_slide(transformed_lower_rows, lower_left_mar, top_mar, width, height, font_size, 4)
-print(f" Слайд №4 сформирован")
-print("<-------------------------------------------------------------------------------------------------------->")
+place_data_on_slide(transformed_upper_rows, upper_left_mar, top_mar, width, height, font_size, 7)
+place_data_on_slide(transformed_lower_rows, lower_left_mar, top_mar, width, height, font_size, 7)
+print(f" Слайд №7 сформирован")
 
-# Слайд № 5
+print("<-------------------------------------------------------------------------------------------------------->")
+# Слайд 8
 # Массив имен изображений с префиксом папки
-images_name_5 = [f"{folder_name}_{image}" for image in ["5q", "5w", "5e", "5r", "5t", "5y"]]
+images_name_8 = [f"{folder_name}_{image}" for image in ["2e", "3e", "2r", "3y", "3r", "3t"]]
 depth_shpee_right_curve = ws2['B29'].value
 depth_shpee_left_curve = ws2['C29'].value
 
-images_position_5 = [
+images_position_8 = [
     (Inches(0.6), Inches(1.2), Inches(3.3), Inches(3)),
     (Inches(4.4), Inches(1.2), Inches(3.3), Inches(3)),
 
@@ -611,224 +628,220 @@ images_position_5 = [
     (Inches(0.6), Inches(9.2), Inches(3.4), Inches(1.4)),
     (Inches(4.2), Inches(9.2), Inches(3.4), Inches(1.4))
 ]
-slide_index_5 = 5
-insert_images(images_name_5, images_position_5, slide_index_5)
+slide_index_8 = 8
+insert_images(images_name_8, images_position_8, slide_index_8)
 
-add_num_to_slide(prs, slide_index_5, Inches(1.4), Inches(11),
+add_num_to_slide(prs, slide_index_8, Inches(1.4), Inches(11),
                  f"R = {process_string(depth_shpee_right_curve, 1)} мм (N = 1,5 мм)", Inches(3), RGBColor(0, 0, 0), 14)
-add_num_to_slide(prs, slide_index_5, Inches(5.1), Inches(11),
+add_num_to_slide(prs, slide_index_8, Inches(5.1), Inches(11),
                  f"L = {process_string(depth_shpee_left_curve, 1)} мм (N = 1,5 мм)", Inches(3), RGBColor(0, 0, 0), 14)
-print(f" Слайд №5 сформирован")
+print(f" Слайд 8 сформирован")
+
+
 print("<-------------------------------------------------------------------------------------------------------->")
+# Слайд 9
+images_name_9 = [f"{folder_name}_{image}" for image in ["1w", "1q", "1e", "1qq", "1ee", "1ww"]]
+images_position_9 = [
+    (Inches(0.8), Inches(1.3), Inches(3.2), Inches(1.8)),
 
-# Слайд № 6
-# Массив имен изображений с префиксом папки
-images_name_6 = [f"{folder_name}_{image}" for image in ["6q", "6w", "6e", "6r", "6t", "6y"]]
-images_position_6 = [
-    (Inches(0.8), Inches(1.3), Inches(3.5), Inches(1.8)),
+    (Inches(0.8), Inches(3.3), Inches(3.2), Inches(1.8)),
 
-    (Inches(0.8), Inches(3.15), Inches(3.5), Inches(1.8)),
+    (Inches(0.8), Inches(5.2), Inches(3.2), Inches(1.8)),
 
-    (Inches(0.8), Inches(5), Inches(3.5), Inches(1.8)),
-
-    (Inches(0.8), Inches(7.1), Inches(3), Inches(2.2)),
-    (Inches(2.9), Inches(9.4), Inches(3.4), Inches(2.2)),
-    (Inches(4.3), Inches(7.1), Inches(3), Inches(2.2))
+    (Inches(4.4), Inches(1.3), Inches(3.1), Inches(1.8)),
+    (Inches(4.4), Inches(3.3), Inches(3.1), Inches(1.8)),
+    (Inches(4.4), Inches(5.2), Inches(3.1), Inches(1.8))
 ]
-slide_index_6 = 6
-insert_images(images_name_6, images_position_6, slide_index_6)
-print(f" Слайд №6 сформирован")
-print("<-------------------------------------------------------------------------------------------------------->")
+slide_index_9 = 9
+insert_images(images_name_9, images_position_9, slide_index_9)
+print(f" Слайд 9 сформирован")
 
-# Слайд № 7
+
+print("<-------------------------------------------------------------------------------------------------------->")
+# Слайд 10
 # Массив имен изображений с префиксом папки
-images_name_7 = [f"{folder_name}_{image}" for image in ["9", "6"]]
-images_position_7 = [
+images_name_10 = [f"{folder_name}_{image}" for image in ["9", "6"]]
+images_position_10 = [
     (Inches(0.6), Inches(1.5), Inches(7), Inches(4)),
     (Inches(0.6), Inches(6.3), Inches(7), Inches(4.6)),
 ]
 
-insert_images(images_name_7, images_position_7, 7)
-rename_image(images_name_7[0], "мягкие ткани")
-rename_image(images_name_7[1], "костная ткань")
-print(f" Слайд №7 сформирован")
-print("<-------------------------------------------------------------------------------------------------------->")
+insert_images(images_name_10, images_position_10, 10)
+rename_image(images_name_10[0], "мягкие ткани")
+rename_image(images_name_10[1], "костная ткань")
+print(f" Слайд №10 сформирован")
 
-# Слайд № 8
-images_name_8 = [f"{folder_name}_{image}" for image in ["11", "вч", "нч"]]
-images_position_8 = [
+print("<-------------------------------------------------------------------------------------------------------->")
+# Слайд 11
+images_name_11 = [f"{folder_name}_{image}" for image in ["11", "вч", "нч"]]
+images_position_11 = [
     (Inches(0.5), Inches(1.1), Inches(7.4), Inches(3.4)),
     (Inches(0.5), Inches(5.1), Inches(7.2), Inches(2.9)),
     (Inches(0.5), Inches(8.5), Inches(7.2), Inches(2.9)),
 ]
 
-insert_images(images_name_8, images_position_8, 8)
-rename_image(images_name_8[0], "ОПТГ")
-print(f" Слайд №8 сформирован")
-print("<-------------------------------------------------------------------------------------------------------->")
+insert_images(images_name_11, images_position_11, 11)
+rename_image(images_name_11[0], "ОПТГ")
+print(f" Слайд №11 сформирован")
 
-# Слайд № 9
+print("<-------------------------------------------------------------------------------------------------------->")
+# Слайд 12
 # Массив имен изображений с префиксом папки
-images_name_9 = [f"{folder_name}_{image}" for image in ["22", "1", "2"]]
-images_position_9 = [
+images_name_12 = [f"{folder_name}_{image}" for image in ["22", "1", "2"]]
+images_position_12 = [
     (Inches(0.4), Inches(1.8), Inches(7.6), Inches(3.2)),
     (Inches(1.5), Inches(5.8), Inches(5.9), Inches(2.6)),
     (Inches(1.5), Inches(8.7), Inches(5.9), Inches(2.6)),
 ]
-insert_images(images_name_9, images_position_9, 9)
-rename_image(images_name_9[0], "ВНЧС")
-rename_image(images_name_9[1], "ВНЧС прав")
-rename_image(images_name_9[2], "ВНЧС лев")
-print(f" Слайд №9 сформирован")
-print("<-------------------------------------------------------------------------------------------------------->")
+insert_images(images_name_12, images_position_12, 12)
+rename_image(images_name_12[0], "ВНЧС")
+rename_image(images_name_12[1], "ВНЧС прав")
+rename_image(images_name_12[2], "ВНЧС лев")
+print(f" Слайд 12 сформирован")
 
-# Слайд № 10
+print("<-------------------------------------------------------------------------------------------------------->")
+# Слайд 13
 # Размеры и положения областей для изображений
-images_name_10_444 = [f"{folder_name}_{image}" for image in ["444"]]
-images_name_10 = [f"{folder_name}_{image}" for image in ["33", "44"]]
-img_name10_1 = os.path.join(images_name_10_444[0] + ".jpg")
+images_name_13_444 = [f"{folder_name}_{image}" for image in ["444"]]
+images_name_13 = [f"{folder_name}_{image}" for image in ["33", "44"]]
+img_name13_1 = os.path.join(images_name_13_444[0] + ".jpg")
 
 # crop_image(os.path.join(image_folder, images_name_10_444[0] + ".jpg"),
 #            os.path.join(image_folder, images_name_10_444[0] + ".jpg"), 1200, 1068)
 
-images_position_10 = [
+images_position_13 = [
     (Inches(0.5), Inches(7.5), Inches(3.5), Inches(3.5)),
     (Inches(4.1), Inches(7.5), Inches(3.5), Inches(3.5)),
 ]
 
-prs.slides[10].shapes.add_picture(os.path.join(image_folder, images_name_10_444[0] + ".jpg"), Inches(1.2), Inches(1.4),
+prs.slides[13].shapes.add_picture(os.path.join(image_folder, images_name_13_444[0] + ".jpg"), Inches(1.2), Inches(1.4),
                                   Inches(6), Inches(5.5))
-insert_images(images_name_10, images_position_10, 10)
-rename_image(images_name_10[0], "ТРГ фронт")
-rename_image(images_name_10[1], "SMV")
-rename_image(images_name_10_444[0], "симметрия")
-print(f" Слайд №10 сформирован")
-print("<-------------------------------------------------------------------------------------------------------->")
+insert_images(images_name_13, images_position_13, 13)
+rename_image(images_name_13[0], "ТРГ фронт")
+rename_image(images_name_13[1], "SMV")
+rename_image(images_name_13_444[0], "симметрия")
+print(f" Слайд №13 сформирован")
 
-# Слайд № 11
-# Размеры и положения областей для изображений
-images_name_11 = [f"{folder_name}_{image}" for image in ["4", "5", "55"]]
-images_position_11 = [
+print("<-------------------------------------------------------------------------------------------------------->")
+# Слайд 14
+images_name_14 = [f"{folder_name}_{image}" for image in ["4", "5", "55"]]
+images_position_14 = [
     (Inches(0.4), Inches(1.4), Inches(3.6), Inches(3.6)),
     (Inches(4.2), Inches(1.4), Inches(3.6), Inches(3.6)),
 
     (Inches(1), Inches(5.8), Inches(6.2), Inches(5.6)),
 ]
 
-insert_images(images_name_11, images_position_11, 11)
-rename_image(images_name_11[0], "ТРГ прав")
-rename_image(images_name_11[1], "ТРГ лев")
-rename_image(images_name_11[2], "трассированная трг")
-print(f" Слайд №11 сформирован")
-print("<-------------------------------------------------------------------------------------------------------->")
+insert_images(images_name_14, images_position_14, 14)
+rename_image(images_name_14[0], "ТРГ прав")
+rename_image(images_name_14[1], "ТРГ лев")
+rename_image(images_name_14[2], "трассированная трг")
+print(f" Слайд 14 сформирован")
 
-# Слайд № 12
-images_name_12 = [f"{folder_name}_{image}" for image in ["12q"]]
-images_position_12 = [
+print("<-------------------------------------------------------------------------------------------------------->")
+# Слайд 15
+images_name_15 = [f"{folder_name}_{image}" for image in ["56"]]
+images_position_15 = [
     (Inches(0.65), Inches(1.6), Inches(7.1), Inches(8.5)),
 ]
-slide_index_12 = 12
-insert_images(images_name_12, images_position_12, slide_index_12)
-print(f" Слайд №12 сформирован")
-print("<-------------------------------------------------------------------------------------------------------->")
+slide_index_15 = 15
+insert_images(images_name_15, images_position_15, slide_index_15)
+print(f" Слайд 15 сформирован")
 
-# Слайд № 13
-images_name_13 = [f"{folder_name}_{image}" for image in ["13q"]]
-images_position_13 = [
+print("<-------------------------------------------------------------------------------------------------------->")
+# Слайд 16
+images_name_16 = [f"{folder_name}_{image}" for image in ["57"]]
+images_position_16 = [
     (Inches(0.6), Inches(1.8), Inches(6.8), Inches(6.6)),
 ]
-slide_index_13 = 13
-insert_images(images_name_13, images_position_13, slide_index_13)
+slide_index_16 = 16
+insert_images(images_name_16, images_position_16, slide_index_16)
 
 ws1 = wb["Лист1"]
-params13_data = []
+params16_data = []
 
 # Заполняем DataFrame данными из листа Excel
 for row in ws1.iter_rows(min_row=29, max_row=36, min_col=2, max_col=6, values_only=True):
-    params13_data.append(list(row))
+    params16_data.append(list(row))
 
 # Размеры и положение данных на слайде
 
-params13_left = Inches(1.3)  # Левая граница
-params13_top = Inches(9.08)  # Верхняя граница
-params13_width = Inches(1.12)  # Ширина ячейки
-params13_height = Inches(0.27)  # Высота ячейки
+params16_left = Inches(1.3)  # Левая граница
+params16_top = Inches(9.08)  # Верхняя граница
+params16_width = Inches(1.12)  # Ширина ячейки
+params16_height = Inches(0.27)  # Высота ячейки
 font_size = Pt(11)  # Размер шрифта
 
-add_text_to_slide(prs, 13, params13_data, params13_left, params13_top, params13_width, params13_height, font_size)
+add_text_to_slide(prs, 16, params16_data, params16_left, params16_top, params16_width, params16_height, font_size)
+print(f" Слайд 16 сформирован")
 
-print(f" Слайд №13 сформирован")
 print("<-------------------------------------------------------------------------------------------------------->")
-
-# Слайд № 14
-images_name_14 = [f"{folder_name}_{image}" for image in ["77", "88"]]
-images_position_14 = [
+# Слайд 17
+images_name_17 = [f"{folder_name}_{image}" for image in ["77", "88"]]
+images_position_17 = [
     (Inches(0.6), Inches(8.1), Inches(3.4), Inches(3.3)),
     (Inches(4.2), Inches(8.1), Inches(3.4), Inches(3.3)),
 ]
 
-insert_images(images_name_14, images_position_14, 14)
+insert_images(images_name_17, images_position_17, 17)
 rename_image([f"{folder_name}_{image}" for image in ["3"]][0], "фронтальный расчет")
-rename_image(images_name_14[1], "Yaw ротация нижней челюсти")
-up_params14_data = []
-lower_params14_data = []
+rename_image(images_name_17[1], "Yaw ротация нижней челюсти")
+up_params17_data = []
+lower_params17_data = []
 
 # Заполняем DataFrame данными из листа Excel
 for row in ws1.iter_rows(min_row=9, max_row=14, min_col=2, max_col=6, values_only=True):
-    up_params14_data.append(list(row))
+    up_params17_data.append(list(row))
 for row in ws1.iter_rows(min_row=17, max_row=26, min_col=2, max_col=6, values_only=True):
-    lower_params14_data.append(list(row))
+    lower_params17_data.append(list(row))
 
 # Размеры и положение данных на слайде
-up_params14_left = Inches(1.2)  # Левая граница
-up_params14_top = Inches(1.96)  # Верхняя граница
-up_params14_width = Inches(1.12)  # Ширина ячейки
-up_params14_height = Inches(0.27)  # Высота ячейки
+up_params17_left = Inches(1.2)  # Левая граница
+up_params17_top = Inches(1.96)  # Верхняя граница
+up_params17_width = Inches(1.12)  # Ширина ячейки
+up_params17_height = Inches(0.27)  # Высота ячейки
 
-lower_params14_left = Inches(1.2)  # Левая граница
-lower_params14_top = Inches(4.3)  # Верхняя граница
-lower_params14_width = Inches(1.12)  # Ширина ячейки
-lower_params14_height = Inches(0.27)  # Высота ячейки
+lower_params17_left = Inches(1.2)  # Левая граница
+lower_params17_top = Inches(4.3)  # Верхняя граница
+lower_params17_width = Inches(1.12)  # Ширина ячейки
+lower_params17_height = Inches(0.27)  # Высота ячейки
 
 font_size = Pt(9)
 
-add_text_to_slide(prs, 14, up_params14_data, up_params14_left, up_params14_top, up_params14_width, up_params14_height,
+add_text_to_slide(prs, 17, up_params17_data, up_params17_left, up_params17_top, up_params17_width, up_params17_height,
                   font_size)
-add_text_to_slide(prs, 14, lower_params14_data, lower_params14_left, lower_params14_top, lower_params14_width,
-                  lower_params14_height, font_size)
-print(f" Слайд №14 сформирован")
-print("<-------------------------------------------------------------------------------------------------------->")
+add_text_to_slide(prs, 17, lower_params17_data, lower_params17_left, lower_params17_top, lower_params17_width,
+                  lower_params17_height, font_size)
+print(f" Слайд №17 сформирован")
 
-# Слайд №15
-# Массив имен изображений с префиксом папки
-images_name_15 = [f"{folder_name}_{image}" for image in ["333", "99"]]
-images_position_15 = [
+print("<-------------------------------------------------------------------------------------------------------->")
+# Слайд 18
+images_name_18 = [f"{folder_name}_{image}" for image in ["333", "99"]]
+images_position_18 = [
     (Inches(0.6), Inches(1.5), Inches(7), Inches(4.7)),
     (Inches(0.6), Inches(7), Inches(7), Inches(4.4)),
 ]
 
-insert_images(images_name_15, images_position_15, 15)
-rename_image(images_name_15[0], "аксиальные срезы")
+insert_images(images_name_18, images_position_18, 18)
+rename_image(images_name_18[0], "аксиальные срезы")
+print(f" Слайд №18 сформирован")
 
-print(f" Слайд №15 сформирован")
 print("<-------------------------------------------------------------------------------------------------------->")
-
-# Слайд №16
+# Слайд 19
 # Массив имен изображений с префиксом папки
-images_name_16 = [f"{folder_name}_{image}" for image in ["222", "0"]]
-images_position_16 = [
+images_name_19 = [f"{folder_name}_{image}" for image in ["222", "0"]]
+images_position_19 = [
     (Inches(0.6), Inches(1.2), Inches(7), Inches(4)),
     (Inches(2), Inches(7.65), Inches(4.3), Inches(3.9)),
 ]
 
-insert_images(images_name_16, images_position_16, 16)
-rename_image(images_name_16[0], "корональные срезы")
-rename_image(images_name_16[1], "воздухоносные пути")
+insert_images(images_name_19, images_position_19, 19)
+rename_image(images_name_19[0], "корональные срезы")
+rename_image(images_name_19[1], "воздухоносные пути")
+print(f" Слайд №19 сформирован")
 
-print(f" Слайд №16 сформирован")
 print("<-------------------------------------------------------------------------------------------------------->")
-
-# Слайд №17
+# Слайд 20
 # Определяем тенденцию к классу
 anb_value = ws1['L42'].value
 beta_angle = ws1['L43'].value
@@ -1074,26 +1087,26 @@ Yaw ротация отсутствует \ вправо  (по часовой �
 """
 
 
-def add_text_to_custom(prs_17, slide_index, left_17, top_17, width_17, height_17, text_17):
-    slide = prs_17.slides[slide_index]
-    textbox = slide.shapes.add_textbox(left_17, top_17, width_17, height_17).text_frame
+def add_text_to_custom(prs_20, slide_index, left_20, top_20, width_20, height_20, text_20):
+    slide = prs_20.slides[slide_index]
+    textbox = slide.shapes.add_textbox(left_20, top_20, width_20, height_20).text_frame
     textbox.word_wrap = True
-    paragraph_17 = textbox.add_paragraph()
-    paragraph_17.font.size = Pt(10.5)
-    paragraph_17.font.bold = False
-    paragraph_17.font.name = "Montserrat"
-    paragraph_17.text = text_17
+    paragraph_20 = textbox.add_paragraph()
+    paragraph_20.font.size = Pt(10.5)
+    paragraph_20.font.bold = False
+    paragraph_20.font.name = "Montserrat"
+    paragraph_20.text = text_20
 
 
 # Использование функции с альтернативным названием
-add_text_to_custom(prs, 17, Inches(0.4), Inches(3.15), Inches(7.21), Inches(3), biometrics_text)
-add_text_to_custom(prs, 17, Inches(0.4), Inches(6.9), Inches(7.21), Inches(2.7), cephalometry_text)
-add_text_to_custom(prs, 17, Inches(0.4), Inches(9.08), Inches(7.21), Inches(2.2), resume_upper_jaw_text)
+add_text_to_custom(prs, 20, Inches(0.4), Inches(3.15), Inches(7.21), Inches(3), biometrics_text)
+add_text_to_custom(prs, 20, Inches(0.4), Inches(6.9), Inches(7.21), Inches(2.7), cephalometry_text)
+add_text_to_custom(prs, 20, Inches(0.4), Inches(9.08), Inches(7.21), Inches(2.2), resume_upper_jaw_text)
 
-print(f" Слайд №17 сформирован")
+print(f" Слайд 20 сформирован")
+
 print("<-------------------------------------------------------------------------------------------------------->")
-
-# Слайд №16
+# Слайд 21
 # Переменные с тенденциями к классу
 go_me_r_value = ws1['C17'].value
 go_me_l_value = ws1['C18'].value
@@ -1318,7 +1331,7 @@ text_width_5 = Inches(7.2)
 text_height_5 = Inches(3.5)
 text_left_5 = Inches(0.5)
 text_top_5 = Inches(0.9)
-name_textbox_5 = prs.slides[18].shapes.add_textbox(text_left_5, text_top_5, text_width_5, text_height_5)
+name_textbox_5 = prs.slides[21].shapes.add_textbox(text_left_5, text_top_5, text_width_5, text_height_5)
 text_frame = name_textbox_5.text_frame
 text_frame.word_wrap = True
 paragraph = text_frame.add_paragraph()
@@ -1328,10 +1341,10 @@ paragraph.font.name = "Montserrat"
 paragraph.text = resume_text2
 
 # Добавляем текст на слайд
-text_left_18_2 = Inches(0.5)
-text_top_18_2 = Inches(4.4)
-name_textbox_18_2 = prs.slides[18].shapes.add_textbox(text_left_18_2, text_top_18_2, text_width_5, Inches(1))
-text_frame = name_textbox_18_2.text_frame
+text_left_21_2 = Inches(0.5)
+text_top_21_2 = Inches(4.4)
+name_textbox_21_2 = prs.slides[21].shapes.add_textbox(text_left_21_2, text_top_21_2, text_width_5, Inches(1))
+text_frame = name_textbox_21_2.text_frame
 text_frame.word_wrap = True
 paragraph = text_frame.add_paragraph()
 paragraph.font.size = Pt(10.5)
@@ -1340,10 +1353,10 @@ paragraph.font.name = "Montserrat"
 paragraph.text = resume_text3
 
 # Добавляем текст на слайд
-text_left_18_3 = Inches(0.5)
-text_top_18_3 = Inches(5.73)
-name_textbox_18_3 = prs.slides[18].shapes.add_textbox(text_left_18_3, text_top_18_3, text_width_5, Inches(1))
-text_frame = name_textbox_18_3.text_frame
+text_left_21_3 = Inches(0.5)
+text_top_21_3 = Inches(5.73)
+name_textbox_21_3 = prs.slides[21].shapes.add_textbox(text_left_21_3, text_top_21_3, text_width_5, Inches(1))
+text_frame = name_textbox_21_3.text_frame
 text_frame.word_wrap = True
 paragraph = text_frame.add_paragraph()
 paragraph.font.size = Pt(10.5)
@@ -1352,8 +1365,8 @@ paragraph.font.name = "Montserrat"
 paragraph.text = resume_text4
 
 # Добавляем текст на слайд
-name_textbox_18_4 = prs.slides[18].shapes.add_textbox(Inches(0.5), Inches(6.9), text_width_5,  Inches(1))
-text_frame = name_textbox_18_4.text_frame
+name_textbox_21_4 = prs.slides[21].shapes.add_textbox(Inches(0.5), Inches(6.9), text_width_5,  Inches(1))
+text_frame = name_textbox_21_4.text_frame
 text_frame.word_wrap = True
 paragraph = text_frame.add_paragraph()
 paragraph.font.size = Pt(10.5)
@@ -1361,10 +1374,10 @@ paragraph.font.bold = False
 paragraph.font.name = "Montserrat"
 paragraph.text = resume_text5
 
-print(f" Слайд №18 сформирован")
-print("<-------------------------------------------------------------------------------------------------------->")
+print(f" Слайд 21 сформирован")
 
-# Слайд №19
+print("<-------------------------------------------------------------------------------------------------------->")
+# Слайд 22
 # Верхняя челюсть: пункт 1
 if jaw_dif == 0:
     width_basis_lower_jaw = "норме"
@@ -1498,7 +1511,7 @@ slide20_text4 = f"""
 """
 
 # Добавляем текст на слайд
-text_frame = prs.slides[19].shapes.add_textbox(Inches(0.6), Inches(0.6), Inches(7), Inches(3.8)).text_frame
+text_frame = prs.slides[22].shapes.add_textbox(Inches(0.6), Inches(0.6), Inches(7), Inches(3.8)).text_frame
 text_frame.word_wrap = True
 paragraph = text_frame.add_paragraph()
 paragraph.font.size = Pt(11)
@@ -1507,7 +1520,7 @@ paragraph.font.name = "Montserrat"
 paragraph.text = slide20_text1
 
 # Добавляем текст на слайд
-text_frame = prs.slides[19].shapes.add_textbox(Inches(0.6), Inches(3.9), Inches(7), Inches(1.5)).text_frame
+text_frame = prs.slides[22].shapes.add_textbox(Inches(0.6), Inches(3.9), Inches(7), Inches(1.5)).text_frame
 text_frame.word_wrap = True
 paragraph = text_frame.add_paragraph()
 paragraph.font.size = Pt(11)
@@ -1516,7 +1529,7 @@ paragraph.font.name = "Montserrat"
 paragraph.text = slide20_text2
 
 # Добавляем текст на слайд
-text_frame = prs.slides[19].shapes.add_textbox(Inches(0.6), Inches(5.1), Inches(7), Inches(2.5)).text_frame
+text_frame = prs.slides[22].shapes.add_textbox(Inches(0.6), Inches(5.1), Inches(7), Inches(2.5)).text_frame
 text_frame.word_wrap = True
 paragraph = text_frame.add_paragraph()
 paragraph.font.size = Pt(11)
@@ -1525,7 +1538,7 @@ paragraph.font.name = "Montserrat"
 paragraph.text = slide20_text3
 
 # Добавляем текст на слайд
-text_frame = prs.slides[19].shapes.add_textbox(Inches(0.6), Inches(7.35), Inches(7), Inches(2.5)).text_frame
+text_frame = prs.slides[22].shapes.add_textbox(Inches(0.6), Inches(7.35), Inches(7), Inches(2.5)).text_frame
 text_frame.word_wrap = True
 paragraph = text_frame.add_paragraph()
 paragraph.font.size = Pt(11)
@@ -1533,9 +1546,9 @@ paragraph.font.bold = False
 paragraph.font.name = "Montserrat"
 paragraph.text = slide20_text4
 
-print(f" Слайд №19 сформирован")
-print("<-------------------------------------------------------------------------------------------------------->")
+print(f" Слайд 22 сформирован")
 
+print("<-------------------------------------------------------------------------------------------------------->")
 if folder_name:
     save_folder = os.path.join(work_folder, folder_name)
     prs.save(os.path.join(save_folder, f"{folder_name}.pptx"))
@@ -1560,7 +1573,7 @@ def extract_text_from_slides(prs, slide_indices):
 
 
 # Индексы слайдов, с которых нужно извлечь текст
-slide_indices_to_extract = [17, 18, 19]  # Пример: извлечение текста с первых трех слайдов
+slide_indices_to_extract = [20, 21, 22]  # Пример: извлечение текста с первых трех слайдов
 
 # Извлечение текста с указанных слайдов
 extracted_text = extract_text_from_slides(prs, slide_indices_to_extract)
@@ -1583,4 +1596,4 @@ def save_text_to_file(text, file_path):
 # Сохранение текста в файл
 save_text_to_file(extracted_text, output_file_path)
 
-print(f"😊 Текст успешно извлечен с выбранных слайдов и сохранен в файл {output_file_path}.")
+print(f"😊 Текст успешно извлечен с выбранных слайдов и сохранен в файл {output_file_path}")
