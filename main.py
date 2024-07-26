@@ -551,7 +551,7 @@ print(f"Слайд 6 сформирован")
 
 print("<-------------------------------------------------------------------------------------------------------->")
 # Слайд 7
-images_name_7 = [f"{folder_name}_{image}" for image in ["a", "3q", "s", "3w", "00", "1r"]]
+images_name_7 = [f"{folder_name}_{image}" for image in ["2q", "3q", "2w", "3w", "00", "1r"]]
 images_position_7 = [
     (Inches(0.9), Inches(1.2), Inches(2.9), Inches(2.75)),
     (Inches(4.4), Inches(1.2), Inches(2.9), Inches(2.75)),
@@ -640,7 +640,7 @@ print(f" Слайд 8 сформирован")
 
 print("<-------------------------------------------------------------------------------------------------------->")
 # Слайд 9
-images_name_9 = [f"{folder_name}_{image}" for image in ["1w", "1q", "1e", "1qq", "1ee", "1ww"]]
+images_name_9 = [f"{folder_name}_{image}" for image in ["1w", "1q", "1e", "1ww", "1qq", "1ee"]]
 images_position_9 = [
     (Inches(0.8), Inches(1.3), Inches(3.2), Inches(1.8)),
 
@@ -1062,7 +1062,7 @@ biometrics_text = f"""
 {analyze_tooth_type(deviation_upper_canine_width, deviation_lower_canine_width, canine)}
 {analyze_tooth_type(deviation_upper_premolars, deviation_lower_premolars, premolars)}
 {analyze_tooth_type(deviation_upper_molars, deviation_lower_molars, molars)}
-Укорочение фронтального участка верхней челюсти на {length_upper_frontal_section} мм. Укорочение фронтального участка нижней челюсти на {length_lower_frontal_section} мм.
+Укорочение фронтального участка верхней челюсти на {format_with_comma(length_upper_frontal_section)} мм. Укорочение фронтального участка нижней челюсти на {format_with_comma(length_lower_frontal_section)} мм.
 Глубина кривой Шпее справа – {process_string(depth_shpee_right_curve, 1)} мм, слева – {process_string(depth_shpee_left_curve, 1)} мм (N = 1,5 мм). Глубокая кривая Шпее справа \ и слева.
 WALA Ridge анализ.
 Ширина верхнего зубного ряда – {process_string(width_upper_dentition, 1)} мм, ширина нижнего зубного ряда – {process_string(width_lower_dentition, 1)} мм.
@@ -1297,7 +1297,7 @@ resume_text2 = f"""
 Ширина базиса нижней челюсти (Md-Md) – {format_with_comma(md_md_value)} мм, что соответствует {md_status} (N = {format_with_comma(round(ws1['D23'].value, 1))} мм ± 3,0 мм).
 Положение нижней челюсти по сагиттали  (<SNB) – {format_with_comma(snb_value)}˚, что соответствует {snb_status}и (N = 80,0˚ ± 3,0˚).
 Положение нижней челюсти по вертикали (<MP-SN) – {format_with_comma(mp_sn_value)}˚, что соответствует {mp_sn_status}и (N = 32,0˚ ± 4,0˚).
-Смещение подбородка {chin_displacement_status}, \ за счет скелетной асиметрии.
+Смещение подбородка {chin_displacement_status}.
 Roll ротация отсутствует \  вправо (по часовой стрелке) \ влево (против часовой стрелки).
 Yaw ротация отсутствует \ вправо  (по часовой стрелке) \ влево (против часовой стрелки).
 """
@@ -1317,15 +1317,18 @@ resume_text4 = f"""
 width_lower_jaw = ws1['C23'].value
 width_upper_jaw = ws1['C10'].value
 width_dif_jaw = width_lower_jaw + 5
-jaw_dif = abs(width_dif_jaw - width_upper_jaw)
-jaw_status = f"составляет {format_with_comma(round(jaw_dif, 1))} мм." if jaw_dif > 0 else "отсутствует."
+jaw_dif = (width_upper_jaw - width_dif_jaw)
+
+if jaw_dif < 0:
+    jaw_status = f"составляет {format_with_comma(round(abs(jaw_dif), 1))} мм."
+else:
+    jaw_status = "отсутствует."
 
 resume_text5 = f"""
 Ширина базиса нижней челюсти – {format_with_comma(width_lower_jaw)} мм. Фактическая ширина базиса верхней челюсти – {format_with_comma(width_upper_jaw)} мм. 
 Требуемая ширина базиса верхней челюсти = {format_with_comma(width_dif_jaw)} мм. 
 Дефицит ширины скелетного базиса верхней челюсти {jaw_status}
 """
-
 # Добавляем текст на слайд
 text_width_5 = Inches(7.2)
 text_height_5 = Inches(3.5)
@@ -1378,13 +1381,20 @@ print(f" Слайд 21 сформирован")
 
 print("<-------------------------------------------------------------------------------------------------------->")
 # Слайд 22
-# Верхняя челюсть: пункт 1
-if jaw_dif == 0:
-    width_basis_lower_jaw = "норме"
-elif width_upper_jaw > width_dif_jaw:
-    width_basis_lower_jaw = f"Расширение базиса верхней челюсти на {format_with_comma(round(jaw_dif, 2))} мм"
+
+pnsa_status_slide22 = ""
+if pnsa_value > pnsa_upper_limit:
+    pnsa_status_slide22 = "увеличен"
+elif pnsa_value < pnsa_lower_limit:
+    pnsa_status_slide22 = "уменьшен"
 else:
-    width_basis_lower_jaw = f"Сужение базиса верхней челюсти на {format_with_comma(round(jaw_dif, 2))} мм"
+    pnsa_status_slide22 = "в норме"
+
+# Верхняя челюсть: пункт 1
+if (width_dif_jaw - width_upper_jaw) <= 0:
+    width_basis_lower_jaw = "Ширина базиса верхней челюсти в норме"
+else:
+    width_basis_lower_jaw = f"Сужение базиса верхней челюсти на {format_with_comma(round(abs(jaw_dif), 2))} мм"
 
 # Нижняя челюсть: пункт 3
 if go_me_r_value > ws1['D17'].value + ws1['E17'].value:
@@ -1481,9 +1491,10 @@ slide20_text1 = f"""
 """
 
 slide20_text2 = f"""
-1. {width_basis_lower_jaw} (Penn анализ).
-2. {sna_status_uppercase}я верхней челюсти. {ppsn_status_uppercase}я верхней челюсти.
-3. Ротация верхней челюсти в Roll \Yaw плоскости вправо (по часовой стрелке)
+1. Размер основания верхней челюсти по сагиттали {pnsa_status_slide22}.
+2. {width_basis_lower_jaw} (Penn анализ).
+3. {sna_status_uppercase}я верхней челюсти. {ppsn_status_uppercase}я верхней челюсти.
+4. Ротация верхней челюсти в Roll \Yaw плоскости вправо (по часовой стрелке)
     \влево (против часовой стрелки).
 """
 slide20_text3 = f"""
