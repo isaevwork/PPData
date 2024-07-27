@@ -261,43 +261,36 @@ def add_text_to_slide(presentation, slide_index, slide_data, current_left, curre
             q.font.color.rgb = color  # Устанавливаем цвет текста
 
 
-def crop_image(img_path, out_path, new_width, new_height):
-    """
-    Обрезает и изменяет размеры изображения и сохраняет его.
-    Args:
-        img_path (str): Путь к исходному изображению.
-        out_path (str): Путь для сохранения обрезанного изображения.
-        new_width (int): Новая ширина изображения.
-        new_height (int): Новая высота изображения.
-    """
-    image = Image.open(img_path)
-    width_i, height_i = image.size
 
-    # Определяем координаты области обрезки относительно центра изображения
-    left_i = (width_i - new_width) // 2
-    top_i = (height_i - new_height) // 2
-    right_i = (width_i + new_width) // 2
-    bottom_i = (height_i + new_height) // 2
+def crop_and_resize_image(input_image_path, output_image_path):
+    with Image.open(input_image_path) as img:
+        # Получаем оригинальные размеры
+        original_width, original_height = img.size
 
-    cropped_image = image.crop((left_i, top_i, right_i, bottom_i))
-    cropped_image.save(out_path)
+        # Проверяем ширину
+        if original_width < 1000:
+            print(f"Изображение {input_image_path} имеет ширину меньше 1000px, сохранение без изменений.")
+            img.save(output_image_path)  # Сохраняем изображение без изменений
+            return
 
+        # Вычисляем новые размеры
+        new_height = original_height  # Высота остаётся прежней
+        new_width = new_height - 150  # Ширина на 150 пикселей меньше высоты
 
-def apply_crop_to_images(images_list, new_w, new_h, suffix=""):
-    for img_name in images_list:
-        # Формируем полный путь к файлу изображения
-        for extension in ['.jpg', '.png']:  # Проверяем два наиболее распространенных формата
-            img_path = os.path.join(image_folder, f"{img_name}{extension}")
-            if os.path.exists(img_path):  # Проверяем существует ли файл
-                break
+        # Обрезка по центру
+        if new_width > 0:
+            left = (original_width - new_width) // 2
+            top = 0
+            right = left + new_width
+            bottom = original_height
+
+            # Обрезаем изображение
+            img_cropped = img.crop((left, top, right, bottom))
+
+            # Сохраняем итоговое изображение
+            img_cropped.save(output_image_path)
         else:
-            continue  # Пропускаем это изображение, если оно не найдено
-
-        # Формируем путь для сохранения обрезанного изображения
-        out_path = os.path.join(image_folder, f"{img_name}{suffix}{extension}")
-
-        # Обрезаем изображение и сохраняем его
-        crop_image(img_path, out_path, new_w, new_h)
+            print("Ошибка: новое значение ширины меньше или равно нулю.")
 
 
 def rename_image(old_name, new_name):
@@ -402,6 +395,7 @@ add_num_to_slide(prs, 2, Inches(5.1), Inches(6.15), f"{format_with_comma(upper_l
 add_num_to_slide(prs, 2, Inches(5.1), Inches(6.65), f"{format_with_comma(lower_lip_position)} мм (N = -2,0 мм ±2,0 мм)")
 
 # Массив имен изображений с префиксом папки
+
 images_name_2 = [f"{folder_name}_{image}" for image in ["a", "s", "d", "f"]]
 
 images_position_2 = [
@@ -410,6 +404,19 @@ images_position_2 = [
     (Inches(0.7), Inches(7.8), Inches(3), Inches(3.6)),
     (Inches(4.6), Inches(7.7), Inches(3), Inches(3.7))
 ]
+
+# Проходим по каждому имени изображения в images_name_2
+for image_name in images_name_2:
+    # Проверяем наличие .jpg и .png файлов, создаем полный путь
+    for ext in ['.jpg', '.png']:
+        input_image_path = os.path.join(image_folder, image_name + ext)
+
+        # Проверяем, существует ли файл
+        if os.path.exists(input_image_path):
+            output_image_path = os.path.join(image_folder, image_name + ext)
+            # Вызываем функцию для обрезки и изменения размера
+            crop_and_resize_image(input_image_path, output_image_path)
+            break  # Выход из цикла, как только файл найден
 
 insert_images(images_name_2, images_position_2, 2)
 print(f"Слайд 2 сформирован")
@@ -701,9 +708,6 @@ images_name_13_444 = [f"{folder_name}_{image}" for image in ["444"]]
 images_name_13 = [f"{folder_name}_{image}" for image in ["33", "44"]]
 img_name13_1 = os.path.join(images_name_13_444[0] + ".jpg")
 
-# crop_image(os.path.join(image_folder, images_name_10_444[0] + ".jpg"),
-#            os.path.join(image_folder, images_name_10_444[0] + ".jpg"), 1200, 1068)
-
 images_position_13 = [
     (Inches(0.5), Inches(7.5), Inches(3.5), Inches(3.5)),
     (Inches(4.1), Inches(7.5), Inches(3.5), Inches(3.5)),
@@ -823,6 +827,7 @@ print(f" Слайд №18 сформирован")
 
 print("<-------------------------------------------------------------------------------------------------------->")
 # Слайд 19
+# Массив имен изображений с префиксом папки
 images_name_19 = [f"{folder_name}_{image}" for image in ["222", "0"]]
 images_position_19 = [
     (Inches(0.6), Inches(1.2), Inches(7), Inches(4)),
@@ -832,6 +837,8 @@ images_position_19 = [
 insert_images(images_name_19, images_position_19, 19)
 rename_image(images_name_19[0], "корональные срезы")
 rename_image(images_name_19[1], "воздухоносные пути")
+
+# !!!!
 
 airway_volume = list(ws1.iter_rows(min_row=26, max_row=27, min_col=13, max_col=15, values_only=True))
 
@@ -863,6 +870,7 @@ height = Inches(0.5)
 font_size = 13
 
 land_on_slide(transformed_airway_volume, left_margin, top_mar, width, height, font_size, 19)
+
 print(f" Слайд №19 сформирован")
 
 print("<-------------------------------------------------------------------------------------------------------->")
