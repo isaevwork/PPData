@@ -360,7 +360,6 @@ p_date = tf_date.add_paragraph()
 p_date.text = f"{datetime.today().strftime('%d.%m.%Y')}"
 print(f"Слайд 1 сформирован")
 
-
 print("<-------------------------------------------------------------------------------------------------------->")
 # Слайд 2
 ws2 = wb["Лист2"]
@@ -376,7 +375,8 @@ upper_lip_position = ws2['B18'].value  #Положение верхней губ
 lower_lip_position = ws2['B19'].value  #Положение нижней губы
 
 
-def add_num_to_slide(prs_n, slide_index, left_n, top_n, text_n, width_n=Inches(2.5), f_color=RGBColor(0, 0, 0), font_size_n=10, font_name="Montserrat", bold=False):
+def add_num_to_slide(prs_n, slide_index, left_n, top_n, text_n, width_n=Inches(2.5), f_color=RGBColor(0, 0, 0),
+                     font_size_n=10, font_name="Montserrat", bold=False):
     slide = prs_n.slides[slide_index]
     textbox = slide.shapes.add_textbox(left_n, top_n, width_n, Inches(0))
     tf = textbox.text_frame
@@ -401,7 +401,6 @@ add_num_to_slide(prs, 2, Inches(1.2), Inches(7.15), f"{format_with_comma(soft_ti
 add_num_to_slide(prs, 2, Inches(5.1), Inches(6.15), f"{format_with_comma(upper_lip_position)} мм (N = -4,0 мм ±2,0 мм)")
 add_num_to_slide(prs, 2, Inches(5.1), Inches(6.65), f"{format_with_comma(lower_lip_position)} мм (N = -2,0 мм ±2,0 мм)")
 
-
 # Массив имен изображений с префиксом папки
 images_name_2 = [f"{folder_name}_{image}" for image in ["a", "s", "d", "f"]]
 
@@ -425,7 +424,6 @@ images_position_3 = [
 insert_images(images_name_3, images_position_3, 3)
 print(f"Слайд 3 сформирован")
 
-
 print("<-------------------------------------------------------------------------------------------------------->")
 # Слайд 4 новый
 images_name_4 = [f"{folder_name}_{image}" for image in ["ss"]]
@@ -445,7 +443,6 @@ images_position_5 = [
 
 insert_images(images_name_5, images_position_5, 5)
 print(f"Слайд 5 сформирован")
-
 
 print("<-------------------------------------------------------------------------------------------------------->")
 # Слайд 6 новый
@@ -548,7 +545,6 @@ fill_table(prs, 6, up_data3, Inches(0.9), Inches(2.45), Inches(0.55), Inches(0.2
 fill_table(prs, 6, lower_data3, Inches(1.3), Inches(3.65), Inches(0.45), Inches(0.27), Pt(14), column_offsets_lower)
 print(f"Слайд 6 сформирован")
 
-
 print("<-------------------------------------------------------------------------------------------------------->")
 # Слайд 7
 images_name_7 = [f"{folder_name}_{image}" for image in ["2q", "3q", "2w", "3w", "00", "1r"]]
@@ -589,7 +585,8 @@ def place_data_on_slide(data_rows, left_mar, top_mar, cell_width, cell_height, s
             cell_left = left_mar + j * cell_width
             cell_top = top_mar + i * cell_height
 
-            new_text_frame = prs.slides[slide_index].shapes.add_textbox(cell_left, cell_top, cell_width, cell_height).text_frame
+            new_text_frame = prs.slides[slide_index].shapes.add_textbox(cell_left, cell_top, cell_width,
+                                                                        cell_height).text_frame
             p = new_text_frame.add_paragraph()
             p.text = format_with_comma(value)
             p.font.size = Pt(size_f)
@@ -637,7 +634,6 @@ add_num_to_slide(prs, slide_index_8, Inches(5.1), Inches(11),
                  f"L = {process_string(depth_shpee_left_curve, 1)} мм (N = 1,5 мм)", Inches(3), RGBColor(0, 0, 0), 14)
 print(f" Слайд 8 сформирован")
 
-
 print("<-------------------------------------------------------------------------------------------------------->")
 # Слайд 9
 images_name_9 = [f"{folder_name}_{image}" for image in ["1w", "1q", "1e", "1ww", "1qq", "1ee"]]
@@ -655,7 +651,6 @@ images_position_9 = [
 slide_index_9 = 9
 insert_images(images_name_9, images_position_9, slide_index_9)
 print(f" Слайд 9 сформирован")
-
 
 print("<-------------------------------------------------------------------------------------------------------->")
 # Слайд 10
@@ -828,7 +823,6 @@ print(f" Слайд №18 сформирован")
 
 print("<-------------------------------------------------------------------------------------------------------->")
 # Слайд 19
-# Массив имен изображений с префиксом папки
 images_name_19 = [f"{folder_name}_{image}" for image in ["222", "0"]]
 images_position_19 = [
     (Inches(0.6), Inches(1.2), Inches(7), Inches(4)),
@@ -838,6 +832,37 @@ images_position_19 = [
 insert_images(images_name_19, images_position_19, 19)
 rename_image(images_name_19[0], "корональные срезы")
 rename_image(images_name_19[1], "воздухоносные пути")
+
+airway_volume = list(ws1.iter_rows(min_row=26, max_row=27, min_col=13, max_col=15, values_only=True))
+
+# Преобразование данных и размещение на слайде
+transformed_airway_volume = convert_list(airway_volume)
+print(transformed_airway_volume)
+
+
+def land_on_slide(data_rows, left_mar, top_mar, cell_width, cell_height, size_f, slide_index):
+    for i, row_data in enumerate(data_rows):
+        for j, value in enumerate(row_data):
+            cell_left = left_mar + j * cell_width
+            cell_top = top_mar + i * cell_height
+
+            new_text_frame = prs.slides[slide_index].shapes.add_textbox(cell_left, cell_top, cell_width,
+                                                                        cell_height).text_frame
+            p = new_text_frame.add_paragraph()
+            p.text = str(value)
+            p.font.size = Pt(size_f)
+            p.font.name = "Montserrat"
+            p.alignment = PP_PARAGRAPH_ALIGNMENT.CENTER
+
+
+left_margin = Inches(4.4)
+top_mar = Inches(6.3)
+
+width = Inches(1.1)
+height = Inches(0.5)
+font_size = 13
+
+land_on_slide(transformed_airway_volume, left_margin, top_mar, width, height, font_size, 19)
 print(f" Слайд №19 сформирован")
 
 print("<-------------------------------------------------------------------------------------------------------->")
@@ -1285,7 +1310,6 @@ if r4_1_value_empty_status is not None:
 u1_pp = f"{r1_1_value_status}. {l2_1_value_status}"
 l1_pp = f"{l3_1_value_status}. {r4_1_value_status}"
 
-
 # Формируем текст, вставляя значения переменных
 resume_text2 = f"""
 Длина тела нижней челюсти (Go-Me): справа – {format_with_comma(go_me_r_value)} мм, слева – {format_with_comma(go_me_l_value)}  мм (N = {format_with_comma(round(ws1['M59'].value, 1))} мм ± 5,0 мм).
@@ -1368,7 +1392,7 @@ paragraph.font.name = "Montserrat"
 paragraph.text = resume_text4
 
 # Добавляем текст на слайд
-name_textbox_21_4 = prs.slides[21].shapes.add_textbox(Inches(0.5), Inches(6.9), text_width_5,  Inches(1))
+name_textbox_21_4 = prs.slides[21].shapes.add_textbox(Inches(0.5), Inches(6.9), text_width_5, Inches(1))
 text_frame = name_textbox_21_4.text_frame
 text_frame.word_wrap = True
 paragraph = text_frame.add_paragraph()
