@@ -101,8 +101,8 @@ top = Inches(7.8)
 width = Inches(3.3)
 height = Inches(2)
 
-# Список индексов слайдов, для которых нужно создать текстовые блоки
-slide_indexes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]
+# Список индексов слайдов, для которых нужно создать текстовые блоки с ФИО
+slide_indexes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22]
 
 # Цикл для создания текстовых блоков на каждом слайде
 for index in slide_indexes:
@@ -261,7 +261,6 @@ def add_text_to_slide(presentation, slide_index, slide_data, current_left, curre
             q.font.color.rgb = color  # Устанавливаем цвет текста
 
 
-
 def crop_and_resize_image(input_image_path, output_image_path):
     with Image.open(input_image_path) as img:
         # Получаем оригинальные размеры
@@ -341,7 +340,7 @@ tf.word_wrap = True
 p = tf.add_paragraph()
 p.text = f"{folder_name}"
 p.font.size = Pt(14)
-p.font.bold = False
+p.font.name = "Montserrat Medium"
 
 date_left = Inches(5)
 date_top = Inches(8.9)
@@ -356,16 +355,40 @@ print(f"Слайд 1 сформирован")
 print("<-------------------------------------------------------------------------------------------------------->")
 # Слайд 2
 ws2 = wb["Лист2"]
-face_width = ws2['B10'].value  #Ширина
-face_height = ws2['B11'].value  #Высота
-facial_index = ws2['B12'].value  #Лицевой индекс
-nosocomial_angle = ws2['B13'].value  #Носолицевой угол
-nasal_angle = ws2['B14'].value  #Носоподбородочный угол
-labial_angle = ws2['B15'].value  #Носогубный угол
-chin_facial_angle = ws2['B16'].value  #Подбородочно-лицевой угол
-soft_tissues_angle = ws2['B17'].value  #Угол выпуклости мягких тканей лица
-upper_lip_position = ws2['B18'].value  #Положение верхней губы
-lower_lip_position = ws2['B19'].value  #Положение нижней губы
+face_width = ws2['B10'].value  # Ширина
+face_height = ws2['B11'].value  # Высота
+facial_index = ws2['B12'].value  # Лицевой индекс
+nosocomial_angle = ws2['B13'].value  # Носолицевой угол
+nasal_angle = ws2['B14'].value  # Носоподбородочный угол
+labial_angle = ws2['B15'].value  # Носогубный угол
+chin_facial_angle = ws2['B16'].value  # Подбородочно-лицевой угол
+soft_tissues_angle = ws2['B17'].value  # Угол выпуклости мягких тканей лица
+upper_lip_position = ws2['B18'].value  # Положение верхней губы
+lower_lip_position = ws2['B19'].value  # Положение нижней губы
+profile_type = ''
+
+if upper_lip_position < -6:
+    upper_lip_position_status = 'ретроположение'
+elif -6 <= upper_lip_position <= -2:
+    upper_lip_position_status = 'в норме'
+else:  # upper_lip_position > -2
+    upper_lip_position_status = 'антеположение'
+
+if lower_lip_position < -4:
+    lower_lip_position_status = 'ретроположение'
+elif -4 <= lower_lip_position <= 0:
+    lower_lip_position_status = 'в норме'
+else:  # lower_lip_position > 0
+    lower_lip_position_status = 'антеположение'
+
+if soft_tissues_angle < 163:
+    profile_type = 'выпуклый'
+elif 163 <= soft_tissues_angle <= 175:
+    profile_type = 'в пределах нормы'
+elif 176 <= soft_tissues_angle <= 180:
+    profile_type = 'прямой'
+elif soft_tissues_angle > 180:
+    profile_type = 'вогнутый'
 
 
 def add_num_to_slide(prs_n, slide_index, left_n, top_n, text_n, width_n=Inches(2.5), f_color=RGBColor(0, 0, 0),
@@ -391,8 +414,13 @@ add_num_to_slide(prs, 2, Inches(1.87), Inches(6.15), f"{format_with_comma(labial
 add_num_to_slide(prs, 2, Inches(2.8), Inches(6.4), f"{format_with_comma(chin_facial_angle)}°")
 add_num_to_slide(prs, 2, Inches(1.2), Inches(7.15), f"{format_with_comma(soft_tissues_angle)}°")
 
-add_num_to_slide(prs, 2, Inches(5.1), Inches(6.15), f"{format_with_comma(upper_lip_position)} мм (N = -4,0 мм ±2,0 мм)")
-add_num_to_slide(prs, 2, Inches(5.1), Inches(6.65), f"{format_with_comma(lower_lip_position)} мм (N = -2,0 мм ±2,0 мм)")
+add_num_to_slide(prs, 2, Inches(5.3), Inches(5.4), f"{profile_type}")  # Расположение Типа профиля
+
+add_num_to_slide(prs, 2, Inches(6.2), Inches(5.9), f"{upper_lip_position_status}—")  # Положение верхней губы
+add_num_to_slide(prs, 2, Inches(4.2), Inches(6.15),f"{format_with_comma(upper_lip_position)} мм (N = -4,0 мм ±2,0 мм)")
+
+add_num_to_slide(prs, 2, Inches(6.2), Inches(6.4), f"{lower_lip_position_status}—")  # Положение нижней губы
+add_num_to_slide(prs, 2, Inches(4.2), Inches(6.65),f"{format_with_comma(lower_lip_position)} мм (N = -2,0 мм ±2,0 мм)")
 
 # Массив имен изображений с префиксом папки
 
@@ -916,23 +944,23 @@ decreased = 'уменьшено'
 def analyze_tooth_type(deviation_upper_tooth_type_width, deviation_lower_tooth_type_width, tooth_type):
     tooth_type_result_str = ''
     if deviation_upper_tooth_type_width > 1 and deviation_lower_tooth_type_width > 1:
-        tooth_type_result_str = f'Расстояние между {tooth_type} на верхней и нижней челюстях увеличено'
+        tooth_type_result_str = f'Расстояние между {tooth_type} на верхней и нижней челюстях увеличено.'
     elif deviation_upper_tooth_type_width < -1 and deviation_lower_tooth_type_width < -1:
-        tooth_type_result_str = f'Расстояние между {tooth_type} на верхней и нижней челюстях уменьшено'
+        tooth_type_result_str = f'Расстояние между {tooth_type} на верхней и нижней челюстях уменьшено.'
     elif deviation_upper_tooth_type_width > 1 and deviation_lower_tooth_type_width < -1:
-        tooth_type_result_str = f'Расстояние между {tooth_type} на верхней челюсти увеличено, а на нижней челюсти уменьшено'
+        tooth_type_result_str = f'Расстояние между {tooth_type} на верхней челюсти увеличено, на нижней челюсти уменьшено.'
     elif deviation_upper_tooth_type_width < -1 and deviation_lower_tooth_type_width > 1:
-        tooth_type_result_str = f'Расстояние между {tooth_type} на верхней челюсти уменьшено, а на нижней челюсти увеличено'
+        tooth_type_result_str = f'Расстояние между {tooth_type} на верхней челюсти уменьшено, на нижней челюсти увеличено.'
     elif 1 >= deviation_upper_tooth_type_width >= -1 > deviation_lower_tooth_type_width:
-        tooth_type_result_str = f'Расстояние между {tooth_type} на верхней челюсти в норме, а на нижней челюсти уменьшено'
+        tooth_type_result_str = f'Расстояние между {tooth_type} на верхней челюсти в норме, на нижней челюсти уменьшено.'
     elif -1 <= deviation_upper_tooth_type_width <= 1 < deviation_lower_tooth_type_width:
-        tooth_type_result_str = f'Расстояние между {tooth_type} на верхней челюсти в норме, а на нижней челюсти увеличено'
+        tooth_type_result_str = f'Расстояние между {tooth_type} на верхней челюсти в норме, на нижней челюсти увеличено.'
     elif deviation_upper_tooth_type_width > 1 >= deviation_lower_tooth_type_width >= -1:
-        tooth_type_result_str = f'Расстояние между {tooth_type} на верхней челюсти увеличено, а на нижней челюсти в норме'
+        tooth_type_result_str = f'Расстояние между {tooth_type} на верхней челюсти увеличено, на нижней челюсти в норме.'
     elif deviation_upper_tooth_type_width < -1 <= deviation_lower_tooth_type_width <= 1:
-        tooth_type_result_str = f'Расстояние между {tooth_type} на верхней челюсти уменьшено, а на нижней челюсти в норме'
+        tooth_type_result_str = f'Расстояние между {tooth_type} на верхней челюсти уменьшено, на нижней челюсти в норме.'
     elif -1 <= deviation_upper_tooth_type_width <= 1 and -1 <= deviation_lower_tooth_type_width <= 1:
-        tooth_type_result_str = f'Расстояние между {tooth_type} на верхней и нижней челюстях в норме'
+        tooth_type_result_str = f'Расстояние между {tooth_type} на верхней и нижней челюстях в норме.'
 
     return tooth_type_result_str
 
@@ -1106,7 +1134,7 @@ WALA Ridge анализ.
 cephalometry_text = f"""
 Межапикальный угол (<ANB) – {format_with_comma(anb_value)}˚, что соответствует соотношению челюстей по {anb_skeletal_class} скелетному классу {anb_trend_class} (N = 2,0˚ ± 2,0˚).
 Угол Бета (< Beta Angle) – {format_with_comma(beta_angle)}˚, что cоответствует соотношению челюстей по {beta_skeletal_class} скелетному классу {beta_trend_class} (N = 31,0˚ ± 4,0˚).
-Параметр Wits (Wits Appraisal.) –  {format_with_comma(wits_appraisal)} мм что указывает на {has_value} диспропорции в расположении апикальных базисов верхней и нижней челюстей в сагиттальной плоскости и говорит за {wits_skeletal_class} скелетный класс {wits_trend_class} (N = -1,0 мм ± 2,0 мм).
+Параметр Wits (Wits Appraisal.) –  {format_with_comma(wits_appraisal)} мм что указывает на {has_value} диспропорции в расположении апикальных базисов верхней и нижней челюстей в сагиттальной плоскости и говорит за {wits_skeletal_class} скелетный класс {wits_trend_class} (N = -1,1 мм ± 2,0 мм).
 {sassouni_text}
 Параметр APDI, указывающий на дисплазию развития челюстей в сагиттальной плоскости, равен {format_with_comma(apdi_value)}˚ и говорит за {apdi_skeletal_class} скелетный класс {apdi_trend_class} (N = 81,4˚ ± 5,0˚).
 """
