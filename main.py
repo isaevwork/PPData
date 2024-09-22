@@ -417,10 +417,12 @@ add_num_to_slide(prs, 2, Inches(1.2), Inches(7.15), f"{format_with_comma(soft_ti
 add_num_to_slide(prs, 2, Inches(5.25), Inches(5.4), f"{profile_type}")  # Расположение Типа профиля
 
 add_num_to_slide(prs, 2, Inches(6.1), Inches(5.65), f"{upper_lip_position_status} —")  # Положение верхней губы
-add_num_to_slide(prs, 2, Inches(4.15), Inches(5.85), f"{format_with_comma(upper_lip_position)} мм (N = -4,0 мм ±2,0 мм)")
+add_num_to_slide(prs, 2, Inches(4.15), Inches(5.85),
+                 f"{format_with_comma(upper_lip_position)} мм (N = -4,0 мм ±2,0 мм)")
 
 add_num_to_slide(prs, 2, Inches(6.1), Inches(6.15), f"{lower_lip_position_status} —")  # Положение нижней губы
-add_num_to_slide(prs, 2, Inches(4.15), Inches(6.35), f"{format_with_comma(lower_lip_position)} мм (N = -2,0 мм ±2,0 мм)")
+add_num_to_slide(prs, 2, Inches(4.15), Inches(6.35),
+                 f"{format_with_comma(lower_lip_position)} мм (N = -2,0 мм ±2,0 мм)")
 
 # Массив имен изображений с префиксом папки
 
@@ -872,7 +874,6 @@ airway_volume = list(ws1.iter_rows(min_row=26, max_row=27, min_col=13, max_col=1
 
 # Преобразование данных и размещение на слайде
 transformed_airway_volume = convert_list(airway_volume)
-print(transformed_airway_volume)
 
 
 def land_on_slide(data_rows, left_mar, top_mar, cell_width, cell_height, size_f, slide_index):
@@ -943,19 +944,36 @@ decreased = 'уменьшено'
 length_upper_frontal_status = ''
 length_lower_frontal_status = ''
 
-if length_upper_frontal_section > 0:
+if length_upper_frontal_section > 1:
     length_upper_frontal_status = f"""Удлинение фронтального участка верхней челюсти на {format_with_comma(length_upper_frontal_section)} мм."""
-elif length_upper_frontal_section < 0:
-    length_upper_frontal_status = f"""Укорочение фронтального участка верхней челюсти на {format_with_comma(length_upper_frontal_section)} мм."""
+elif length_upper_frontal_section < -1:
+    length_upper_frontal_status = f"""Укорочение фронтального участка верхней челюсти на {process_string(length_upper_frontal_section, 1)} мм."""
 else:
-    length_upper_frontal_status = f"""Фронтальный участок верхней челюсти не изменяется."""
+    length_upper_frontal_status = f"""Длина фронтального участка верхней челюсти в норме."""
 
-if length_lower_frontal_section > 0:
-    length_lower_frontal_status = f"""Удлинение фронтального участка верхней челюсти на {format_with_comma(length_upper_frontal_section)} мм."""
-elif length_lower_frontal_section < 0:
-    length_lower_frontal_status = f"""Укорочение фронтального участка верхней челюсти на {format_with_comma(length_upper_frontal_section)} мм."""
+if length_lower_frontal_section > 1:
+    length_lower_frontal_status = f"""Удлинение фронтального участка нижней челюсти на {format_with_comma(length_lower_frontal_section)} мм."""
+elif length_lower_frontal_section < -1:
+    length_lower_frontal_status = f"""Укорочение фронтального участка нижней челюсти на {process_string(length_lower_frontal_section, 1)} мм."""
 else:
-    length_lower_frontal_status = f"""Фронтальный участок верхней челюсти не изменяется."""
+    length_lower_frontal_status = f"""Длина фронтального участка нижней челюсти в норме."""
+
+upper_frontal_without_number = ''
+lower_frontal_without_number = ''
+
+if length_upper_frontal_section > 1:
+    upper_frontal_without_number = f"""Удлинение фронтального участка верхнего зубного ряда."""
+elif length_upper_frontal_section < -1:
+    upper_frontal_without_number = f"""Укорочение фронтального участка верхнего зубного ряда."""
+else:
+    upper_frontal_without_number = f"""Длина фронтального участка верхнего зубного ряда в норме."""
+
+if length_lower_frontal_section > 1:
+    lower_frontal_without_number = f"""Удлинение фронтального участка нижнего зубного ряда."""
+elif length_lower_frontal_section < -1:
+    lower_frontal_without_number = f"""Укорочение фронтального участка нижнего зубного ряда."""
+else:
+    lower_frontal_without_number = f"""Длина фронтального участка нижнего зубного ряда в норме."""
 
 
 def analyze_tooth_type(deviation_upper_tooth_type_width, deviation_lower_tooth_type_width, tooth_type):
@@ -1125,10 +1143,10 @@ ppsn_status_uppercase = ppsn_status.capitalize()
 
 
 def check_disadvantage_width_upper_dentition(dentition_value):
-    if dentition_value == 0:
+    if dentition_value <= 0:
         return "Недостаток ширины зубного ряда на верхней челюсти отсутствует."
     else:
-        return f"""Недостаток ширины зубного ряда на верхней челюсти составляет {process_string(dentition_value, 1)} мм."""
+        return f"Недостаток ширины зубного ряда на верхней челюсти составляет {process_string(dentition_value, 1)} мм."
 
 
 # условие для определения типа лицевой структуры на основе лицевого индекса
@@ -1146,7 +1164,6 @@ increased_angles = []
 decreased_angles = []
 normal_angles = []
 middle_third_face = ws1['L69'].value
-
 
 # Определение состояния для носолицевого угла
 if nosocomial_angle < 36:
@@ -1205,7 +1222,7 @@ if decreased_angles:
 if normal_angles:
     normal_sentence = ' ' + ', '.join([angles_dict[angle] for angle in normal_angles]) + ' в норме.'
 
-trimmed_message = normal_sentence.strip() # Убираем пробелы для нормы
+trimmed_message = normal_sentence.strip()  # Убираем пробелы для нормы
 
 # Делаем первую букву заглавной
 if trimmed_message:
@@ -1233,7 +1250,6 @@ fotometrics_text = f"""
 Положение губ относительно эстетической плоскости Ricketts: верхняя губа: {format_with_comma(upper_lip_position)} мм – {upper_lip_position_status},
 нижняя губа:  {format_with_comma(lower_lip_position)} мм – {lower_lip_position_status} (N = -4,0 мм ± 2,0 мм.;  -2,0 мм ± 2,0 мм).
 """
-
 
 # Формируем текст, вставляя значения переменных
 biometrics_text = f"""
@@ -1446,23 +1462,22 @@ r4_1_value_empty_status = get_tooth_empty_status(slant_r4_1, slant_r4_1_dif, 100
 
 result_string = ""
 
-if r1_1_value_empty_status is not None:
-    result_string += f"{r1_1_value_empty_status}"
-    if r1_1_value_empty_status:
-        result_string += f". "
+# Список статусов зубов
+empty_status_list = [
+    r1_1_value_empty_status,
+    l2_1_value_empty_status,
+    l3_1_value_empty_status,
+    r4_1_value_empty_status
+]
 
-if l2_1_value_empty_status is not None:
-    result_string += f"{l2_1_value_empty_status}"
-    if l2_1_value_empty_status:
-        result_string += f". "
+# Формируем строку вывода
+for status in empty_status_list:
+    if status:  # Если статус не пустой
+        result_string += f"{status}. "
 
-if l3_1_value_empty_status is not None:
-    result_string += f"{l3_1_value_empty_status}"
-    if l3_1_value_empty_status:
-        result_string += f". "
-
-if r4_1_value_empty_status is not None:
-    result_string += f"{r4_1_value_empty_status}"
+# Проверяем, если все статусы пустые
+if not any(empty_status_list):  # Если в списке нет ни одного статуса
+    result_string = "Наклон резцов в пределах нормы"
 
 # Формирование строки с динамическими данными
 u1_pp = f"{r1_1_value_status}. {l2_1_value_status}"
@@ -1480,7 +1495,7 @@ resume_text2 = f"""
 Положение нижней челюсти по сагиттали  (<SNB) – {format_with_comma(snb_value)}˚, что соответствует {snb_status}и (N = 80,0˚ ± 3,0˚).
 Положение нижней челюсти по вертикали (<MP-SN) – {format_with_comma(mp_sn_value)}˚, что соответствует {mp_sn_status}и (N = 32,0˚ ± 4,0˚).
 Смещение подбородка {chin_displacement_status}.
-Roll ротация отсутствует \  вправо (по часовой стрелке) \ влево (против часовой стрелки).
+Roll ротация отсутствует \ вправо (по часовой стрелке) \ влево (против часовой стрелки).
 Yaw ротация отсутствует \ вправо  (по часовой стрелке) \ влево (против часовой стрелки).
 """
 resume_text3 = f"""
@@ -1653,91 +1668,213 @@ elif md_md_value < mdk_lower_limit:
 else:
     md_status = "Ширина базиса нижней челюсти в норме."
 
-slide20_text1 = f"""
-1. Скелетный III класс с тенденцией к III, обусловленный 
-    макро \ микрогнатией, про \ ретрогнатией верхней \ нижней челюсти \ 
-    диспропорцией расположения апикальных базисов челюстей в сагиттальном 
-    направлении. 
-    Зубоальвеолярная форма дистальной \ мезиальной окклюзии.
-2. Мезофациальный тип строения лицевого отдела черепа. 
-3. Нейтральный тип роста с тенденцией к вертикальному\ горизонтальному росту.
-4. Высота нижней трети лица по Ricketts  в {ans_xi_pm_status}.
-5. Профиль лица  выпуклый. 
-6. Ретроположение верхней и нижней губы относительно эстетической 
-    плоскости Ricketts. 
-7. Сужение и уменьшение объема воздухоносных путей. Сужения и уменьшения 
-    объема воздухоносных путей не выявлено. 
-8. Нормальное \ Переднее \ Заднее положение правой \ левой суставной головки
-    височно-нижнечелюстного сустава.
+
+# Инициализация переменных для верхней и нижней челюстей
+upper_jaw_displacement = ws1['M30'].value  # Смещение верхней челюсти
+lower_jaw_displacement = ws1['N30'].value  # Смещение нижней челюсти
+
+# Переменные для хранения описания смещений
+upper_jaw_status = ''
+lower_jaw_status = ''
+
+# Обработка смещения верхней челюсти
+if upper_jaw_displacement > 0:
+    upper_jaw_status = f'Межрезцовая линия на верхней челюсти смещена относительно срединно \n    сагиттальной линии на {upper_jaw_displacement} мм вправо,'
+elif upper_jaw_displacement < 0:
+    upper_jaw_status = f'Межрезцовая линия на верхней челюсти смещена относительно срединно \n    сагиттальной линии на {abs(upper_jaw_displacement)} мм влево,'
+else:
+    upper_jaw_status = f'Межрезцовая линия на верхней челюсти не смещена относительно срединно \n    сагиттальной линии,'
+
+# Обработка смещения нижней челюсти
+if lower_jaw_displacement > 0:
+    lower_jaw_status = f'на нижней челюсти смещена \n    относительно срединно сагиттальной линии на {lower_jaw_displacement} мм вправо.'
+elif lower_jaw_displacement < 0:
+    lower_jaw_status = f'на нижней челюсти смещена \n    относительно срединно сагиттальной линии на {abs(lower_jaw_displacement)} мм влево.'
+else:
+    lower_jaw_status = 'на нижней челюсти не смещена \n    относительно срединно сагиттальной линии.'
+
+# Инициализация текстового фрейма на слайде
+text_frame = prs.slides[22].shapes.add_textbox(Inches(0.6), Inches(0.6), Inches(7), Inches(9)).text_frame
+text_frame.word_wrap = True
+
+# Общий текст
+paragraph = text_frame.add_paragraph()
+paragraph.font.size = Pt(11)
+paragraph.font.bold = False
+paragraph.font.name = "Montserrat"
+paragraph.text = f"""
+1. Скелетный III класс с тенденцией к III, обусловленный
+   макро/микробнатией, про/ретрогнатией верхней/нижней челюсти,
+   диспропорцией расположения апикальных базисов челюстей в сагиттальном
+   направлении. Зубоальвеолярная форма дистальной/мезиальной окклюзии.
+2. {type_facial_structure} тип строения лицевого отдела черепа.
+3. Нейтральный тип роста с тенденцией к вертикальному/горизонтальному росту.
+4. Высота нижней трети лица по Ricketts в {ans_xi_pm_status}.
+5. Профиль лица {profile_type}.
+6. Ретроположение верхней и нижней губы относительно эстетической
+   плоскости Ricketts.
+7. Сужение и уменьшение объема воздухоносных путей. Сужения и уменьшения
+   объема воздухоносных путей не выявлено.
+8. Нормальное/Переднее/Заднее положение правой/левой суставной головки
+   височно-нижнечелюстного сустава.
 9. Скелетный возраст соответствует IIIVI стадии созревания шейных позвонков.
 """
 
-slide20_text2 = f"""
+# Заголовок "Верхняя челюсть:"
+upper_jaw_heading = text_frame.add_paragraph()
+upper_jaw_heading.font.size = Pt(11)
+upper_jaw_heading.font.bold = True
+upper_jaw_heading.font.name = "Montserrat"
+upper_jaw_heading.text = "Верхняя челюсть:"
+upper_jaw_heading.alignment = PP_PARAGRAPH_ALIGNMENT.LEFT
+
+# Основной текст для верхней челюсти
+upper_jaw_content = text_frame.add_paragraph()
+upper_jaw_content.font.size = Pt(11)
+upper_jaw_content.font.bold = False
+upper_jaw_content.font.name = "Montserrat"
+upper_jaw_content.text = f"""
 1. Размер основания верхней челюсти по сагиттали {pnsa_status_slide22}.
 2. {width_basis_lower_jaw} (Penn анализ).
 3. {sna_status_uppercase}я верхней челюсти. {ppsn_status_uppercase}я верхней челюсти.
-4. Ротация верхней челюсти в Roll \Yaw плоскости вправо (по часовой стрелке)
-    \влево (против часовой стрелки).
+4. Ротация верхней челюсти в Roll/Yaw плоскости вправо (по часовой стрелке) 
+   \влево (против часовой стрелки).
 """
-slide20_text3 = f"""
+
+# Заголовок "Нижняя челюсть:"
+lower_jaw_heading = text_frame.add_paragraph()
+lower_jaw_heading.font.size = Pt(11)
+lower_jaw_heading.font.bold = True
+lower_jaw_heading.font.name = "Montserrat"
+lower_jaw_heading.text = "Нижняя челюсть:"
+lower_jaw_heading.alignment = PP_PARAGRAPH_ALIGNMENT.LEFT
+
+# Основной текст для нижней челюсти
+lower_jaw_content = text_frame.add_paragraph()
+lower_jaw_content.font.size = Pt(11)
+lower_jaw_content.font.bold = False
+lower_jaw_content.font.name = "Montserrat"
+lower_jaw_content.text = f"""
 1. {md_status}
 2. {snb_status_uppercase}я нижней челюсти. {mp_sn_status_uppercase}я нижней челюсти.
 3. Длина тела нижней челюсти справа {go_me_r_status}. Длина тела нижней челюсти слева {go_me_l_status}.
 4. Длина ветви нижней челюсти справа {go_go_r_status}. Длина ветви нижней челюсти слева {go_go_l_status}.
-5. Смещение подбородка {chin_displacement_status}, \ за счет скелетной асимметрии. 
-6. Ротация нижней челюсти в Roll \Yaw плоскости вправо (по часовой стрелке) 
-    \влево (против часовой стрелки).
+5. Смещение подбородка {chin_displacement_status} за счет скелетной асимметрии.
+6. Ротация нижней челюсти в Roll/Yaw плоскости вправо (по часовой стрелке) 
+   \влево (против часовой стрелки).
 """
 
-slide20_text4 = f"""
-1. Межрезцовая линия на верхней челюсти не смещена относительно
-    срединно сагиттальной линии на 1,2 мм вправо \ влево, на нижней челюсти не 
-    смещена на 1,2 мм влево / вправо.
+# Заголовок "Параметры наклона и положения зубов:"
+teeth_parameters_heading = text_frame.add_paragraph()
+teeth_parameters_heading.font.size = Pt(11)
+teeth_parameters_heading.font.bold = True
+teeth_parameters_heading.font.name = "Montserrat"
+teeth_parameters_heading.text = "Параметры наклона и положения зубов:"
+teeth_parameters_heading.alignment = PP_PARAGRAPH_ALIGNMENT.LEFT
+
+# Основной текст для параметров наклона и положения зубов
+teeth_parameters_content = text_frame.add_paragraph()
+teeth_parameters_content.font.size = Pt(11)
+teeth_parameters_content.font.bold = False
+teeth_parameters_content.font.name = "Montserrat"
+teeth_parameters_content.text = f"""
+1. {upper_jaw_status} {lower_jaw_status}
 2. Сужение верхнего зубного ряда в области клыков, премоляров, моляров.
-    Сужение нижнего зубного ряда в области клыков, моляров, премоляров.
-3. Длина фронтального участка верхнего зубного ряда в норме , нижнего зубного 
-    ряда в норме.
-4. {result_string}
+   Сужение нижнего зубного ряда в области клыков, моляров, премоляров.
+3. {upper_frontal_without_number}
+   {lower_frontal_without_number}
+4. {result_string.strip()}.
 5. {overbite_value_status}
 6. {overjet_value_status}
-7. Глубина кривой Шпее в увеличена справа \ слева.
+7. Глубина кривой Шпее увеличена справа \ слева.
 """
 
-# Добавляем текст на слайд
-text_frame = prs.slides[22].shapes.add_textbox(Inches(0.6), Inches(0.6), Inches(7), Inches(3.8)).text_frame
-text_frame.word_wrap = True
-paragraph = text_frame.add_paragraph()
-paragraph.font.size = Pt(11)
-paragraph.font.bold = False
-paragraph.font.name = "Montserrat"
-paragraph.text = slide20_text1
+# slide20_text1 = f"""
+# 1. Скелетный III класс с тенденцией к III, обусловленный
+#     макро \ микрогнатией, про \ ретрогнатией верхней \ нижней челюсти \
+#     диспропорцией расположения апикальных базисов челюстей в сагиттальном
+#     направлении.
+#     Зубоальвеолярная форма дистальной \ мезиальной окклюзии.
+# 2. {type_facial_structure} тип строения лицевого отдела черепа.
+# 3. Нейтральный тип роста с тенденцией к вертикальному\ горизонтальному росту.
+# 4. Высота нижней трети лица по Ricketts  в {ans_xi_pm_status}.
+# 5. Профиль лица {profile_type}.
+# 6. Ретроположение верхней и нижней губы относительно эстетической
+#     плоскости Ricketts.
+# 7. Сужение и уменьшение объема воздухоносных путей. Сужения и уменьшения
+#     объема воздухоносных путей не выявлено.
+# 8. Нормальное \ Переднее \ Заднее положение правой \ левой суставной головки
+#     височно-нижнечелюстного сустава.
+# 9. Скелетный возраст соответствует IIIVI стадии созревания шейных позвонков.
+# \t\n
+# Верхняя челюсть:
+# 1. Размер основания верхней челюсти по сагиттали {pnsa_status_slide22}.
+# 2. {width_basis_lower_jaw} (Penn анализ).
+# 3. {sna_status_uppercase}я верхней челюсти. {ppsn_status_uppercase}я верхней челюсти.
+# 4. Ротация верхней челюсти в Roll \Yaw плоскости вправо (по часовой стрелке)
+#     \влево (против часовой стрелки).
+# \t\n
+# Нижняя челюсть:
+# 1. {md_status}
+# 2. {snb_status_uppercase}я нижней челюсти. {mp_sn_status_uppercase}я нижней челюсти.
+# 3. Длина тела нижней челюсти справа {go_me_r_status}. Длина тела нижней челюсти слева {go_me_l_status}.
+# 4. Длина ветви нижней челюсти справа {go_go_r_status}. Длина ветви нижней челюсти слева {go_go_l_status}.
+# 5. Смещение подбородка {chin_displacement_status}, \ за счет скелетной асимметрии.
+# 6. Ротация нижней челюсти в Roll \Yaw плоскости вправо (по часовой стрелке)
+#     \влево (против часовой стрелки).
+# \t\n
+# Параметры наклона и положения зубов:
+# 1. {upper_jaw_status} {lower_jaw_status}
+# 2. Сужение верхнего зубного ряда в области клыков, премоляров, моляров.
+#     Сужение нижнего зубного ряда в области клыков, моляров, премоляров.
+# 3. {upper_frontal_without_number}
+#     {lower_frontal_without_number}
+# 4. {result_string.strip()}.
+# 5. {overbite_value_status}
+# 6. {overjet_value_status}
+# 7. Глубина кривой Шпее в увеличена справа \ слева.
+# """
 
-# Добавляем текст на слайд
-text_frame = prs.slides[22].shapes.add_textbox(Inches(0.6), Inches(3.9), Inches(7), Inches(1.5)).text_frame
-text_frame.word_wrap = True
-paragraph = text_frame.add_paragraph()
-paragraph.font.size = Pt(11)
-paragraph.font.bold = False
-paragraph.font.name = "Montserrat"
-paragraph.text = slide20_text2
+# slide20_text4 = f"""
+#
+# """
 
-# Добавляем текст на слайд
-text_frame = prs.slides[22].shapes.add_textbox(Inches(0.6), Inches(5.1), Inches(7), Inches(2.5)).text_frame
-text_frame.word_wrap = True
-paragraph = text_frame.add_paragraph()
-paragraph.font.size = Pt(11)
-paragraph.font.bold = False
-paragraph.font.name = "Montserrat"
-paragraph.text = slide20_text3
-
-# Добавляем текст на слайд
-text_frame = prs.slides[22].shapes.add_textbox(Inches(0.6), Inches(7.35), Inches(7), Inches(2.5)).text_frame
-text_frame.word_wrap = True
-paragraph = text_frame.add_paragraph()
-paragraph.font.size = Pt(11)
-paragraph.font.bold = False
-paragraph.font.name = "Montserrat"
-paragraph.text = slide20_text4
+#
+# # Добавляем текст на слайд
+# text_frame = prs.slides[22].shapes.add_textbox(Inches(0.6), Inches(0.6), Inches(7), Inches(3.8)).text_frame
+# text_frame.word_wrap = True
+# paragraph = text_frame.add_paragraph()
+# paragraph.font.size = Pt(11)
+# paragraph.font.bold = False
+# paragraph.font.name = "Montserrat"
+# paragraph.text = slide20_text1
+#
+# # Добавляем текст на слайд
+# text_frame = prs.slides[22].shapes.add_textbox(Inches(0.6), Inches(3.9), Inches(7), Inches(1.5)).text_frame
+# text_frame.word_wrap = True
+# paragraph = text_frame.add_paragraph()
+# paragraph.font.size = Pt(11)
+# paragraph.font.bold = False
+# paragraph.font.name = "Montserrat"
+# paragraph.text = slide20_text2
+#
+# # Добавляем текст на слайд
+# text_frame = prs.slides[22].shapes.add_textbox(Inches(0.6), Inches(5.1), Inches(7), Inches(2.5)).text_frame
+# text_frame.word_wrap = True
+# paragraph = text_frame.add_paragraph()
+# paragraph.font.size = Pt(11)
+# paragraph.font.bold = False
+# paragraph.font.name = "Montserrat"
+# paragraph.text = slide20_text3
+#
+# # Добавляем текст на слайд
+# text_frame = prs.slides[22].shapes.add_textbox(Inches(0.6), Inches(7.35), Inches(7), Inches(2.5)).text_frame
+# text_frame.word_wrap = True
+# paragraph = text_frame.add_paragraph()
+# paragraph.font.size = Pt(11)
+# paragraph.font.bold = False
+# paragraph.font.name = "Montserrat"
+# paragraph.text = slide20_text4
 
 print(f" Слайд 22 сформирован")
 
