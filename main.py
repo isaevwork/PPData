@@ -414,13 +414,13 @@ add_num_to_slide(prs, 2, Inches(1.87), Inches(6.15), f"{format_with_comma(labial
 add_num_to_slide(prs, 2, Inches(2.8), Inches(6.4), f"{format_with_comma(chin_facial_angle)}°")
 add_num_to_slide(prs, 2, Inches(1.2), Inches(7.15), f"{format_with_comma(soft_tissues_angle)}°")
 
-add_num_to_slide(prs, 2, Inches(5.3), Inches(5.4), f"{profile_type}")  # Расположение Типа профиля
+add_num_to_slide(prs, 2, Inches(5.25), Inches(5.4), f"{profile_type}")  # Расположение Типа профиля
 
-add_num_to_slide(prs, 2, Inches(6.2), Inches(5.9), f"{upper_lip_position_status}—")  # Положение верхней губы
-add_num_to_slide(prs, 2, Inches(4.2), Inches(6.15),f"{format_with_comma(upper_lip_position)} мм (N = -4,0 мм ±2,0 мм)")
+add_num_to_slide(prs, 2, Inches(6.1), Inches(5.65), f"{upper_lip_position_status} —")  # Положение верхней губы
+add_num_to_slide(prs, 2, Inches(4.15), Inches(5.85), f"{format_with_comma(upper_lip_position)} мм (N = -4,0 мм ±2,0 мм)")
 
-add_num_to_slide(prs, 2, Inches(6.2), Inches(6.4), f"{lower_lip_position_status}—")  # Положение нижней губы
-add_num_to_slide(prs, 2, Inches(4.2), Inches(6.65),f"{format_with_comma(lower_lip_position)} мм (N = -2,0 мм ±2,0 мм)")
+add_num_to_slide(prs, 2, Inches(6.1), Inches(6.15), f"{lower_lip_position_status} —")  # Положение нижней губы
+add_num_to_slide(prs, 2, Inches(4.15), Inches(6.35), f"{format_with_comma(lower_lip_position)} мм (N = -2,0 мм ±2,0 мм)")
 
 # Массив имен изображений с префиксом папки
 
@@ -940,6 +940,23 @@ molars = 'молярами'
 increased = 'увеличено'
 decreased = 'уменьшено'
 
+length_upper_frontal_status = ''
+length_lower_frontal_status = ''
+
+if length_upper_frontal_section > 0:
+    length_upper_frontal_status = f"""Удлинение фронтального участка верхней челюсти на {format_with_comma(length_upper_frontal_section)} мм."""
+elif length_upper_frontal_section < 0:
+    length_upper_frontal_status = f"""Укорочение фронтального участка верхней челюсти на {format_with_comma(length_upper_frontal_section)} мм."""
+else:
+    length_upper_frontal_status = f"""Фронтальный участок верхней челюсти не изменяется."""
+
+if length_lower_frontal_section > 0:
+    length_lower_frontal_status = f"""Удлинение фронтального участка верхней челюсти на {format_with_comma(length_upper_frontal_section)} мм."""
+elif length_lower_frontal_section < 0:
+    length_lower_frontal_status = f"""Укорочение фронтального участка верхней челюсти на {format_with_comma(length_upper_frontal_section)} мм."""
+else:
+    length_lower_frontal_status = f"""Фронтальный участок верхней челюсти не изменяется."""
+
 
 def analyze_tooth_type(deviation_upper_tooth_type_width, deviation_lower_tooth_type_width, tooth_type):
     tooth_type_result_str = ''
@@ -1114,6 +1131,110 @@ def check_disadvantage_width_upper_dentition(dentition_value):
         return f"""Недостаток ширины зубного ряда на верхней челюсти составляет {process_string(dentition_value, 1)} мм."""
 
 
+# условие для определения типа лицевой структуры на основе лицевого индекса
+type_facial_structure = ''
+
+if facial_index < 97:
+    type_facial_structure = 'Брахиофациальный'
+elif 97 <= facial_index <= 103:
+    type_facial_structure = 'Мезофациальный'
+elif facial_index > 103:
+    type_facial_structure = 'Долихофациальный'
+
+# Тут мы формируем логику для увеличения, уменьшения углов и генерации вывода
+increased_angles = []
+decreased_angles = []
+normal_angles = []
+middle_third_face = ws1['L69'].value
+
+
+# Определение состояния для носолицевого угла
+if nosocomial_angle < 36:
+    decreased_angles.append('носолицевого угла')
+elif 36 <= nosocomial_angle <= 38:
+    normal_angles.append('носолицевого угла')
+elif nosocomial_angle > 38:
+    increased_angles.append('носолицевого угла')
+
+# Определение состояния для носоподбородочного угла
+if nasal_angle < 122:
+    decreased_angles.append('носоподбородочного угла')
+elif 122 <= nasal_angle <= 132:
+    normal_angles.append('носоподбородочного угла')
+elif nasal_angle > 132:
+    increased_angles.append('носоподбородочного угла')
+
+# Определение состояния для носогубного угла
+if labial_angle < 100:
+    decreased_angles.append('носогубного угла')
+elif 100 <= labial_angle <= 110:
+    normal_angles.append('носогубного угла')
+elif labial_angle > 110:
+    increased_angles.append('носогубного угла')
+
+# Определение состояния для подбородочно-лицевого угла
+if chin_facial_angle < 80:
+    decreased_angles.append('подбородочно-лицевого угла')
+elif 80 <= chin_facial_angle <= 90:
+    normal_angles.append('подбородочно-лицевого угла')
+elif chin_facial_angle > 90:
+    increased_angles.append('подбородочно-лицевого угла')
+
+# Словарь для нормальных состояний углов
+angles_dict = {
+    'носолицевого угла': 'носолицевой угол',
+    'носоподбородочного угла': 'носоподбородочный угол',
+    'носогубного угла': 'носогубный угол',
+    'подбородочно-лицевого угла': 'подбородочно-лицевой угол'
+}
+
+# Формируем предложения
+increased_sentence = ""
+decreased_sentence = ""
+normal_sentence = ""
+
+# Формируем кадры для увеличенных углов
+if increased_angles:
+    increased_sentence = 'Увеличение ' + ', '.join(increased_angles) + '.'
+
+# Формируем кадры для уменьшенных углов
+if decreased_angles:
+    decreased_sentence = 'Уменьшение ' + ', '.join(decreased_angles) + '.'
+
+# Формируем кадры для нормальных углов
+if normal_angles:
+    normal_sentence = ' ' + ', '.join([angles_dict[angle] for angle in normal_angles]) + ' в норме.'
+
+trimmed_message = normal_sentence.strip() # Убираем пробелы для нормы
+
+# Делаем первую букву заглавной
+if trimmed_message:
+    result_normal_message = trimmed_message[0].upper() + trimmed_message[1:]
+else:
+    result_normal_message = trimmed_message  # Если сообщение пустое, оставляем как есть
+
+middle_third_face_status = ''
+
+if middle_third_face < 47.5:
+    middle_third_face_status = 'уменьшена'
+elif 47.5 <= middle_third_face >= 52.5:
+    middle_third_face_status = 'в норме'
+elif middle_third_face > 52.5:
+    middle_third_face_status = 'увеличена'
+
+fotometrics_text = f"""
+Угол выпуклости мягких тканей лица (gl-sn-pog) – {format_with_comma(soft_tissues_angle)}˚ (N = 163,0°-175,0°).
+{type_facial_structure} тип строения лица.
+Профиль лица {profile_type}.
+{increased_sentence}
+{decreased_sentence}
+{result_normal_message}
+Надподбородочная борозда не выражена. Средняя треть лица {middle_third_face_status}.
+Положение губ относительно эстетической плоскости Ricketts: верхняя губа: {format_with_comma(upper_lip_position)} мм – {upper_lip_position_status},
+нижняя губа:  {format_with_comma(lower_lip_position)} мм – {lower_lip_position_status} (N = -4,0 мм ± 2,0 мм.;  -2,0 мм ± 2,0 мм).
+"""
+
+
 # Формируем текст, вставляя значения переменных
 biometrics_text = f"""
 Окклюзия моляров по Энглю: справа III класс, слева III класс.
@@ -1123,7 +1244,7 @@ biometrics_text = f"""
 {analyze_tooth_type(deviation_upper_canine_width, deviation_lower_canine_width, canine)}
 {analyze_tooth_type(deviation_upper_premolars, deviation_lower_premolars, premolars)}
 {analyze_tooth_type(deviation_upper_molars, deviation_lower_molars, molars)}
-Укорочение фронтального участка верхней челюсти на {format_with_comma(length_upper_frontal_section)} мм. Укорочение фронтального участка нижней челюсти на {format_with_comma(length_lower_frontal_section)} мм.
+{length_upper_frontal_status} {length_lower_frontal_status}
 Глубина кривой Шпее справа – {process_string(depth_shpee_right_curve, 1)} мм, слева – {process_string(depth_shpee_left_curve, 1)} мм (N = 1,5 мм). Глубокая кривая Шпее справа \ и слева.
 WALA Ridge анализ.
 Ширина верхнего зубного ряда – {process_string(width_upper_dentition, 1)} мм, ширина нижнего зубного ряда – {process_string(width_lower_dentition, 1)} мм.
@@ -1160,7 +1281,8 @@ def add_text_to_custom(prs_20, slide_index, left_20, top_20, width_20, height_20
 
 
 # Использование функции с альтернативным названием
-add_text_to_custom(prs, 20, Inches(0.4), Inches(3.15), Inches(7.21), Inches(3), biometrics_text)
+add_text_to_custom(prs, 20, Inches(0.4), Inches(0.8), Inches(7.21), Inches(2.5), fotometrics_text)
+add_text_to_custom(prs, 20, Inches(0.4), Inches(3.15), Inches(7.21), Inches(2.5), biometrics_text)
 add_text_to_custom(prs, 20, Inches(0.4), Inches(6.9), Inches(7.21), Inches(2.7), cephalometry_text)
 add_text_to_custom(prs, 20, Inches(0.4), Inches(9.08), Inches(7.21), Inches(2.2), resume_upper_jaw_text)
 
